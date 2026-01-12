@@ -27,8 +27,8 @@ const client = new Ark({
 });
 
 const sendEmail = await client.emails.send({
-  from: 'Security <security@myapp.com>',
-  subject: 'Reset your password',
+  from: 'Acme <hello@acme.com>',
+  subject: 'Hello World',
   to: ['user@example.com'],
 });
 
@@ -48,8 +48,8 @@ const client = new Ark({
 });
 
 const params: Ark.EmailSendParams = {
-  from: 'Security <security@myapp.com>',
-  subject: 'Reset your password',
+  from: 'Acme <hello@acme.com>',
+  subject: 'Hello World',
   to: ['user@example.com'],
 };
 const sendEmail: Ark.SendEmail = await client.emails.send(params);
@@ -67,8 +67,8 @@ a subclass of `APIError` will be thrown:
 ```ts
 const sendEmail = await client.emails
   .send({
-    from: 'Security <security@myapp.com>',
-    subject: 'Reset your password',
+    from: 'Acme <hello@acme.com>',
+    subject: 'Hello World',
     to: ['user@example.com'],
   })
   .catch(async (err) => {
@@ -112,8 +112,8 @@ const client = new Ark({
 
 // Or, configure per-request:
 await client.emails.send({
-  from: 'Security <security@myapp.com>',
-  subject: 'Reset your password',
+  from: 'Acme <hello@acme.com>',
+  subject: 'Hello World',
   to: ['user@example.com'],
 }, {
   maxRetries: 5,
@@ -133,8 +133,8 @@ const client = new Ark({
 
 // Override per-request:
 await client.emails.send({
-  from: 'Security <security@myapp.com>',
-  subject: 'Reset your password',
+  from: 'Acme <hello@acme.com>',
+  subject: 'Hello World',
   to: ['user@example.com'],
 }, {
   timeout: 5 * 1000,
@@ -161,8 +161,8 @@ const client = new Ark();
 
 const response = await client.emails
   .send({
-    from: 'Security <security@myapp.com>',
-    subject: 'Reset your password',
+    from: 'Acme <hello@acme.com>',
+    subject: 'Hello World',
     to: ['user@example.com'],
   })
   .asResponse();
@@ -171,8 +171,8 @@ console.log(response.statusText); // access the underlying Response object
 
 const { data: sendEmail, response: raw } = await client.emails
   .send({
-    from: 'Security <security@myapp.com>',
-    subject: 'Reset your password',
+    from: 'Acme <hello@acme.com>',
+    subject: 'Hello World',
     to: ['user@example.com'],
   })
   .withResponse();

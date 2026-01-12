@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0 (2026-01-12)
+
+Full Changelog: [v0.0.2...v0.1.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.0.2...v0.1.0)
+
+### Features
+
+* **api:** api update ([14a50c5](https://github.com/ArkHQ-io/ark-nodejs/commit/14a50c59a1555c18ca7e5d2b4abe732788121c3b))
+* **api:** api update ([71e703e](https://github.com/ArkHQ-io/ark-nodejs/commit/71e703eead20289f14838410780476bd203701f2))
+
 ## 0.0.2 (2026-01-12)
 
 Full Changelog: [v0.0.1...v0.0.2](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.0.1...v0.0.2)

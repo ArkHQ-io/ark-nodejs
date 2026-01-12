@@ -101,12 +101,10 @@ export class Emails extends APIResource {
    * @example
    * ```ts
    * const sendEmail = await client.emails.send({
-   *   from: 'Security <security@myapp.com>',
-   *   subject: 'Reset your password',
+   *   from: 'Acme <hello@acme.com>',
+   *   subject: 'Hello World',
    *   to: ['user@example.com'],
-   *   html: '<p>Click <a href="https://myapp.com/reset?token=abc123">here</a> to reset your password. This link expires in 1 hour.</p>',
-   *   tag: 'password-reset',
-   *   text: 'Reset your password by visiting: https://myapp.com/reset?token=abc123',
+   *   html: '<h1>Welcome!</h1><p>Thanks for signing up.</p>',
    * });
    * ```
    */

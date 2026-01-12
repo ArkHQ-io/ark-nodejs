@@ -91,8 +91,8 @@ describe('resource emails', () => {
   // Prism tests are disabled
   test.skip('send: only required params', async () => {
     const responsePromise = client.emails.send({
-      from: 'Security <security@myapp.com>',
-      subject: 'Reset your password',
+      from: 'Acme <hello@acme.com>',
+      subject: 'Hello World',
       to: ['user@example.com'],
     });
     const rawResponse = await responsePromise.asResponse();
@@ -107,8 +107,8 @@ describe('resource emails', () => {
   // Prism tests are disabled
   test.skip('send: required and optional params', async () => {
     const response = await client.emails.send({
-      from: 'Security <security@myapp.com>',
-      subject: 'Reset your password',
+      from: 'Acme <hello@acme.com>',
+      subject: 'Hello World',
       to: ['user@example.com'],
       attachments: [
         {
@@ -120,10 +120,10 @@ describe('resource emails', () => {
       bcc: ['dev@stainless.com'],
       cc: ['dev@stainless.com'],
       headers: { foo: 'string' },
-      html: '<p>Click <a href="https://myapp.com/reset?token=abc123">here</a> to reset your password. This link expires in 1 hour.</p>',
+      html: '<h1>Welcome!</h1><p>Thanks for signing up.</p>',
       replyTo: 'dev@stainless.com',
-      tag: 'password-reset',
-      text: 'Reset your password by visiting: https://myapp.com/reset?token=abc123',
+      tag: 'tag',
+      text: 'text',
       'Idempotency-Key': 'user_123_order_456',
     });
   });

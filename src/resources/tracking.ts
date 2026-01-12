@@ -224,16 +224,16 @@ export interface TrackDomainResponse {
 }
 
 export interface TrackingListResponse {
-  data?: TrackingListResponse.Data;
+  data: TrackingListResponse.Data;
 
-  meta?: APIMeta;
+  meta: APIMeta;
 
-  success?: true;
+  success: true;
 }
 
 export namespace TrackingListResponse {
   export interface Data {
-    trackDomains?: Array<TrackingAPI.TrackDomain>;
+    trackDomains: Array<TrackingAPI.TrackDomain>;
   }
 }
 

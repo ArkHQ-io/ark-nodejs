@@ -55,7 +55,7 @@ describe('resource emails', () => {
           from: 'dev@stainless.com',
           page: 1,
           perPage: 1,
-          status: 'queued',
+          status: 'pending',
           tag: 'tag',
           to: 'dev@stainless.com',
         },

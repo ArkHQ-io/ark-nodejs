@@ -179,11 +179,6 @@ export namespace WebhookResponse {
     url: string;
 
     uuid: string;
-
-    /**
-     * Whether the webhook payloads are signed (always true for new webhooks)
-     */
-    signed?: boolean;
   }
 }
 
@@ -214,11 +209,6 @@ export namespace WebhookListResponse {
       name: string;
 
       url: string;
-
-      /**
-       * Whether webhook payloads are signed
-       */
-      signed?: boolean;
     }
   }
 }

@@ -3,7 +3,6 @@
 import { APIResource } from '../core/resource';
 import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
-import { PageNumberPagination, type PageNumberPaginationParams, PagePromise } from '../core/pagination';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
@@ -42,17 +41,14 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const emailListResponse of client.emails.list()) {
-   *   // ...
-   * }
+   * const emails = await client.emails.list();
    * ```
    */
   list(
     query: EmailListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<EmailListResponsesPageNumberPagination, EmailListResponse> {
-    return this._client.getAPIList('/emails', PageNumberPagination<EmailListResponse>, { query, ...options });
+  ): APIPromise<EmailListResponse> {
+    return this._client.get('/emails', { query, ...options });
   }
 
   /**
@@ -184,8 +180,6 @@ export class Emails extends APIResource {
     return this._client.post('/emails/raw', { body, ...options });
   }
 }
-
-export type EmailListResponsesPageNumberPagination = PageNumberPagination<EmailListResponse>;
 
 export interface EmailRetrieveResponse {
   data: EmailRetrieveResponse.Data;
@@ -338,36 +332,76 @@ export namespace EmailRetrieveResponse {
 }
 
 export interface EmailListResponse {
-  /**
-   * Internal message ID
-   */
-  id: string;
+  data: EmailListResponse.Data;
 
-  token: string;
+  meta: Shared.APIMeta;
 
-  from: string;
+  success: true;
+}
 
-  /**
-   * Current delivery status:
-   *
-   * - `pending` - Email accepted, waiting to be processed
-   * - `sent` - Email transmitted to recipient's mail server
-   * - `softfail` - Temporary delivery failure, will retry
-   * - `hardfail` - Permanent delivery failure
-   * - `bounced` - Email bounced back
-   * - `held` - Held for manual review
-   */
-  status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
+export namespace EmailListResponse {
+  export interface Data {
+    messages: Array<Data.Message>;
 
-  subject: string;
+    pagination: Data.Pagination;
+  }
 
-  timestamp: number;
+  export namespace Data {
+    export interface Message {
+      /**
+       * Internal message ID
+       */
+      id: string;
 
-  timestampIso: string;
+      token: string;
 
-  to: string;
+      from: string;
 
-  tag?: string;
+      /**
+       * Current delivery status:
+       *
+       * - `pending` - Email accepted, waiting to be processed
+       * - `sent` - Email transmitted to recipient's mail server
+       * - `softfail` - Temporary delivery failure, will retry
+       * - `hardfail` - Permanent delivery failure
+       * - `bounced` - Email bounced back
+       * - `held` - Held for manual review
+       */
+      status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
+
+      subject: string;
+
+      timestamp: number;
+
+      timestampIso: string;
+
+      to: string;
+
+      tag?: string;
+    }
+
+    export interface Pagination {
+      /**
+       * Current page number (1-indexed)
+       */
+      page: number;
+
+      /**
+       * Items per page
+       */
+      perPage: number;
+
+      /**
+       * Total number of items
+       */
+      total: number;
+
+      /**
+       * Total number of pages
+       */
+      totalPages: number;
+    }
+  }
 }
 
 export interface EmailRetrieveDeliveriesResponse {
@@ -439,16 +473,14 @@ export namespace EmailRetrieveDeliveriesResponse {
 }
 
 export interface EmailRetryResponse {
-  data: EmailRetryResponse.Data;
+  data?: EmailRetryResponse.Data;
 
-  meta: Shared.APIMeta;
-
-  success: true;
+  success?: boolean;
 }
 
 export namespace EmailRetryResponse {
   export interface Data {
-    message: string;
+    message?: string;
   }
 }
 
@@ -571,7 +603,7 @@ export interface EmailRetrieveParams {
   expand?: string;
 }
 
-export interface EmailListParams extends PageNumberPaginationParams {
+export interface EmailListParams {
   /**
    * Return emails sent after this timestamp (Unix seconds or ISO 8601)
    */
@@ -586,6 +618,16 @@ export interface EmailListParams extends PageNumberPaginationParams {
    * Filter by sender email address
    */
   from?: string;
+
+  /**
+   * Page number (starts at 1)
+   */
+  page?: number;
+
+  /**
+   * Results per page (max 100)
+   */
+  perPage?: number;
 
   /**
    * Filter by delivery status:
@@ -760,7 +802,6 @@ export declare namespace Emails {
     type EmailSendResponse as EmailSendResponse,
     type EmailSendBatchResponse as EmailSendBatchResponse,
     type EmailSendRawResponse as EmailSendRawResponse,
-    type EmailListResponsesPageNumberPagination as EmailListResponsesPageNumberPagination,
     type EmailRetrieveParams as EmailRetrieveParams,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,

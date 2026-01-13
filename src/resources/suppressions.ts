@@ -3,7 +3,6 @@
 import { APIResource } from '../core/resource';
 import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
-import { PageNumberPagination, type PageNumberPaginationParams, PagePromise } from '../core/pagination';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
@@ -44,20 +43,14 @@ export class Suppressions extends APIResource {
    *
    * @example
    * ```ts
-   * // Automatically fetches more pages as needed.
-   * for await (const suppressionListResponse of client.suppressions.list()) {
-   *   // ...
-   * }
+   * const suppressions = await client.suppressions.list();
    * ```
    */
   list(
     query: SuppressionListParams | null | undefined = {},
     options?: RequestOptions,
-  ): PagePromise<SuppressionListResponsesPageNumberPagination, SuppressionListResponse> {
-    return this._client.getAPIList('/suppressions', PageNumberPagination<SuppressionListResponse>, {
-      query,
-      ...options,
-    });
+  ): APIPromise<SuppressionListResponse> {
+    return this._client.get('/suppressions', { query, ...options });
   }
 
   /**
@@ -93,8 +86,6 @@ export class Suppressions extends APIResource {
   }
 }
 
-export type SuppressionListResponsesPageNumberPagination = PageNumberPagination<SuppressionListResponse>;
-
 export interface SuppressionCreateResponse {
   data: SuppressionCreateResponse.Data;
 
@@ -122,48 +113,74 @@ export namespace SuppressionCreateResponse {
 }
 
 export interface SuppressionRetrieveResponse {
-  data: SuppressionRetrieveResponse.Data;
+  data?: SuppressionRetrieveResponse.Data;
+
+  success?: boolean;
+}
+
+export namespace SuppressionRetrieveResponse {
+  export interface Data {
+    address?: string;
+
+    createdAt?: string | null;
+
+    reason?: string | null;
+
+    suppressed?: boolean;
+  }
+}
+
+export interface SuppressionListResponse {
+  data: SuppressionListResponse.Data;
 
   meta: Shared.APIMeta;
 
   success: true;
 }
 
-export namespace SuppressionRetrieveResponse {
+export namespace SuppressionListResponse {
   export interface Data {
-    /**
-     * The email address that was checked
-     */
-    address: string;
+    pagination: Data.Pagination;
 
-    /**
-     * Whether the address is currently suppressed
-     */
-    suppressed: boolean;
-
-    /**
-     * When the suppression was created (if suppressed)
-     */
-    createdAt?: string | null;
-
-    /**
-     * Reason for suppression (if suppressed)
-     */
-    reason?: string | null;
+    suppressions: Array<Data.Suppression>;
   }
-}
 
-export interface SuppressionListResponse {
-  /**
-   * Suppression ID
-   */
-  id: string;
+  export namespace Data {
+    export interface Pagination {
+      /**
+       * Current page number (1-indexed)
+       */
+      page: number;
 
-  address: string;
+      /**
+       * Items per page
+       */
+      perPage: number;
 
-  createdAt: string;
+      /**
+       * Total number of items
+       */
+      total: number;
 
-  reason?: string;
+      /**
+       * Total number of pages
+       */
+      totalPages: number;
+    }
+
+    export interface Suppression {
+      /**
+       * Suppression ID
+       */
+      id: string;
+
+      address: string;
+
+      createdAt: string;
+
+      reason?: string;
+    }
+  }
 }
 
 export interface SuppressionDeleteResponse {
@@ -224,7 +241,11 @@ export interface SuppressionCreateParams {
   reason?: string;
 }
 
-export interface SuppressionListParams extends PageNumberPaginationParams {}
+export interface SuppressionListParams {
+  page?: number;
+
+  perPage?: number;
+}
 
 export interface SuppressionBulkCreateParams {
   suppressions: Array<SuppressionBulkCreateParams.Suppression>;
@@ -245,7 +266,6 @@ export declare namespace Suppressions {
     type SuppressionListResponse as SuppressionListResponse,
     type SuppressionDeleteResponse as SuppressionDeleteResponse,
     type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
-    type SuppressionListResponsesPageNumberPagination as SuppressionListResponsesPageNumberPagination,
     type SuppressionCreateParams as SuppressionCreateParams,
     type SuppressionListParams as SuppressionListParams,
     type SuppressionBulkCreateParams as SuppressionBulkCreateParams,

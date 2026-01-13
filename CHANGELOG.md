@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0 (2026-01-13)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** api update ([0eaf1fe](https://github.com/ArkHQ-io/ark-nodejs/commit/0eaf1fe064d9168018f3700351549708cd7de25b))
+* **api:** api update ([f3411f5](https://github.com/ArkHQ-io/ark-nodejs/commit/f3411f5dd165b0957ac7675d5075f7413f33ac48))
+* **api:** manual updates ([b1746f4](https://github.com/ArkHQ-io/ark-nodejs/commit/b1746f4400f581b85fd49592284f7e17f020f0d5))
+* **api:** manual updates ([92bf8d9](https://github.com/ArkHQ-io/ark-nodejs/commit/92bf8d9a68333a0e4e1d893e0fb25df6b8503046))
+* **api:** manual updates ([f626b56](https://github.com/ArkHQ-io/ark-nodejs/commit/f626b5653f59d445cf0267f9f0f9f64fbbee97e9))
+* **api:** manual updates ([b33acbb](https://github.com/ArkHQ-io/ark-nodejs/commit/b33acbb523c5dc3fdd2ff65447d4de308aba3de0))
+* **api:** manual updates ([a37bb97](https://github.com/ArkHQ-io/ark-nodejs/commit/a37bb971d00dc5fd0410de9b8ad7314494c5df70))
+* **api:** manual updates ([cf863b5](https://github.com/ArkHQ-io/ark-nodejs/commit/cf863b5d87fb97347ed2736ff01e98c959b24804))
+* **api:** manual updates ([8103e47](https://github.com/ArkHQ-io/ark-nodejs/commit/8103e47e939042924ed97cae887e0f47a60e1955))
+* **api:** manual updates ([a7b064d](https://github.com/ArkHQ-io/ark-nodejs/commit/a7b064ddc25aaec798a1ce6355adf393253a0115))
+* **api:** manual updates ([091fa7c](https://github.com/ArkHQ-io/ark-nodejs/commit/091fa7cb74cfa78fb3e0a639eba6e3965c2868fb))
+
 ## 0.3.0 (2026-01-12)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.2.0...v0.3.0)

@@ -35,6 +35,7 @@ import {
 import {
   EmailListParams,
   EmailListResponse,
+  EmailListResponsesPageNumberPagination,
   EmailRetrieveDeliveriesResponse,
   EmailRetrieveParams,
   EmailRetrieveResponse,
@@ -55,6 +56,7 @@ import {
   SuppressionDeleteResponse,
   SuppressionListParams,
   SuppressionListResponse,
+  SuppressionListResponsesPageNumberPagination,
   SuppressionRetrieveResponse,
   Suppressions,
 } from './resources/suppressions';
@@ -834,6 +836,7 @@ export declare namespace Ark {
     type EmailSendResponse as EmailSendResponse,
     type EmailSendBatchResponse as EmailSendBatchResponse,
     type EmailSendRawResponse as EmailSendRawResponse,
+    type EmailListResponsesPageNumberPagination as EmailListResponsesPageNumberPagination,
     type EmailRetrieveParams as EmailRetrieveParams,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
@@ -859,6 +862,7 @@ export declare namespace Ark {
     type SuppressionListResponse as SuppressionListResponse,
     type SuppressionDeleteResponse as SuppressionDeleteResponse,
     type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
+    type SuppressionListResponsesPageNumberPagination as SuppressionListResponsesPageNumberPagination,
     type SuppressionCreateParams as SuppressionCreateParams,
     type SuppressionListParams as SuppressionListParams,
     type SuppressionBulkCreateParams as SuppressionBulkCreateParams,

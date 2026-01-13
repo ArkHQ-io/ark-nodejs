@@ -18,8 +18,6 @@ import {
   AbstractPage,
   type PageNumberPaginationParams,
   PageNumberPaginationResponse,
-  type SuppressionsPaginationParams,
-  SuppressionsPaginationResponse,
 } from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
@@ -827,12 +825,6 @@ export declare namespace Ark {
   export {
     type PageNumberPaginationParams as PageNumberPaginationParams,
     type PageNumberPaginationResponse as PageNumberPaginationResponse,
-  };
-
-  export import SuppressionsPagination = Pagination.SuppressionsPagination;
-  export {
-    type SuppressionsPaginationParams as SuppressionsPaginationParams,
-    type SuppressionsPaginationResponse as SuppressionsPaginationResponse,
   };
 
   export {

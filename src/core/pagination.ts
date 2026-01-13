@@ -108,50 +108,15 @@ export class PagePromise<
 }
 
 export interface PageNumberPaginationResponse<Item> {
-  data: PageNumberPaginationResponse.Data<Item>;
+  data: PageNumberPaginationResponse.Data;
 }
 
 export namespace PageNumberPaginationResponse {
-  export interface Data<Item> {
-    messages?: Array<Item>;
-
+  export interface Data {
     pagination?: Data.Pagination;
   }
 
   export namespace Data {
-    export interface Message {
-      /**
-       * Internal message ID
-       */
-      id: string;
-
-      token: string;
-
-      from: string;
-
-      /**
-       * Current delivery status:
-       *
-       * - `pending` - Email accepted, waiting to be processed
-       * - `sent` - Email transmitted to recipient's mail server
-       * - `softfail` - Temporary delivery failure, will retry
-       * - `hardfail` - Permanent delivery failure
-       * - `bounced` - Email bounced back
-       * - `held` - Held for manual review
-       */
-      status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
-
-      subject: string;
-
-      timestamp: number;
-
-      timestampIso: string;
-
-      to: string;
-
-      tag?: string;
-    }
-
     export interface Pagination {
       page?: number;
 
@@ -170,7 +135,7 @@ export class PageNumberPagination<Item>
   extends AbstractPage<Item>
   implements PageNumberPaginationResponse<Item>
 {
-  data: PageNumberPaginationResponse.Data<Item>;
+  data: PageNumberPaginationResponse.Data;
 
   constructor(
     client: Ark,
@@ -184,84 +149,7 @@ export class PageNumberPagination<Item>
   }
 
   getPaginatedItems(): Item[] {
-    return this.data?.messages ?? [];
-  }
-
-  nextPageRequestOptions(): PageRequestOptions | null {
-    const currentPage = this.data?.pagination?.page ?? 1;
-
-    if (currentPage >= this.data?.pagination?.totalPages) {
-      return null;
-    }
-
-    return {
-      ...this.options,
-      query: {
-        ...maybeObj(this.options.query),
-        page: currentPage + 1,
-      },
-    };
-  }
-}
-
-export interface SuppressionsPaginationResponse<Item> {
-  data: SuppressionsPaginationResponse.Data<Item>;
-}
-
-export namespace SuppressionsPaginationResponse {
-  export interface Data<Item> {
-    pagination?: Data.Pagination;
-
-    suppressions?: Array<Item>;
-  }
-
-  export namespace Data {
-    export interface Pagination {
-      page?: number;
-
-      totalPages?: number;
-    }
-
-    export interface Suppression {
-      /**
-       * Suppression ID
-       */
-      id: string;
-
-      address: string;
-
-      createdAt: string;
-
-      reason?: string;
-    }
-  }
-}
-
-export interface SuppressionsPaginationParams {
-  page?: number;
-
-  perPage?: number;
-}
-
-export class SuppressionsPagination<Item>
-  extends AbstractPage<Item>
-  implements SuppressionsPaginationResponse<Item>
-{
-  data: SuppressionsPaginationResponse.Data<Item>;
-
-  constructor(
-    client: Ark,
-    response: Response,
-    body: SuppressionsPaginationResponse<Item>,
-    options: FinalRequestOptions,
-  ) {
-    super(client, response, body, options);
-
-    this.data = body.data || {};
-  }
-
-  getPaginatedItems(): Item[] {
-    return this.data?.suppressions ?? [];
+    return this.data ?? [];
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {

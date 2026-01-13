@@ -650,15 +650,15 @@ export interface EmailSendParams {
   cc?: Array<string> | null;
 
   /**
-   * Body param: Custom email headers
+   * Body param: Custom email headers (accepts null)
    */
-  headers?: { [key: string]: string };
+  headers?: { [key: string]: string } | null;
 
   /**
-   * Body param: HTML body content. Maximum 5MB (5,242,880 characters). Combined with
-   * attachments, the total message must not exceed 14MB.
+   * Body param: HTML body content (accepts null). Maximum 5MB (5,242,880
+   * characters). Combined with attachments, the total message must not exceed 14MB.
    */
-  html?: string;
+  html?: string | null;
 
   /**
    * Body param: Reply-to address (accepts null)
@@ -666,15 +666,15 @@ export interface EmailSendParams {
   replyTo?: string | null;
 
   /**
-   * Body param: Tag for categorization and filtering
+   * Body param: Tag for categorization and filtering (accepts null)
    */
-  tag?: string;
+  tag?: string | null;
 
   /**
-   * Body param: Plain text body (auto-generated from HTML if not provided). Maximum
-   * 5MB (5,242,880 characters).
+   * Body param: Plain text body (accepts null, auto-generated from HTML if not
+   * provided). Maximum 5MB (5,242,880 characters).
    */
-  text?: string;
+  text?: string | null;
 
   /**
    * Header param: Unique key for idempotent requests. If a request with this key was

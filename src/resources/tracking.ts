@@ -17,7 +17,7 @@ export class Tracking extends APIResource {
    * @example
    * ```ts
    * const tracking = await client.tracking.create({
-   *   domainId: '123',
+   *   domainId: 123,
    *   name: 'track',
    * });
    * ```
@@ -320,7 +320,7 @@ export interface TrackingCreateParams {
   /**
    * ID of the sending domain to attach this track domain to
    */
-  domainId: string;
+  domainId: number;
 
   /**
    * Subdomain name (e.g., 'track' for track.yourdomain.com)
@@ -328,41 +328,41 @@ export interface TrackingCreateParams {
   name: string;
 
   /**
-   * Enable SSL for tracking URLs (recommended)
+   * Enable SSL for tracking URLs (accepts null, defaults to true)
    */
-  sslEnabled?: boolean;
+  sslEnabled?: boolean | null;
 
   /**
-   * Enable click tracking
+   * Enable click tracking (accepts null, defaults to true)
    */
-  trackClicks?: boolean;
+  trackClicks?: boolean | null;
 
   /**
-   * Enable open tracking (tracking pixel)
+   * Enable open tracking (tracking pixel, accepts null, defaults to true)
    */
-  trackOpens?: boolean;
+  trackOpens?: boolean | null;
 }
 
 export interface TrackingUpdateParams {
   /**
-   * Comma-separated list of domains to exclude from click tracking
+   * Comma-separated list of domains to exclude from click tracking (accepts null)
    */
-  excludedClickDomains?: string;
+  excludedClickDomains?: string | null;
 
   /**
-   * Enable or disable SSL for tracking URLs
+   * Enable or disable SSL for tracking URLs (accepts null)
    */
-  sslEnabled?: boolean;
+  sslEnabled?: boolean | null;
 
   /**
-   * Enable or disable click tracking
+   * Enable or disable click tracking (accepts null)
    */
-  trackClicks?: boolean;
+  trackClicks?: boolean | null;
 
   /**
-   * Enable or disable open tracking
+   * Enable or disable open tracking (accepts null)
    */
-  trackOpens?: boolean;
+  trackOpens?: boolean | null;
 }
 
 export declare namespace Tracking {

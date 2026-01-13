@@ -180,6 +180,7 @@ describe('resource emails', () => {
       data: 'data',
       mailFrom: 'dev@stainless.com',
       rcptTo: ['dev@stainless.com'],
+      bounce: true,
     });
   });
 });

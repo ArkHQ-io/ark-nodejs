@@ -13,6 +13,14 @@ import * as Shims from './internal/shims';
 import * as Opts from './internal/request-options';
 import { VERSION } from './version';
 import * as Errors from './core/error';
+import * as Pagination from './core/pagination';
+import {
+  AbstractPage,
+  type PageNumberParams,
+  PageNumberResponse,
+  type SuppressionsPageParams,
+  SuppressionsPageResponse,
+} from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
@@ -37,7 +45,7 @@ import {
   EmailSendParams,
   EmailSendRawParams,
   Emails,
-  Pagination,
+  Pagination as EmailsAPIPagination,
   SendEmail,
 } from './resources/emails';
 import {
@@ -539,6 +547,25 @@ export class Ark {
     return { response, options, controller, requestLogID, retryOfRequestLogID, startTime };
   }
 
+  getAPIList<Item, PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>>(
+    path: string,
+    Page: new (...args: any[]) => PageClass,
+    opts?: RequestOptions,
+  ): Pagination.PagePromise<PageClass, Item> {
+    return this.requestAPIList(Page, { method: 'get', path, ...opts });
+  }
+
+  requestAPIList<
+    Item = unknown,
+    PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>,
+  >(
+    Page: new (...args: ConstructorParameters<typeof Pagination.AbstractPage>) => PageClass,
+    options: FinalRequestOptions,
+  ): Pagination.PagePromise<PageClass, Item> {
+    const request = this.makeRequest(options, null, undefined);
+    return new Pagination.PagePromise<PageClass, Item>(this as any as Ark, request, Page);
+  }
+
   async fetchWithTimeout(
     url: RequestInfo,
     init: RequestInit | undefined,
@@ -787,10 +814,19 @@ Ark.Tracking = Tracking;
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
 
+  export import PageNumber = Pagination.PageNumber;
+  export { type PageNumberParams as PageNumberParams, type PageNumberResponse as PageNumberResponse };
+
+  export import SuppressionsPage = Pagination.SuppressionsPage;
+  export {
+    type SuppressionsPageParams as SuppressionsPageParams,
+    type SuppressionsPageResponse as SuppressionsPageResponse,
+  };
+
   export {
     Emails as Emails,
     type Delivery as Delivery,
-    type Pagination as Pagination,
+    type EmailsAPIPagination as Pagination,
     type SendEmail as SendEmail,
     type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailListResponse as EmailListResponse,

@@ -25,6 +25,7 @@ export {
   type EmailSendParams,
   type EmailSendBatchParams,
   type EmailSendRawParams,
+  type EmailListResponsesPageNumberPagination,
 } from './emails';
 export {
   Suppressions,
@@ -36,6 +37,7 @@ export {
   type SuppressionCreateParams,
   type SuppressionListParams,
   type SuppressionBulkCreateParams,
+  type SuppressionListResponsesPageNumberPagination,
 } from './suppressions';
 export {
   Tracking,

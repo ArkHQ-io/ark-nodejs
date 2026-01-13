@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.2 (2026-01-13)
+
+Full Changelog: [v0.5.1...v0.5.2](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.5.1...v0.5.2)
+
+### Chores
+
+* configure new SDK language ([1a24644](https://github.com/ArkHQ-io/ark-nodejs/commit/1a24644f17178f407704468c1d22f19714fcb2e0))
+* **internal:** configure MCP Server hosting ([8f70ff5](https://github.com/ArkHQ-io/ark-nodejs/commit/8f70ff5d5e4824fb2de1c1b0e8c77eee9bfcb351))
+
 ## 0.5.1 (2026-01-13)
 
 Full Changelog: [v0.5.0...v0.5.1](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.5.0...v0.5.1)

@@ -1,6 +1,6 @@
 {
   "name": "ark-email",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "The official TypeScript library for the Ark API",
   "author": "Ark <hi@arkhq.io>",
   "types": "dist/index.d.ts",

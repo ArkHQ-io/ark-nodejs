@@ -108,20 +108,22 @@ export class PagePromise<
 }
 
 export interface PageNumberPaginationResponse<Item> {
-  data: PageNumberPaginationResponse.Data;
+  data: Array<Item>;
+
+  page: number;
+
+  perPage: number;
+
+  total: number;
+
+  totalPages: number;
+
+  meta: PageNumberPaginationResponse.Meta;
 }
 
 export namespace PageNumberPaginationResponse {
-  export interface Data {
-    pagination?: Data.Pagination;
-  }
-
-  export namespace Data {
-    export interface Pagination {
-      page?: number;
-
-      totalPages?: number;
-    }
+  export interface Meta {
+    requestId?: string;
   }
 }
 
@@ -135,7 +137,17 @@ export class PageNumberPagination<Item>
   extends AbstractPage<Item>
   implements PageNumberPaginationResponse<Item>
 {
-  data: PageNumberPaginationResponse.Data;
+  data: Array<Item>;
+
+  page: number;
+
+  perPage: number;
+
+  total: number;
+
+  totalPages: number;
+
+  meta: PageNumberPaginationResponse.Meta;
 
   constructor(
     client: Ark,
@@ -145,7 +157,12 @@ export class PageNumberPagination<Item>
   ) {
     super(client, response, body, options);
 
-    this.data = body.data || {};
+    this.data = body.data || [];
+    this.page = body.page || 0;
+    this.perPage = body.perPage || 0;
+    this.total = body.total || 0;
+    this.totalPages = body.totalPages || 0;
+    this.meta = body.meta || {};
   }
 
   getPaginatedItems(): Item[] {
@@ -153,9 +170,9 @@ export class PageNumberPagination<Item>
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
-    const currentPage = this.data?.pagination?.page ?? 1;
+    const currentPage = this.page;
 
-    if (currentPage >= this.data?.pagination?.totalPages) {
+    if (currentPage >= this.totalPages) {
       return null;
     }
 

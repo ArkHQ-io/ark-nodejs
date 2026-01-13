@@ -338,76 +338,36 @@ export namespace EmailRetrieveResponse {
 }
 
 export interface EmailListResponse {
-  data: EmailListResponse.Data;
+  /**
+   * Internal message ID
+   */
+  id: string;
 
-  meta: Shared.APIMeta;
+  token: string;
 
-  success: true;
-}
+  from: string;
 
-export namespace EmailListResponse {
-  export interface Data {
-    messages: Array<Data.Message>;
+  /**
+   * Current delivery status:
+   *
+   * - `pending` - Email accepted, waiting to be processed
+   * - `sent` - Email transmitted to recipient's mail server
+   * - `softfail` - Temporary delivery failure, will retry
+   * - `hardfail` - Permanent delivery failure
+   * - `bounced` - Email bounced back
+   * - `held` - Held for manual review
+   */
+  status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
 
-    pagination: Data.Pagination;
-  }
+  subject: string;
 
-  export namespace Data {
-    export interface Message {
-      /**
-       * Internal message ID
-       */
-      id: string;
+  timestamp: number;
 
-      token: string;
+  timestampIso: string;
 
-      from: string;
+  to: string;
 
-      /**
-       * Current delivery status:
-       *
-       * - `pending` - Email accepted, waiting to be processed
-       * - `sent` - Email transmitted to recipient's mail server
-       * - `softfail` - Temporary delivery failure, will retry
-       * - `hardfail` - Permanent delivery failure
-       * - `bounced` - Email bounced back
-       * - `held` - Held for manual review
-       */
-      status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
-
-      subject: string;
-
-      timestamp: number;
-
-      timestampIso: string;
-
-      to: string;
-
-      tag?: string;
-    }
-
-    export interface Pagination {
-      /**
-       * Current page number (1-indexed)
-       */
-      page: number;
-
-      /**
-       * Items per page
-       */
-      perPage: number;
-
-      /**
-       * Total number of items
-       */
-      total: number;
-
-      /**
-       * Total number of pages
-       */
-      totalPages: number;
-    }
-  }
+  tag?: string;
 }
 
 export interface EmailRetrieveDeliveriesResponse {

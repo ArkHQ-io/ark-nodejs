@@ -154,56 +154,16 @@ export namespace SuppressionRetrieveResponse {
 }
 
 export interface SuppressionListResponse {
-  data: SuppressionListResponse.Data;
+  /**
+   * Suppression ID
+   */
+  id: string;
 
-  meta: Shared.APIMeta;
+  address: string;
 
-  success: true;
-}
+  createdAt: string;
 
-export namespace SuppressionListResponse {
-  export interface Data {
-    pagination: Data.Pagination;
-
-    suppressions: Array<Data.Suppression>;
-  }
-
-  export namespace Data {
-    export interface Pagination {
-      /**
-       * Current page number (1-indexed)
-       */
-      page: number;
-
-      /**
-       * Items per page
-       */
-      perPage: number;
-
-      /**
-       * Total number of items
-       */
-      total: number;
-
-      /**
-       * Total number of pages
-       */
-      totalPages: number;
-    }
-
-    export interface Suppression {
-      /**
-       * Suppression ID
-       */
-      id: string;
-
-      address: string;
-
-      createdAt: string;
-
-      reason?: string;
-    }
-  }
+  reason?: string;
 }
 
 export interface SuppressionDeleteResponse {

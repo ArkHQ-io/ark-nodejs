@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1 (2026-01-13)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.5.0...v0.5.1)
+
+### Chores
+
+* update SDK settings ([a5d86ab](https://github.com/ArkHQ-io/ark-nodejs/commit/a5d86abfe5d5986bab54ed2660cb6f35cd45d567))
+
 ## 0.5.0 (2026-01-13)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.4.0...v0.5.0)

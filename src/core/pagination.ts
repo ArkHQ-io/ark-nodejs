@@ -119,6 +119,39 @@ export namespace PageNumberPaginationResponse {
   }
 
   export namespace Data {
+    export interface Message {
+      /**
+       * Internal message ID
+       */
+      id: string;
+
+      token: string;
+
+      from: string;
+
+      /**
+       * Current delivery status:
+       *
+       * - `pending` - Email accepted, waiting to be processed
+       * - `sent` - Email transmitted to recipient's mail server
+       * - `softfail` - Temporary delivery failure, will retry
+       * - `hardfail` - Permanent delivery failure
+       * - `bounced` - Email bounced back
+       * - `held` - Held for manual review
+       */
+      status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
+
+      subject: string;
+
+      timestamp: number;
+
+      timestampIso: string;
+
+      to: string;
+
+      tag?: string;
+    }
+
     export interface Pagination {
       page?: number;
 
@@ -187,6 +220,19 @@ export namespace SuppressionsPaginationResponse {
       page?: number;
 
       totalPages?: number;
+    }
+
+    export interface Suppression {
+      /**
+       * Suppression ID
+       */
+      id: string;
+
+      address: string;
+
+      createdAt: string;
+
+      reason?: string;
     }
   }
 }

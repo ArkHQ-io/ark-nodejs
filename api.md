@@ -19,7 +19,7 @@ Types:
 Methods:
 
 - <code title="get /emails/{emailId}">client.emails.<a href="./src/resources/emails.ts">retrieve</a>(emailID, { ...params }) -> EmailRetrieveResponse</code>
-- <code title="get /emails">client.emails.<a href="./src/resources/emails.ts">list</a>({ ...params }) -> EmailListResponse</code>
+- <code title="get /emails">client.emails.<a href="./src/resources/emails.ts">list</a>({ ...params }) -> EmailListResponsesPageNumberPagination</code>
 - <code title="get /emails/{emailId}/deliveries">client.emails.<a href="./src/resources/emails.ts">retrieveDeliveries</a>(emailID) -> EmailRetrieveDeliveriesResponse</code>
 - <code title="post /emails/{emailId}/retry">client.emails.<a href="./src/resources/emails.ts">retry</a>(emailID) -> EmailRetryResponse</code>
 - <code title="post /emails">client.emails.<a href="./src/resources/emails.ts">send</a>({ ...params }) -> EmailSendResponse</code>
@@ -59,7 +59,7 @@ Methods:
 
 - <code title="post /suppressions">client.suppressions.<a href="./src/resources/suppressions.ts">create</a>({ ...params }) -> SuppressionCreateResponse</code>
 - <code title="get /suppressions/{email}">client.suppressions.<a href="./src/resources/suppressions.ts">retrieve</a>(email) -> SuppressionRetrieveResponse</code>
-- <code title="get /suppressions">client.suppressions.<a href="./src/resources/suppressions.ts">list</a>({ ...params }) -> SuppressionListResponse</code>
+- <code title="get /suppressions">client.suppressions.<a href="./src/resources/suppressions.ts">list</a>({ ...params }) -> SuppressionListResponsesPageNumberPagination</code>
 - <code title="delete /suppressions/{email}">client.suppressions.<a href="./src/resources/suppressions.ts">delete</a>(email) -> SuppressionDeleteResponse</code>
 - <code title="post /suppressions/bulk">client.suppressions.<a href="./src/resources/suppressions.ts">bulkCreate</a>({ ...params }) -> SuppressionBulkCreateResponse</code>
 

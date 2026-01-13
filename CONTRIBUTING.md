@@ -55,12 +55,12 @@ $ cd ark-nodejs
 # With yarn
 $ yarn link
 $ cd ../my-package
-$ yarn link ark
+$ yarn link ark-email
 
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global ark
+$ pnpm link -—global ark-email
 ```
 
 ## Running tests

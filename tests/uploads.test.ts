@@ -1,6 +1,6 @@
 import fs from 'fs';
-import type { ResponseLike } from 'ark/internal/to-file';
-import { toFile } from 'ark/core/uploads';
+import type { ResponseLike } from 'ark-email/internal/to-file';
+import { toFile } from 'ark-email/core/uploads';
 import { File } from 'node:buffer';
 
 class MyClass {
@@ -97,7 +97,7 @@ describe('missing File error message', () => {
   });
 
   test('is thrown', async () => {
-    const uploads = await import('ark/core/uploads');
+    const uploads = await import('ark-email/core/uploads');
     await expect(
       uploads.toFile(mockResponse({ url: 'https://example.com/my/audio.mp3' })),
     ).rejects.toMatchInlineSnapshot(

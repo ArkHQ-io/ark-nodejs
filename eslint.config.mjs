@@ -25,7 +25,7 @@ export default tseslint.config(
         {
           patterns: [
             {
-              regex: '^ark(/.*)?',
+              regex: '^ark-email(/.*)?',
               message: 'Use a relative import, not a package import.',
             },
           ],

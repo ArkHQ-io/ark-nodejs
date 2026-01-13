@@ -1,5 +1,5 @@
-import { multipartFormRequestOptions, createForm } from 'ark/internal/uploads';
-import { toFile } from 'ark/core/uploads';
+import { multipartFormRequestOptions, createForm } from 'ark-email/internal/uploads';
+import { toFile } from 'ark-email/core/uploads';
 
 describe('form data validation', () => {
   test('valid values do not error', async () => {

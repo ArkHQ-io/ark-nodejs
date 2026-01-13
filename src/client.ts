@@ -16,10 +16,10 @@ import * as Errors from './core/error';
 import * as Pagination from './core/pagination';
 import {
   AbstractPage,
-  type EmailsPageParams,
-  EmailsPageResponse,
-  type SuppressionsPageParams,
-  SuppressionsPageResponse,
+  type PageNumberPaginationParams,
+  PageNumberPaginationResponse,
+  type SuppressionsPaginationParams,
+  SuppressionsPaginationResponse,
 } from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
@@ -27,17 +27,18 @@ import { APIPromise } from './core/api-promise';
 import {
   DNSRecord,
   DomainCreateParams,
+  DomainCreateResponse,
+  DomainDeleteResponse,
   DomainListResponse,
-  DomainResponse,
+  DomainRetrieveResponse,
+  DomainVerifyResponse,
   Domains,
-  SuccessResponse,
 } from './resources/domains';
 import {
-  Delivery,
-  EmailGetDeliveriesResponse,
   EmailListParams,
   EmailListResponse,
-  EmailListResponsesEmailsPage,
+  EmailListResponsesPageNumberPagination,
+  EmailRetrieveDeliveriesResponse,
   EmailRetrieveParams,
   EmailRetrieveResponse,
   EmailRetryResponse,
@@ -45,38 +46,44 @@ import {
   EmailSendBatchResponse,
   EmailSendParams,
   EmailSendRawParams,
+  EmailSendRawResponse,
+  EmailSendResponse,
   Emails,
-  Pagination as EmailsAPIPagination,
-  SendEmail,
 } from './resources/emails';
 import {
   SuppressionBulkCreateParams,
   SuppressionBulkCreateResponse,
   SuppressionCreateParams,
   SuppressionCreateResponse,
+  SuppressionDeleteResponse,
   SuppressionListParams,
   SuppressionListResponse,
-  SuppressionListResponsesEmailsPage,
+  SuppressionListResponsesPageNumberPagination,
   SuppressionRetrieveResponse,
   Suppressions,
 } from './resources/suppressions';
 import {
-  APIMeta,
   TrackDomain,
-  TrackDomainResponse,
   Tracking,
   TrackingCreateParams,
+  TrackingCreateResponse,
+  TrackingDeleteResponse,
   TrackingListResponse,
+  TrackingRetrieveResponse,
   TrackingUpdateParams,
+  TrackingUpdateResponse,
   TrackingVerifyResponse,
 } from './resources/tracking';
 import {
   WebhookCreateParams,
+  WebhookCreateResponse,
+  WebhookDeleteResponse,
   WebhookListResponse,
-  WebhookResponse,
+  WebhookRetrieveResponse,
   WebhookTestParams,
   WebhookTestResponse,
   WebhookUpdateParams,
+  WebhookUpdateResponse,
   Webhooks,
 } from './resources/webhooks';
 import { type Fetch } from './internal/builtin-types';
@@ -816,26 +823,28 @@ Ark.Tracking = Tracking;
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
 
-  export import EmailsPage = Pagination.EmailsPage;
-  export { type EmailsPageParams as EmailsPageParams, type EmailsPageResponse as EmailsPageResponse };
-
-  export import SuppressionsPage = Pagination.SuppressionsPage;
+  export import PageNumberPagination = Pagination.PageNumberPagination;
   export {
-    type SuppressionsPageParams as SuppressionsPageParams,
-    type SuppressionsPageResponse as SuppressionsPageResponse,
+    type PageNumberPaginationParams as PageNumberPaginationParams,
+    type PageNumberPaginationResponse as PageNumberPaginationResponse,
+  };
+
+  export import SuppressionsPagination = Pagination.SuppressionsPagination;
+  export {
+    type SuppressionsPaginationParams as SuppressionsPaginationParams,
+    type SuppressionsPaginationResponse as SuppressionsPaginationResponse,
   };
 
   export {
     Emails as Emails,
-    type Delivery as Delivery,
-    type EmailsAPIPagination as Pagination,
-    type SendEmail as SendEmail,
     type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailListResponse as EmailListResponse,
-    type EmailGetDeliveriesResponse as EmailGetDeliveriesResponse,
+    type EmailRetrieveDeliveriesResponse as EmailRetrieveDeliveriesResponse,
     type EmailRetryResponse as EmailRetryResponse,
+    type EmailSendResponse as EmailSendResponse,
     type EmailSendBatchResponse as EmailSendBatchResponse,
-    type EmailListResponsesEmailsPage as EmailListResponsesEmailsPage,
+    type EmailSendRawResponse as EmailSendRawResponse,
+    type EmailListResponsesPageNumberPagination as EmailListResponsesPageNumberPagination,
     type EmailRetrieveParams as EmailRetrieveParams,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
@@ -846,9 +855,11 @@ export declare namespace Ark {
   export {
     Domains as Domains,
     type DNSRecord as DNSRecord,
-    type DomainResponse as DomainResponse,
-    type SuccessResponse as SuccessResponse,
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
     type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainVerifyResponse as DomainVerifyResponse,
     type DomainCreateParams as DomainCreateParams,
   };
 
@@ -857,8 +868,9 @@ export declare namespace Ark {
     type SuppressionCreateResponse as SuppressionCreateResponse,
     type SuppressionRetrieveResponse as SuppressionRetrieveResponse,
     type SuppressionListResponse as SuppressionListResponse,
+    type SuppressionDeleteResponse as SuppressionDeleteResponse,
     type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
-    type SuppressionListResponsesEmailsPage as SuppressionListResponsesEmailsPage,
+    type SuppressionListResponsesPageNumberPagination as SuppressionListResponsesPageNumberPagination,
     type SuppressionCreateParams as SuppressionCreateParams,
     type SuppressionListParams as SuppressionListParams,
     type SuppressionBulkCreateParams as SuppressionBulkCreateParams,
@@ -866,8 +878,11 @@ export declare namespace Ark {
 
   export {
     Webhooks as Webhooks,
-    type WebhookResponse as WebhookResponse,
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookRetrieveResponse as WebhookRetrieveResponse,
+    type WebhookUpdateResponse as WebhookUpdateResponse,
     type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
     type WebhookTestResponse as WebhookTestResponse,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
@@ -876,12 +891,16 @@ export declare namespace Ark {
 
   export {
     Tracking as Tracking,
-    type APIMeta as APIMeta,
     type TrackDomain as TrackDomain,
-    type TrackDomainResponse as TrackDomainResponse,
+    type TrackingCreateResponse as TrackingCreateResponse,
+    type TrackingRetrieveResponse as TrackingRetrieveResponse,
+    type TrackingUpdateResponse as TrackingUpdateResponse,
     type TrackingListResponse as TrackingListResponse,
+    type TrackingDeleteResponse as TrackingDeleteResponse,
     type TrackingVerifyResponse as TrackingVerifyResponse,
     type TrackingCreateParams as TrackingCreateParams,
     type TrackingUpdateParams as TrackingUpdateParams,
   };
+
+  export type APIMeta = API.APIMeta;
 }

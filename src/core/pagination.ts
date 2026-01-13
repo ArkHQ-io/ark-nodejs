@@ -107,57 +107,47 @@ export class PagePromise<
   }
 }
 
-export interface EmailsPageResponse<Item> {
-  success: boolean;
-
-  data: EmailsPageResponse.Data<Item>;
-
-  meta: EmailsPageResponse.Meta;
+export interface PageNumberPaginationResponse<Item> {
+  data: PageNumberPaginationResponse.Data<Item>;
 }
 
-export namespace EmailsPageResponse {
+export namespace PageNumberPaginationResponse {
   export interface Data<Item> {
-    messages: Array<Item>;
+    messages?: Array<Item>;
 
-    pagination: Data.Pagination;
+    pagination?: Data.Pagination;
   }
 
   export namespace Data {
     export interface Pagination {
-      page: number;
+      page?: number;
 
-      perPage: number;
-
-      total: number;
-
-      totalPages: number;
+      totalPages?: number;
     }
-  }
-
-  export interface Meta {
-    requestId?: string;
   }
 }
 
-export interface EmailsPageParams {
+export interface PageNumberPaginationParams {
   page?: number;
 
   perPage?: number;
 }
 
-export class EmailsPage<Item> extends AbstractPage<Item> implements EmailsPageResponse<Item> {
-  success: boolean;
+export class PageNumberPagination<Item>
+  extends AbstractPage<Item>
+  implements PageNumberPaginationResponse<Item>
+{
+  data: PageNumberPaginationResponse.Data<Item>;
 
-  data: EmailsPageResponse.Data<Item>;
-
-  meta: EmailsPageResponse.Meta;
-
-  constructor(client: Ark, response: Response, body: EmailsPageResponse<Item>, options: FinalRequestOptions) {
+  constructor(
+    client: Ark,
+    response: Response,
+    body: PageNumberPaginationResponse<Item>,
+    options: FinalRequestOptions,
+  ) {
     super(client, response, body, options);
 
-    this.success = body.success || false;
     this.data = body.data || {};
-    this.meta = body.meta || {};
   }
 
   getPaginatedItems(): Item[] {
@@ -165,9 +155,9 @@ export class EmailsPage<Item> extends AbstractPage<Item> implements EmailsPageRe
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
-    const currentPage = this.data?.pagination.page ?? 1;
+    const currentPage = this.data?.pagination?.page ?? 1;
 
-    if (currentPage >= this.data?.pagination.totalPages) {
+    if (currentPage >= this.data?.pagination?.totalPages) {
       return null;
     }
 
@@ -181,62 +171,47 @@ export class EmailsPage<Item> extends AbstractPage<Item> implements EmailsPageRe
   }
 }
 
-export interface SuppressionsPageResponse<Item> {
-  success: boolean;
-
-  data: SuppressionsPageResponse.Data<Item>;
-
-  meta: SuppressionsPageResponse.Meta;
+export interface SuppressionsPaginationResponse<Item> {
+  data: SuppressionsPaginationResponse.Data<Item>;
 }
 
-export namespace SuppressionsPageResponse {
+export namespace SuppressionsPaginationResponse {
   export interface Data<Item> {
-    pagination: Data.Pagination;
+    pagination?: Data.Pagination;
 
-    suppressions: Array<Item>;
+    suppressions?: Array<Item>;
   }
 
   export namespace Data {
     export interface Pagination {
-      page: number;
+      page?: number;
 
-      perPage: number;
-
-      total: number;
-
-      totalPages: number;
+      totalPages?: number;
     }
-  }
-
-  export interface Meta {
-    requestId?: string;
   }
 }
 
-export interface SuppressionsPageParams {
+export interface SuppressionsPaginationParams {
   page?: number;
 
   perPage?: number;
 }
 
-export class SuppressionsPage<Item> extends AbstractPage<Item> implements SuppressionsPageResponse<Item> {
-  success: boolean;
-
-  data: SuppressionsPageResponse.Data<Item>;
-
-  meta: SuppressionsPageResponse.Meta;
+export class SuppressionsPagination<Item>
+  extends AbstractPage<Item>
+  implements SuppressionsPaginationResponse<Item>
+{
+  data: SuppressionsPaginationResponse.Data<Item>;
 
   constructor(
     client: Ark,
     response: Response,
-    body: SuppressionsPageResponse<Item>,
+    body: SuppressionsPaginationResponse<Item>,
     options: FinalRequestOptions,
   ) {
     super(client, response, body, options);
 
-    this.success = body.success || false;
     this.data = body.data || {};
-    this.meta = body.meta || {};
   }
 
   getPaginatedItems(): Item[] {
@@ -244,9 +219,9 @@ export class SuppressionsPage<Item> extends AbstractPage<Item> implements Suppre
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
-    const currentPage = this.data?.pagination.page ?? 1;
+    const currentPage = this.data?.pagination?.page ?? 1;
 
-    if (currentPage >= this.data?.pagination.totalPages) {
+    if (currentPage >= this.data?.pagination?.totalPages) {
       return null;
     }
 

@@ -219,9 +219,9 @@ export interface SuppressionCreateParams {
   address: string;
 
   /**
-   * Reason for suppression
+   * Reason for suppression (accepts null)
    */
-  reason?: string;
+  reason?: string | null;
 }
 
 export interface SuppressionListParams extends PageNumberPaginationParams {}
@@ -234,7 +234,10 @@ export namespace SuppressionBulkCreateParams {
   export interface Suppression {
     address: string;
 
-    reason?: string;
+    /**
+     * Reason for suppression (accepts null)
+     */
+    reason?: string | null;
   }
 }
 

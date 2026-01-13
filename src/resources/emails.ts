@@ -635,19 +635,19 @@ export interface EmailSendParams {
   to: Array<string>;
 
   /**
-   * Body param: File attachments
+   * Body param: File attachments (accepts null)
    */
-  attachments?: Array<EmailSendParams.Attachment>;
+  attachments?: Array<EmailSendParams.Attachment> | null;
 
   /**
-   * Body param: BCC recipients
+   * Body param: BCC recipients (accepts null)
    */
-  bcc?: Array<string>;
+  bcc?: Array<string> | null;
 
   /**
-   * Body param: CC recipients
+   * Body param: CC recipients (accepts null)
    */
-  cc?: Array<string>;
+  cc?: Array<string> | null;
 
   /**
    * Body param: Custom email headers
@@ -661,9 +661,9 @@ export interface EmailSendParams {
   html?: string;
 
   /**
-   * Body param: Reply-to address
+   * Body param: Reply-to address (accepts null)
    */
-  replyTo?: string;
+  replyTo?: string | null;
 
   /**
    * Body param: Tag for categorization and filtering
@@ -726,11 +726,11 @@ export namespace EmailSendBatchParams {
 
     to: Array<string>;
 
-    html?: string;
+    html?: string | null;
 
-    tag?: string;
+    tag?: string | null;
 
-    text?: string;
+    text?: string | null;
   }
 }
 
@@ -749,6 +749,11 @@ export interface EmailSendRawParams {
    * Envelope recipient addresses
    */
   rcptTo: Array<string>;
+
+  /**
+   * Whether this is a bounce message (accepts null)
+   */
+  bounce?: boolean | null;
 }
 
 export declare namespace Emails {

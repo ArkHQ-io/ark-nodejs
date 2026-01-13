@@ -170,7 +170,7 @@ Alternatively, you can request a single page at a time:
 
 ```ts
 let page = await client.emails.list({ page: 1, perPage: 10 });
-for (const emailListResponse of page.data?.messages) {
+for (const emailListResponse of page.data) {
   console.log(emailListResponse);
 }
 

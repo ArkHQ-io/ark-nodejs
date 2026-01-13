@@ -122,20 +122,34 @@ export namespace SuppressionCreateResponse {
 }
 
 export interface SuppressionRetrieveResponse {
-  data?: SuppressionRetrieveResponse.Data;
+  data: SuppressionRetrieveResponse.Data;
 
-  success?: boolean;
+  meta: Shared.APIMeta;
+
+  success: true;
 }
 
 export namespace SuppressionRetrieveResponse {
   export interface Data {
-    address?: string;
+    /**
+     * The email address that was checked
+     */
+    address: string;
 
+    /**
+     * Whether the address is currently suppressed
+     */
+    suppressed: boolean;
+
+    /**
+     * When the suppression was created (if suppressed)
+     */
     createdAt?: string | null;
 
+    /**
+     * Reason for suppression (if suppressed)
+     */
     reason?: string | null;
-
-    suppressed?: boolean;
   }
 }
 

@@ -338,36 +338,76 @@ export namespace EmailRetrieveResponse {
 }
 
 export interface EmailListResponse {
-  /**
-   * Internal message ID
-   */
-  id: string;
+  data: EmailListResponse.Data;
 
-  token: string;
+  meta: Shared.APIMeta;
 
-  from: string;
+  success: true;
+}
 
-  /**
-   * Current delivery status:
-   *
-   * - `pending` - Email accepted, waiting to be processed
-   * - `sent` - Email transmitted to recipient's mail server
-   * - `softfail` - Temporary delivery failure, will retry
-   * - `hardfail` - Permanent delivery failure
-   * - `bounced` - Email bounced back
-   * - `held` - Held for manual review
-   */
-  status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
+export namespace EmailListResponse {
+  export interface Data {
+    messages: Array<Data.Message>;
 
-  subject: string;
+    pagination: Data.Pagination;
+  }
 
-  timestamp: number;
+  export namespace Data {
+    export interface Message {
+      /**
+       * Internal message ID
+       */
+      id: string;
 
-  timestampIso: string;
+      token: string;
 
-  to: string;
+      from: string;
 
-  tag?: string;
+      /**
+       * Current delivery status:
+       *
+       * - `pending` - Email accepted, waiting to be processed
+       * - `sent` - Email transmitted to recipient's mail server
+       * - `softfail` - Temporary delivery failure, will retry
+       * - `hardfail` - Permanent delivery failure
+       * - `bounced` - Email bounced back
+       * - `held` - Held for manual review
+       */
+      status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
+
+      subject: string;
+
+      timestamp: number;
+
+      timestampIso: string;
+
+      to: string;
+
+      tag?: string;
+    }
+
+    export interface Pagination {
+      /**
+       * Current page number (1-indexed)
+       */
+      page: number;
+
+      /**
+       * Items per page
+       */
+      perPage: number;
+
+      /**
+       * Total number of items
+       */
+      total: number;
+
+      /**
+       * Total number of pages
+       */
+      totalPages: number;
+    }
+  }
 }
 
 export interface EmailRetrieveDeliveriesResponse {
@@ -439,14 +479,16 @@ export namespace EmailRetrieveDeliveriesResponse {
 }
 
 export interface EmailRetryResponse {
-  data?: EmailRetryResponse.Data;
+  data: EmailRetryResponse.Data;
 
-  success?: boolean;
+  meta: Shared.APIMeta;
+
+  success: true;
 }
 
 export namespace EmailRetryResponse {
   export interface Data {
-    message?: string;
+    message: string;
   }
 }
 

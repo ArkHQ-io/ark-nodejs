@@ -1,10 +1,10 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIPromise } from 'ark/core/api-promise';
+import { APIPromise } from 'ark-email/core/api-promise';
 
 import util from 'node:util';
-import Ark from 'ark';
-import { APIUserAbortError } from 'ark';
+import Ark from 'ark-email';
+import { APIUserAbortError } from 'ark-email';
 const defaultFetch = fetch;
 
 describe('instantiate client', () => {

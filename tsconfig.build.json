@@ -5,8 +5,8 @@
   "compilerOptions": {
     "rootDir": "./dist/src",
     "paths": {
-      "ark/*": ["./dist/src/*"],
-      "ark": ["./dist/src/index.ts"]
+      "ark-email/*": ["./dist/src/*"],
+      "ark-email": ["./dist/src/index.ts"]
     },
     "noEmit": false,
     "declaration": true,

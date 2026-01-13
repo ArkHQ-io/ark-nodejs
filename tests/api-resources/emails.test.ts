@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import Ark from 'ark';
+import Ark from 'ark-email';
 
 const client = new Ark({
   apiKey: 'My API Key',

@@ -8,8 +8,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "paths": {
-      "ark/*": ["./src/*"],
-      "ark": ["./src/index.ts"]
+      "ark-email/*": ["./src/*"],
+      "ark-email": ["./src/index.ts"]
     },
     "noEmit": true,
 

@@ -124,13 +124,13 @@ export namespace EmailsPageResponse {
 
   export namespace Data {
     export interface Pagination {
-      page?: number;
+      page: number;
 
-      perPage?: number;
+      perPage: number;
 
-      total?: number;
+      total: number;
 
-      totalPages?: number;
+      totalPages: number;
     }
   }
 
@@ -198,13 +198,13 @@ export namespace SuppressionsPageResponse {
 
   export namespace Data {
     export interface Pagination {
-      page?: number;
+      page: number;
 
-      perPage?: number;
+      perPage: number;
 
-      total?: number;
+      total: number;
 
-      totalPages?: number;
+      totalPages: number;
     }
   }
 

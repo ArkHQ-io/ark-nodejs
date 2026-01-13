@@ -107,32 +107,51 @@ export class PagePromise<
   }
 }
 
-export interface PageNumberResponse<Item> {
-  messages: Array<Item>;
+export interface EmailsPageResponse<Item> {
+  data: EmailsPageResponse.Data<Item>;
 }
 
-export interface PageNumberParams {
+export namespace EmailsPageResponse {
+  export interface Data<Item> {
+    messages?: Array<Item>;
+
+    pagination?: Data.Pagination;
+  }
+
+  export namespace Data {
+    export interface Pagination {
+      page?: number;
+
+      totalPages?: number;
+    }
+  }
+}
+
+export interface EmailsPageParams {
   page?: number;
 
   perPage?: number;
 }
 
-export class PageNumber<Item> extends AbstractPage<Item> implements PageNumberResponse<Item> {
-  messages: Array<Item>;
+export class EmailsPage<Item> extends AbstractPage<Item> implements EmailsPageResponse<Item> {
+  data: EmailsPageResponse.Data<Item>;
 
-  constructor(client: Ark, response: Response, body: PageNumberResponse<Item>, options: FinalRequestOptions) {
+  constructor(client: Ark, response: Response, body: EmailsPageResponse<Item>, options: FinalRequestOptions) {
     super(client, response, body, options);
 
-    this.messages = body.messages || [];
+    this.data = body.data || {};
   }
 
   getPaginatedItems(): Item[] {
-    return this.messages ?? [];
+    return this.data?.messages ?? [];
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
-    const query = this.options.query as PageNumberParams;
-    const currentPage = query?.page ?? 1;
+    const currentPage = this.data?.pagination?.page ?? 1;
+
+    if (currentPage >= this.data?.pagination?.totalPages) {
+      return null;
+    }
 
     return {
       ...this.options,
@@ -145,7 +164,23 @@ export class PageNumber<Item> extends AbstractPage<Item> implements PageNumberRe
 }
 
 export interface SuppressionsPageResponse<Item> {
-  suppressions: Array<Item>;
+  data: SuppressionsPageResponse.Data<Item>;
+}
+
+export namespace SuppressionsPageResponse {
+  export interface Data<Item> {
+    pagination?: Data.Pagination;
+
+    suppressions?: Array<Item>;
+  }
+
+  export namespace Data {
+    export interface Pagination {
+      page?: number;
+
+      totalPages?: number;
+    }
+  }
 }
 
 export interface SuppressionsPageParams {
@@ -155,7 +190,7 @@ export interface SuppressionsPageParams {
 }
 
 export class SuppressionsPage<Item> extends AbstractPage<Item> implements SuppressionsPageResponse<Item> {
-  suppressions: Array<Item>;
+  data: SuppressionsPageResponse.Data<Item>;
 
   constructor(
     client: Ark,
@@ -165,16 +200,19 @@ export class SuppressionsPage<Item> extends AbstractPage<Item> implements Suppre
   ) {
     super(client, response, body, options);
 
-    this.suppressions = body.suppressions || [];
+    this.data = body.data || {};
   }
 
   getPaginatedItems(): Item[] {
-    return this.suppressions ?? [];
+    return this.data?.suppressions ?? [];
   }
 
   nextPageRequestOptions(): PageRequestOptions | null {
-    const query = this.options.query as SuppressionsPageParams;
-    const currentPage = query?.page ?? 1;
+    const currentPage = this.data?.pagination?.page ?? 1;
+
+    if (currentPage >= this.data?.pagination?.totalPages) {
+      return null;
+    }
 
     return {
       ...this.options,

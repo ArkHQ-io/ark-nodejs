@@ -4,6 +4,7 @@ import { APIResource } from '../core/resource';
 import * as EmailsAPI from './emails';
 import * as TrackingAPI from './tracking';
 import { APIPromise } from '../core/api-promise';
+import { EmailsPage, type EmailsPageParams, PagePromise } from '../core/pagination';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
@@ -42,14 +43,17 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const emails = await client.emails.list();
+   * // Automatically fetches more pages as needed.
+   * for await (const emailListResponse of client.emails.list()) {
+   *   // ...
+   * }
    * ```
    */
   list(
     query: EmailListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<EmailListResponse> {
-    return this._client.get('/emails', { query, ...options });
+  ): PagePromise<EmailListResponsesEmailsPage, EmailListResponse> {
+    return this._client.getAPIList('/emails', EmailsPage<EmailListResponse>, { query, ...options });
   }
 
   /**
@@ -181,6 +185,8 @@ export class Emails extends APIResource {
     return this._client.post('/emails/raw', { body, ...options });
   }
 }
+
+export type EmailListResponsesEmailsPage = EmailsPage<EmailListResponse>;
 
 export interface Delivery {
   /**
@@ -385,54 +391,36 @@ export namespace EmailRetrieveResponse {
 }
 
 export interface EmailListResponse {
-  data: EmailListResponse.Data;
+  /**
+   * Internal message ID
+   */
+  id: string;
 
-  meta: TrackingAPI.APIMeta;
+  token: string;
 
-  success: true;
-}
+  from: string;
 
-export namespace EmailListResponse {
-  export interface Data {
-    messages: Array<Data.Message>;
+  /**
+   * Current delivery status:
+   *
+   * - `pending` - Email accepted, waiting to be processed
+   * - `sent` - Email transmitted to recipient's mail server
+   * - `softfail` - Temporary delivery failure, will retry
+   * - `hardfail` - Permanent delivery failure
+   * - `bounced` - Email bounced back
+   * - `held` - Held for manual review
+   */
+  status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
 
-    pagination: EmailsAPI.Pagination;
-  }
+  subject: string;
 
-  export namespace Data {
-    export interface Message {
-      /**
-       * Internal message ID
-       */
-      id: string;
+  timestamp: number;
 
-      token: string;
+  timestampIso: string;
 
-      from: string;
+  to: string;
 
-      /**
-       * Current delivery status:
-       *
-       * - `pending` - Email accepted, waiting to be processed
-       * - `sent` - Email transmitted to recipient's mail server
-       * - `softfail` - Temporary delivery failure, will retry
-       * - `hardfail` - Permanent delivery failure
-       * - `bounced` - Email bounced back
-       * - `held` - Held for manual review
-       */
-      status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
-
-      subject: string;
-
-      timestamp: number;
-
-      timestampIso: string;
-
-      to: string;
-
-      tag?: string;
-    }
-  }
+  tag?: string;
 }
 
 export interface EmailGetDeliveriesResponse {
@@ -526,7 +514,7 @@ export interface EmailRetrieveParams {
   expand?: string;
 }
 
-export interface EmailListParams {
+export interface EmailListParams extends EmailsPageParams {
   /**
    * Return emails sent after this timestamp (Unix seconds or ISO 8601)
    */
@@ -541,16 +529,6 @@ export interface EmailListParams {
    * Filter by sender email address
    */
   from?: string;
-
-  /**
-   * Page number (starts at 1)
-   */
-  page?: number;
-
-  /**
-   * Results per page (max 100)
-   */
-  perPage?: number;
 
   /**
    * Filter by delivery status:
@@ -726,6 +704,7 @@ export declare namespace Emails {
     type EmailGetDeliveriesResponse as EmailGetDeliveriesResponse,
     type EmailRetryResponse as EmailRetryResponse,
     type EmailSendBatchResponse as EmailSendBatchResponse,
+    type EmailListResponsesEmailsPage as EmailListResponsesEmailsPage,
     type EmailRetrieveParams as EmailRetrieveParams,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,

@@ -10,7 +10,6 @@ const client = new Ark({
 describe('resource webhooks', () => {
   test('create: only required params', async () => {
     const responsePromise = client.webhooks.create({
-      events: ['MessageSent', 'MessageDeliveryFailed', 'MessageBounced'],
       name: 'My App Webhook',
       url: 'https://myapp.com/webhooks/email',
     });
@@ -25,11 +24,11 @@ describe('resource webhooks', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.webhooks.create({
-      events: ['MessageSent', 'MessageDeliveryFailed', 'MessageBounced'],
       name: 'My App Webhook',
       url: 'https://myapp.com/webhooks/email',
       allEvents: true,
       enabled: true,
+      events: ['MessageSent', 'MessageDeliveryFailed', 'MessageBounced'],
     });
   });
 

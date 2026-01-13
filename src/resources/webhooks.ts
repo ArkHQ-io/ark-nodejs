@@ -24,13 +24,13 @@ export class Webhooks extends APIResource {
    * @example
    * ```ts
    * const webhook = await client.webhooks.create({
+   *   name: 'My App Webhook',
+   *   url: 'https://myapp.com/webhooks/email',
    *   events: [
    *     'MessageSent',
    *     'MessageDeliveryFailed',
    *     'MessageBounced',
    *   ],
-   *   name: 'My App Webhook',
-   *   url: 'https://myapp.com/webhooks/email',
    * });
    * ```
    */
@@ -374,29 +374,6 @@ export namespace WebhookTestResponse {
 
 export interface WebhookCreateParams {
   /**
-   * Events to subscribe to:
-   *
-   * - `MessageSent` - Email successfully delivered to recipient's server
-   * - `MessageDelayed` - Temporary delivery failure, will retry
-   * - `MessageDeliveryFailed` - Permanent delivery failure
-   * - `MessageHeld` - Email held for manual review
-   * - `MessageBounced` - Email bounced back
-   * - `MessageLinkClicked` - Recipient clicked a tracked link
-   * - `MessageLoaded` - Recipient opened the email (tracking pixel loaded)
-   * - `DomainDNSError` - DNS configuration issue detected
-   */
-  events: Array<
-    | 'MessageSent'
-    | 'MessageDelayed'
-    | 'MessageDeliveryFailed'
-    | 'MessageHeld'
-    | 'MessageBounced'
-    | 'MessageLinkClicked'
-    | 'MessageLoaded'
-    | 'DomainDNSError'
-  >;
-
-  /**
    * Webhook name for identification
    */
   name: string;
@@ -407,23 +384,49 @@ export interface WebhookCreateParams {
   url: string;
 
   /**
-   * Subscribe to all events (ignores events array)
+   * Subscribe to all events (ignores events array, accepts null)
    */
-  allEvents?: boolean;
+  allEvents?: boolean | null;
 
-  enabled?: boolean;
+  /**
+   * Whether the webhook is enabled (accepts null)
+   */
+  enabled?: boolean | null;
+
+  /**
+   * Events to subscribe to (accepts null):
+   *
+   * - `MessageSent` - Email successfully delivered to recipient's server
+   * - `MessageDelayed` - Temporary delivery failure, will retry
+   * - `MessageDeliveryFailed` - Permanent delivery failure
+   * - `MessageHeld` - Email held for manual review
+   * - `MessageBounced` - Email bounced back
+   * - `MessageLinkClicked` - Recipient clicked a tracked link
+   * - `MessageLoaded` - Recipient opened the email (tracking pixel loaded)
+   * - `DomainDNSError` - DNS configuration issue detected
+   */
+  events?: Array<
+    | 'MessageSent'
+    | 'MessageDelayed'
+    | 'MessageDeliveryFailed'
+    | 'MessageHeld'
+    | 'MessageBounced'
+    | 'MessageLinkClicked'
+    | 'MessageLoaded'
+    | 'DomainDNSError'
+  > | null;
 }
 
 export interface WebhookUpdateParams {
-  allEvents?: boolean;
+  allEvents?: boolean | null;
 
-  enabled?: boolean;
+  enabled?: boolean | null;
 
-  events?: Array<string>;
+  events?: Array<string> | null;
 
-  name?: string;
+  name?: string | null;
 
-  url?: string;
+  url?: string | null;
 }
 
 export interface WebhookTestParams {

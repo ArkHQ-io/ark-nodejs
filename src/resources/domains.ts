@@ -2,7 +2,7 @@
 
 import { APIResource } from '../core/resource';
 import * as DomainsAPI from './domains';
-import * as TrackingAPI from './tracking';
+import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
@@ -22,12 +22,12 @@ export class Domains extends APIResource {
    *
    * @example
    * ```ts
-   * const domainResponse = await client.domains.create({
+   * const domain = await client.domains.create({
    *   name: 'notifications.myapp.com',
    * });
    * ```
    */
-  create(body: DomainCreateParams, options?: RequestOptions): APIPromise<DomainResponse> {
+  create(body: DomainCreateParams, options?: RequestOptions): APIPromise<DomainCreateResponse> {
     return this._client.post('/domains', { body, ...options });
   }
 
@@ -36,12 +36,10 @@ export class Domains extends APIResource {
    *
    * @example
    * ```ts
-   * const domainResponse = await client.domains.retrieve(
-   *   'domainId',
-   * );
+   * const domain = await client.domains.retrieve('domainId');
    * ```
    */
-  retrieve(domainID: string, options?: RequestOptions): APIPromise<DomainResponse> {
+  retrieve(domainID: string, options?: RequestOptions): APIPromise<DomainRetrieveResponse> {
     return this._client.get(path`/domains/${domainID}`, options);
   }
 
@@ -65,12 +63,10 @@ export class Domains extends APIResource {
    *
    * @example
    * ```ts
-   * const successResponse = await client.domains.delete(
-   *   'domainId',
-   * );
+   * const domain = await client.domains.delete('domainId');
    * ```
    */
-  delete(domainID: string, options?: RequestOptions): APIPromise<SuccessResponse> {
+  delete(domainID: string, options?: RequestOptions): APIPromise<DomainDeleteResponse> {
     return this._client.delete(path`/domains/${domainID}`, options);
   }
 
@@ -82,12 +78,10 @@ export class Domains extends APIResource {
    *
    * @example
    * ```ts
-   * const domainResponse = await client.domains.verify(
-   *   'domainId',
-   * );
+   * const response = await client.domains.verify('domainId');
    * ```
    */
-  verify(domainID: string, options?: RequestOptions): APIPromise<DomainResponse> {
+  verify(domainID: string, options?: RequestOptions): APIPromise<DomainVerifyResponse> {
     return this._client.post(path`/domains/${domainID}/verify`, options);
   }
 }
@@ -119,15 +113,15 @@ export interface DNSRecord {
   status?: 'OK' | 'Missing' | 'Invalid' | null;
 }
 
-export interface DomainResponse {
-  data: DomainResponse.Data;
+export interface DomainCreateResponse {
+  data: DomainCreateResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
 
-export namespace DomainResponse {
+export namespace DomainCreateResponse {
   export interface Data {
     /**
      * Domain ID
@@ -167,24 +161,58 @@ export namespace DomainResponse {
   }
 }
 
-export interface SuccessResponse {
-  data: SuccessResponse.Data;
+export interface DomainRetrieveResponse {
+  data: DomainRetrieveResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
 
-export namespace SuccessResponse {
+export namespace DomainRetrieveResponse {
   export interface Data {
-    message: string;
+    /**
+     * Domain ID
+     */
+    id: string;
+
+    createdAt: string;
+
+    dnsRecords: Data.DNSRecords;
+
+    /**
+     * Domain name
+     */
+    name: string;
+
+    uuid: string;
+
+    /**
+     * Whether DNS is verified
+     */
+    verified: boolean;
+
+    /**
+     * When the domain was verified (null if not verified)
+     */
+    verifiedAt?: string | null;
+  }
+
+  export namespace Data {
+    export interface DNSRecords {
+      dkim: DomainsAPI.DNSRecord;
+
+      returnPath: DomainsAPI.DNSRecord;
+
+      spf: DomainsAPI.DNSRecord;
+    }
   }
 }
 
 export interface DomainListResponse {
   data: DomainListResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -210,6 +238,68 @@ export namespace DomainListResponse {
   }
 }
 
+export interface DomainDeleteResponse {
+  data: DomainDeleteResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace DomainDeleteResponse {
+  export interface Data {
+    message: string;
+  }
+}
+
+export interface DomainVerifyResponse {
+  data: DomainVerifyResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace DomainVerifyResponse {
+  export interface Data {
+    /**
+     * Domain ID
+     */
+    id: string;
+
+    createdAt: string;
+
+    dnsRecords: Data.DNSRecords;
+
+    /**
+     * Domain name
+     */
+    name: string;
+
+    uuid: string;
+
+    /**
+     * Whether DNS is verified
+     */
+    verified: boolean;
+
+    /**
+     * When the domain was verified (null if not verified)
+     */
+    verifiedAt?: string | null;
+  }
+
+  export namespace Data {
+    export interface DNSRecords {
+      dkim: DomainsAPI.DNSRecord;
+
+      returnPath: DomainsAPI.DNSRecord;
+
+      spf: DomainsAPI.DNSRecord;
+    }
+  }
+}
+
 export interface DomainCreateParams {
   /**
    * Domain name (e.g., "mail.example.com")
@@ -220,9 +310,11 @@ export interface DomainCreateParams {
 export declare namespace Domains {
   export {
     type DNSRecord as DNSRecord,
-    type DomainResponse as DomainResponse,
-    type SuccessResponse as SuccessResponse,
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
     type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainVerifyResponse as DomainVerifyResponse,
     type DomainCreateParams as DomainCreateParams,
   };
 }

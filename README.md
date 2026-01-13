@@ -26,14 +26,14 @@ const client = new Ark({
   apiKey: process.env['ARK_API_KEY'], // This is the default and can be omitted
 });
 
-const sendEmail = await client.emails.send({
+const response = await client.emails.send({
   from: 'hello@yourdomain.com',
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
 });
 
-console.log(sendEmail.data);
+console.log(response.data);
 ```
 
 ### Request & Response types
@@ -54,7 +54,7 @@ const params: Ark.EmailSendParams = {
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
 };
-const sendEmail: Ark.SendEmail = await client.emails.send(params);
+const response: Ark.EmailSendResponse = await client.emails.send(params);
 ```
 
 Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
@@ -67,7 +67,7 @@ a subclass of `APIError` will be thrown:
 
 <!-- prettier-ignore -->
 ```ts
-const sendEmail = await client.emails
+const response = await client.emails
   .send({
     from: 'hello@yourdomain.com',
     subject: 'Hello World',
@@ -206,7 +206,7 @@ const response = await client.emails
 console.log(response.headers.get('X-My-Header'));
 console.log(response.statusText); // access the underlying Response object
 
-const { data: sendEmail, response: raw } = await client.emails
+const { data: response, response: raw } = await client.emails
   .send({
     from: 'hello@yourdomain.com',
     subject: 'Hello World',
@@ -215,7 +215,7 @@ const { data: sendEmail, response: raw } = await client.emails
   })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));
-console.log(sendEmail.data);
+console.log(response.data);
 ```
 
 ### Logging

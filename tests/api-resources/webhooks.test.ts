@@ -8,8 +8,7 @@ const client = new Ark({
 });
 
 describe('resource webhooks', () => {
-  // Prism tests are disabled
-  test.skip('create: only required params', async () => {
+  test('create: only required params', async () => {
     const responsePromise = client.webhooks.create({
       events: ['MessageSent', 'MessageDeliveryFailed', 'MessageBounced'],
       name: 'My App Webhook',
@@ -24,8 +23,7 @@ describe('resource webhooks', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
-  test.skip('create: required and optional params', async () => {
+  test('create: required and optional params', async () => {
     const response = await client.webhooks.create({
       events: ['MessageSent', 'MessageDeliveryFailed', 'MessageBounced'],
       name: 'My App Webhook',
@@ -35,8 +33,7 @@ describe('resource webhooks', () => {
     });
   });
 
-  // Prism tests are disabled
-  test.skip('retrieve', async () => {
+  test('retrieve', async () => {
     const responsePromise = client.webhooks.retrieve('webhookId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -47,8 +44,7 @@ describe('resource webhooks', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
-  test.skip('update', async () => {
+  test('update', async () => {
     const responsePromise = client.webhooks.update('webhookId', {});
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -59,8 +55,7 @@ describe('resource webhooks', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
-  test.skip('list', async () => {
+  test('list', async () => {
     const responsePromise = client.webhooks.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -71,8 +66,7 @@ describe('resource webhooks', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
-  test.skip('delete', async () => {
+  test('delete', async () => {
     const responsePromise = client.webhooks.delete('webhookId');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -83,8 +77,7 @@ describe('resource webhooks', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
-  test.skip('test: only required params', async () => {
+  test('test: only required params', async () => {
     const responsePromise = client.webhooks.test('webhookId', { event: 'MessageSent' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -95,8 +88,7 @@ describe('resource webhooks', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  // Prism tests are disabled
-  test.skip('test: required and optional params', async () => {
+  test('test: required and optional params', async () => {
     const response = await client.webhooks.test('webhookId', { event: 'MessageSent' });
   });
 });

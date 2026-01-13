@@ -9,7 +9,7 @@ const client = new Ark({
 
 describe('resource tracking', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.tracking.create({ domainId: '123', name: 'track' });
+    const responsePromise = client.tracking.create({ domainId: 123, name: 'track' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,7 +21,7 @@ describe('resource tracking', () => {
 
   test('create: required and optional params', async () => {
     const response = await client.tracking.create({
-      domainId: '123',
+      domainId: 123,
       name: 'track',
       sslEnabled: true,
       trackClicks: true,

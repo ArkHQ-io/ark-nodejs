@@ -2,7 +2,7 @@
 
 import { APIResource } from '../core/resource';
 import * as TrackingAPI from './tracking';
-import * as DomainsAPI from './domains';
+import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
@@ -16,13 +16,13 @@ export class Tracking extends APIResource {
    *
    * @example
    * ```ts
-   * const trackDomainResponse = await client.tracking.create({
+   * const tracking = await client.tracking.create({
    *   domainId: '123',
    *   name: 'track',
    * });
    * ```
    */
-  create(body: TrackingCreateParams, options?: RequestOptions): APIPromise<TrackDomainResponse> {
+  create(body: TrackingCreateParams, options?: RequestOptions): APIPromise<TrackingCreateResponse> {
     return this._client.post('/tracking', { body, ...options });
   }
 
@@ -31,12 +31,12 @@ export class Tracking extends APIResource {
    *
    * @example
    * ```ts
-   * const trackDomainResponse = await client.tracking.retrieve(
+   * const tracking = await client.tracking.retrieve(
    *   'trackingId',
    * );
    * ```
    */
-  retrieve(trackingID: string, options?: RequestOptions): APIPromise<TrackDomainResponse> {
+  retrieve(trackingID: string, options?: RequestOptions): APIPromise<TrackingRetrieveResponse> {
     return this._client.get(path`/tracking/${trackingID}`, options);
   }
 
@@ -52,16 +52,14 @@ export class Tracking extends APIResource {
    *
    * @example
    * ```ts
-   * const trackDomainResponse = await client.tracking.update(
-   *   'trackingId',
-   * );
+   * const tracking = await client.tracking.update('trackingId');
    * ```
    */
   update(
     trackingID: string,
     body: TrackingUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<TrackDomainResponse> {
+  ): APIPromise<TrackingUpdateResponse> {
     return this._client.patch(path`/tracking/${trackingID}`, { body, ...options });
   }
 
@@ -84,12 +82,10 @@ export class Tracking extends APIResource {
    *
    * @example
    * ```ts
-   * const successResponse = await client.tracking.delete(
-   *   'trackingId',
-   * );
+   * const tracking = await client.tracking.delete('trackingId');
    * ```
    */
-  delete(trackingID: string, options?: RequestOptions): APIPromise<DomainsAPI.SuccessResponse> {
+  delete(trackingID: string, options?: RequestOptions): APIPromise<TrackingDeleteResponse> {
     return this._client.delete(path`/tracking/${trackingID}`, options);
   }
 
@@ -107,13 +103,6 @@ export class Tracking extends APIResource {
   verify(trackingID: string, options?: RequestOptions): APIPromise<TrackingVerifyResponse> {
     return this._client.post(path`/tracking/${trackingID}/verify`, options);
   }
-}
-
-export interface APIMeta {
-  /**
-   * Unique request identifier for debugging and support
-   */
-  requestId: string;
 }
 
 export interface TrackDomain {
@@ -215,32 +204,62 @@ export namespace TrackDomain {
   }
 }
 
-export interface TrackDomainResponse {
+export interface TrackingCreateResponse {
   data: TrackDomain;
 
-  meta: APIMeta;
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export interface TrackingRetrieveResponse {
+  data: TrackDomain;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export interface TrackingUpdateResponse {
+  data: TrackDomain;
+
+  meta: Shared.APIMeta;
 
   success: true;
 }
 
 export interface TrackingListResponse {
-  data?: TrackingListResponse.Data;
+  data: TrackingListResponse.Data;
 
-  meta?: APIMeta;
+  meta: Shared.APIMeta;
 
-  success?: true;
+  success: true;
 }
 
 export namespace TrackingListResponse {
   export interface Data {
-    trackDomains?: Array<TrackingAPI.TrackDomain>;
+    trackDomains: Array<TrackingAPI.TrackDomain>;
+  }
+}
+
+export interface TrackingDeleteResponse {
+  data: TrackingDeleteResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace TrackingDeleteResponse {
+  export interface Data {
+    message: string;
   }
 }
 
 export interface TrackingVerifyResponse {
   data: TrackingVerifyResponse.Data;
 
-  meta: APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -348,10 +367,12 @@ export interface TrackingUpdateParams {
 
 export declare namespace Tracking {
   export {
-    type APIMeta as APIMeta,
     type TrackDomain as TrackDomain,
-    type TrackDomainResponse as TrackDomainResponse,
+    type TrackingCreateResponse as TrackingCreateResponse,
+    type TrackingRetrieveResponse as TrackingRetrieveResponse,
+    type TrackingUpdateResponse as TrackingUpdateResponse,
     type TrackingListResponse as TrackingListResponse,
+    type TrackingDeleteResponse as TrackingDeleteResponse,
     type TrackingVerifyResponse as TrackingVerifyResponse,
     type TrackingCreateParams as TrackingCreateParams,
     type TrackingUpdateParams as TrackingUpdateParams,

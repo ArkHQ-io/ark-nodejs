@@ -1,8 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../core/resource';
-import * as DomainsAPI from './domains';
-import * as TrackingAPI from './tracking';
+import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
@@ -24,7 +23,7 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const webhookResponse = await client.webhooks.create({
+   * const webhook = await client.webhooks.create({
    *   events: [
    *     'MessageSent',
    *     'MessageDeliveryFailed',
@@ -35,7 +34,7 @@ export class Webhooks extends APIResource {
    * });
    * ```
    */
-  create(body: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookResponse> {
+  create(body: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookCreateResponse> {
     return this._client.post('/webhooks', { body, ...options });
   }
 
@@ -44,12 +43,10 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const webhookResponse = await client.webhooks.retrieve(
-   *   'webhookId',
-   * );
+   * const webhook = await client.webhooks.retrieve('webhookId');
    * ```
    */
-  retrieve(webhookID: string, options?: RequestOptions): APIPromise<WebhookResponse> {
+  retrieve(webhookID: string, options?: RequestOptions): APIPromise<WebhookRetrieveResponse> {
     return this._client.get(path`/webhooks/${webhookID}`, options);
   }
 
@@ -58,16 +55,14 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const webhookResponse = await client.webhooks.update(
-   *   'webhookId',
-   * );
+   * const webhook = await client.webhooks.update('webhookId');
    * ```
    */
   update(
     webhookID: string,
     body: WebhookUpdateParams,
     options?: RequestOptions,
-  ): APIPromise<WebhookResponse> {
+  ): APIPromise<WebhookUpdateResponse> {
     return this._client.patch(path`/webhooks/${webhookID}`, { body, ...options });
   }
 
@@ -88,12 +83,10 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const successResponse = await client.webhooks.delete(
-   *   'webhookId',
-   * );
+   * const webhook = await client.webhooks.delete('webhookId');
    * ```
    */
-  delete(webhookID: string, options?: RequestOptions): APIPromise<DomainsAPI.SuccessResponse> {
+  delete(webhookID: string, options?: RequestOptions): APIPromise<WebhookDeleteResponse> {
     return this._client.delete(path`/webhooks/${webhookID}`, options);
   }
 
@@ -127,15 +120,125 @@ export class Webhooks extends APIResource {
   }
 }
 
-export interface WebhookResponse {
-  data: WebhookResponse.Data;
+export interface WebhookCreateResponse {
+  data: WebhookCreateResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
 
-export namespace WebhookResponse {
+export namespace WebhookCreateResponse {
+  export interface Data {
+    /**
+     * Webhook ID
+     */
+    id: string;
+
+    /**
+     * Whether subscribed to all events
+     */
+    allEvents: boolean;
+
+    createdAt: string;
+
+    /**
+     * Whether the webhook is active
+     */
+    enabled: boolean;
+
+    /**
+     * Subscribed events
+     */
+    events: Array<
+      | 'MessageSent'
+      | 'MessageDelayed'
+      | 'MessageDeliveryFailed'
+      | 'MessageHeld'
+      | 'MessageBounced'
+      | 'MessageLinkClicked'
+      | 'MessageLoaded'
+      | 'DomainDNSError'
+    >;
+
+    /**
+     * Webhook name for identification
+     */
+    name: string;
+
+    /**
+     * Webhook endpoint URL
+     */
+    url: string;
+
+    uuid: string;
+  }
+}
+
+export interface WebhookRetrieveResponse {
+  data: WebhookRetrieveResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace WebhookRetrieveResponse {
+  export interface Data {
+    /**
+     * Webhook ID
+     */
+    id: string;
+
+    /**
+     * Whether subscribed to all events
+     */
+    allEvents: boolean;
+
+    createdAt: string;
+
+    /**
+     * Whether the webhook is active
+     */
+    enabled: boolean;
+
+    /**
+     * Subscribed events
+     */
+    events: Array<
+      | 'MessageSent'
+      | 'MessageDelayed'
+      | 'MessageDeliveryFailed'
+      | 'MessageHeld'
+      | 'MessageBounced'
+      | 'MessageLinkClicked'
+      | 'MessageLoaded'
+      | 'DomainDNSError'
+    >;
+
+    /**
+     * Webhook name for identification
+     */
+    name: string;
+
+    /**
+     * Webhook endpoint URL
+     */
+    url: string;
+
+    uuid: string;
+  }
+}
+
+export interface WebhookUpdateResponse {
+  data: WebhookUpdateResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace WebhookUpdateResponse {
   export interface Data {
     /**
      * Webhook ID
@@ -185,7 +288,7 @@ export namespace WebhookResponse {
 export interface WebhookListResponse {
   data: WebhookListResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -213,10 +316,24 @@ export namespace WebhookListResponse {
   }
 }
 
+export interface WebhookDeleteResponse {
+  data: WebhookDeleteResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace WebhookDeleteResponse {
+  export interface Data {
+    message: string;
+  }
+}
+
 export interface WebhookTestResponse {
   data: WebhookTestResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -326,8 +443,11 @@ export interface WebhookTestParams {
 
 export declare namespace Webhooks {
   export {
-    type WebhookResponse as WebhookResponse,
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookRetrieveResponse as WebhookRetrieveResponse,
+    type WebhookUpdateResponse as WebhookUpdateResponse,
     type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
     type WebhookTestResponse as WebhookTestResponse,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,

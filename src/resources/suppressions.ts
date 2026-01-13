@@ -1,9 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../core/resource';
-import * as DomainsAPI from './domains';
-import * as EmailsAPI from './emails';
-import * as TrackingAPI from './tracking';
+import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
@@ -61,12 +59,12 @@ export class Suppressions extends APIResource {
    *
    * @example
    * ```ts
-   * const successResponse = await client.suppressions.delete(
+   * const suppression = await client.suppressions.delete(
    *   'dev@stainless.com',
    * );
    * ```
    */
-  delete(email: string, options?: RequestOptions): APIPromise<DomainsAPI.SuccessResponse> {
+  delete(email: string, options?: RequestOptions): APIPromise<SuppressionDeleteResponse> {
     return this._client.delete(path`/suppressions/${email}`, options);
   }
 
@@ -91,7 +89,7 @@ export class Suppressions extends APIResource {
 export interface SuppressionCreateResponse {
   data: SuppressionCreateResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -135,19 +133,41 @@ export namespace SuppressionRetrieveResponse {
 export interface SuppressionListResponse {
   data: SuppressionListResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
 
 export namespace SuppressionListResponse {
   export interface Data {
-    pagination: EmailsAPI.Pagination;
+    pagination: Data.Pagination;
 
     suppressions: Array<Data.Suppression>;
   }
 
   export namespace Data {
+    export interface Pagination {
+      /**
+       * Current page number (1-indexed)
+       */
+      page: number;
+
+      /**
+       * Items per page
+       */
+      perPage: number;
+
+      /**
+       * Total number of items
+       */
+      total: number;
+
+      /**
+       * Total number of pages
+       */
+      totalPages: number;
+    }
+
     export interface Suppression {
       /**
        * Suppression ID
@@ -163,10 +183,24 @@ export namespace SuppressionListResponse {
   }
 }
 
+export interface SuppressionDeleteResponse {
+  data: SuppressionDeleteResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace SuppressionDeleteResponse {
+  export interface Data {
+    message: string;
+  }
+}
+
 export interface SuppressionBulkCreateResponse {
   data: SuppressionBulkCreateResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -230,6 +264,7 @@ export declare namespace Suppressions {
     type SuppressionCreateResponse as SuppressionCreateResponse,
     type SuppressionRetrieveResponse as SuppressionRetrieveResponse,
     type SuppressionListResponse as SuppressionListResponse,
+    type SuppressionDeleteResponse as SuppressionDeleteResponse,
     type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
     type SuppressionCreateParams as SuppressionCreateParams,
     type SuppressionListParams as SuppressionListParams,

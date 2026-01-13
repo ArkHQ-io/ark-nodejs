@@ -1,8 +1,7 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../core/resource';
-import * as EmailsAPI from './emails';
-import * as TrackingAPI from './tracking';
+import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
@@ -58,12 +57,12 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.emails.getDeliveries(
+   * const response = await client.emails.retrieveDeliveries(
    *   'emailId',
    * );
    * ```
    */
-  getDeliveries(emailID: string, options?: RequestOptions): APIPromise<EmailGetDeliveriesResponse> {
+  retrieveDeliveries(emailID: string, options?: RequestOptions): APIPromise<EmailRetrieveDeliveriesResponse> {
     return this._client.get(path`/emails/${emailID}/deliveries`, options);
   }
 
@@ -100,7 +99,7 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const sendEmail = await client.emails.send({
+   * const response = await client.emails.send({
    *   from: 'Acme <hello@acme.com>',
    *   subject: 'Hello World',
    *   to: ['user@example.com'],
@@ -108,7 +107,7 @@ export class Emails extends APIResource {
    * });
    * ```
    */
-  send(params: EmailSendParams, options?: RequestOptions): APIPromise<SendEmail> {
+  send(params: EmailSendParams, options?: RequestOptions): APIPromise<EmailSendResponse> {
     const { 'Idempotency-Key': idempotencyKey, ...body } = params;
     return this._client.post('/emails', {
       body,
@@ -170,118 +169,22 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const sendEmail = await client.emails.sendRaw({
+   * const response = await client.emails.sendRaw({
    *   data: 'data',
    *   mailFrom: 'dev@stainless.com',
    *   rcptTo: ['dev@stainless.com'],
    * });
    * ```
    */
-  sendRaw(body: EmailSendRawParams, options?: RequestOptions): APIPromise<SendEmail> {
+  sendRaw(body: EmailSendRawParams, options?: RequestOptions): APIPromise<EmailSendRawResponse> {
     return this._client.post('/emails/raw', { body, ...options });
-  }
-}
-
-export interface Delivery {
-  /**
-   * Delivery attempt ID
-   */
-  id: string;
-
-  /**
-   * Delivery status (lowercase)
-   */
-  status: string;
-
-  /**
-   * Unix timestamp
-   */
-  timestamp: number;
-
-  /**
-   * ISO 8601 timestamp
-   */
-  timestampIso: string;
-
-  /**
-   * SMTP response code
-   */
-  code?: number;
-
-  /**
-   * Status details
-   */
-  details?: string;
-
-  /**
-   * SMTP server response from the receiving mail server
-   */
-  output?: string;
-
-  /**
-   * Whether TLS was used
-   */
-  sentWithSsl?: boolean;
-}
-
-export interface Pagination {
-  /**
-   * Current page number (1-indexed)
-   */
-  page: number;
-
-  /**
-   * Items per page
-   */
-  perPage: number;
-
-  /**
-   * Total number of items
-   */
-  total: number;
-
-  /**
-   * Total number of pages
-   */
-  totalPages: number;
-}
-
-export interface SendEmail {
-  data: SendEmail.Data;
-
-  meta: TrackingAPI.APIMeta;
-
-  success: true;
-}
-
-export namespace SendEmail {
-  export interface Data {
-    /**
-     * Unique message ID (format: msg*{id}*{token})
-     */
-    id: string;
-
-    /**
-     * Current delivery status
-     */
-    status: 'pending' | 'sent';
-
-    /**
-     * List of recipient addresses
-     */
-    to: Array<string>;
-
-    /**
-     * SMTP Message-ID header value
-     */
-    messageId?: string;
   }
 }
 
 export interface EmailRetrieveResponse {
   data: EmailRetrieveResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -345,7 +248,7 @@ export namespace EmailRetrieveResponse {
     /**
      * Delivery attempt history (included if expand=deliveries)
      */
-    deliveries?: Array<EmailsAPI.Delivery>;
+    deliveries?: Array<Data.Delivery>;
 
     /**
      * Email headers (included if expand=headers)
@@ -382,12 +285,56 @@ export namespace EmailRetrieveResponse {
      */
     tag?: string;
   }
+
+  export namespace Data {
+    export interface Delivery {
+      /**
+       * Delivery attempt ID
+       */
+      id: string;
+
+      /**
+       * Delivery status (lowercase)
+       */
+      status: string;
+
+      /**
+       * Unix timestamp
+       */
+      timestamp: number;
+
+      /**
+       * ISO 8601 timestamp
+       */
+      timestampIso: string;
+
+      /**
+       * SMTP response code
+       */
+      code?: number;
+
+      /**
+       * Status details
+       */
+      details?: string;
+
+      /**
+       * SMTP server response from the receiving mail server
+       */
+      output?: string;
+
+      /**
+       * Whether TLS was used
+       */
+      sentWithSsl?: boolean;
+    }
+  }
 }
 
 export interface EmailListResponse {
   data: EmailListResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -396,7 +343,7 @@ export namespace EmailListResponse {
   export interface Data {
     messages: Array<Data.Message>;
 
-    pagination: EmailsAPI.Pagination;
+    pagination: Data.Pagination;
   }
 
   export namespace Data {
@@ -432,20 +379,42 @@ export namespace EmailListResponse {
 
       tag?: string;
     }
+
+    export interface Pagination {
+      /**
+       * Current page number (1-indexed)
+       */
+      page: number;
+
+      /**
+       * Items per page
+       */
+      perPage: number;
+
+      /**
+       * Total number of items
+       */
+      total: number;
+
+      /**
+       * Total number of pages
+       */
+      totalPages: number;
+    }
   }
 }
 
-export interface EmailGetDeliveriesResponse {
-  data: EmailGetDeliveriesResponse.Data;
+export interface EmailRetrieveDeliveriesResponse {
+  data: EmailRetrieveDeliveriesResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
 
-export namespace EmailGetDeliveriesResponse {
+export namespace EmailRetrieveDeliveriesResponse {
   export interface Data {
-    deliveries: Array<EmailsAPI.Delivery>;
+    deliveries: Array<Data.Delivery>;
 
     /**
      * Internal message ID
@@ -456,6 +425,50 @@ export namespace EmailGetDeliveriesResponse {
      * Message token
      */
     messageToken: string;
+  }
+
+  export namespace Data {
+    export interface Delivery {
+      /**
+       * Delivery attempt ID
+       */
+      id: string;
+
+      /**
+       * Delivery status (lowercase)
+       */
+      status: string;
+
+      /**
+       * Unix timestamp
+       */
+      timestamp: number;
+
+      /**
+       * ISO 8601 timestamp
+       */
+      timestampIso: string;
+
+      /**
+       * SMTP response code
+       */
+      code?: number;
+
+      /**
+       * Status details
+       */
+      details?: string;
+
+      /**
+       * SMTP server response from the receiving mail server
+       */
+      output?: string;
+
+      /**
+       * Whether TLS was used
+       */
+      sentWithSsl?: boolean;
+    }
   }
 }
 
@@ -471,10 +484,42 @@ export namespace EmailRetryResponse {
   }
 }
 
+export interface EmailSendResponse {
+  data: EmailSendResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace EmailSendResponse {
+  export interface Data {
+    /**
+     * Unique message ID (format: msg*{id}*{token})
+     */
+    id: string;
+
+    /**
+     * Current delivery status
+     */
+    status: 'pending' | 'sent';
+
+    /**
+     * List of recipient addresses
+     */
+    to: Array<string>;
+
+    /**
+     * SMTP Message-ID header value
+     */
+    messageId?: string;
+  }
+}
+
 export interface EmailSendBatchResponse {
   data: EmailSendBatchResponse.Data;
 
-  meta: TrackingAPI.APIMeta;
+  meta: Shared.APIMeta;
 
   success: true;
 }
@@ -511,6 +556,38 @@ export namespace EmailSendBatchResponse {
 
       token: string;
     }
+  }
+}
+
+export interface EmailSendRawResponse {
+  data: EmailSendRawResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace EmailSendRawResponse {
+  export interface Data {
+    /**
+     * Unique message ID (format: msg*{id}*{token})
+     */
+    id: string;
+
+    /**
+     * Current delivery status
+     */
+    status: 'pending' | 'sent';
+
+    /**
+     * List of recipient addresses
+     */
+    to: Array<string>;
+
+    /**
+     * SMTP Message-ID header value
+     */
+    messageId?: string;
   }
 }
 
@@ -718,14 +795,13 @@ export interface EmailSendRawParams {
 
 export declare namespace Emails {
   export {
-    type Delivery as Delivery,
-    type Pagination as Pagination,
-    type SendEmail as SendEmail,
     type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailListResponse as EmailListResponse,
-    type EmailGetDeliveriesResponse as EmailGetDeliveriesResponse,
+    type EmailRetrieveDeliveriesResponse as EmailRetrieveDeliveriesResponse,
     type EmailRetryResponse as EmailRetryResponse,
+    type EmailSendResponse as EmailSendResponse,
     type EmailSendBatchResponse as EmailSendBatchResponse,
+    type EmailSendRawResponse as EmailSendRawResponse,
     type EmailRetrieveParams as EmailRetrieveParams,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,

@@ -13,22 +13,29 @@ import * as Shims from './internal/shims';
 import * as Opts from './internal/request-options';
 import { VERSION } from './version';
 import * as Errors from './core/error';
+import * as Pagination from './core/pagination';
+import {
+  AbstractPage,
+  type PageNumberPaginationParams,
+  PageNumberPaginationResponse,
+} from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import {
   DNSRecord,
   DomainCreateParams,
+  DomainCreateResponse,
+  DomainDeleteResponse,
   DomainListResponse,
-  DomainResponse,
+  DomainRetrieveResponse,
+  DomainVerifyResponse,
   Domains,
-  SuccessResponse,
 } from './resources/domains';
 import {
-  Delivery,
-  EmailGetDeliveriesResponse,
   EmailListParams,
   EmailListResponse,
+  EmailRetrieveDeliveriesResponse,
   EmailRetrieveParams,
   EmailRetrieveResponse,
   EmailRetryResponse,
@@ -36,37 +43,43 @@ import {
   EmailSendBatchResponse,
   EmailSendParams,
   EmailSendRawParams,
+  EmailSendRawResponse,
+  EmailSendResponse,
   Emails,
-  Pagination,
-  SendEmail,
 } from './resources/emails';
 import {
   SuppressionBulkCreateParams,
   SuppressionBulkCreateResponse,
   SuppressionCreateParams,
   SuppressionCreateResponse,
+  SuppressionDeleteResponse,
   SuppressionListParams,
   SuppressionListResponse,
   SuppressionRetrieveResponse,
   Suppressions,
 } from './resources/suppressions';
 import {
-  APIMeta,
   TrackDomain,
-  TrackDomainResponse,
   Tracking,
   TrackingCreateParams,
+  TrackingCreateResponse,
+  TrackingDeleteResponse,
   TrackingListResponse,
+  TrackingRetrieveResponse,
   TrackingUpdateParams,
+  TrackingUpdateResponse,
   TrackingVerifyResponse,
 } from './resources/tracking';
 import {
   WebhookCreateParams,
+  WebhookCreateResponse,
+  WebhookDeleteResponse,
   WebhookListResponse,
-  WebhookResponse,
+  WebhookRetrieveResponse,
   WebhookTestParams,
   WebhookTestResponse,
   WebhookUpdateParams,
+  WebhookUpdateResponse,
   Webhooks,
 } from './resources/webhooks';
 import { type Fetch } from './internal/builtin-types';
@@ -539,6 +552,25 @@ export class Ark {
     return { response, options, controller, requestLogID, retryOfRequestLogID, startTime };
   }
 
+  getAPIList<Item, PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>>(
+    path: string,
+    Page: new (...args: any[]) => PageClass,
+    opts?: RequestOptions,
+  ): Pagination.PagePromise<PageClass, Item> {
+    return this.requestAPIList(Page, { method: 'get', path, ...opts });
+  }
+
+  requestAPIList<
+    Item = unknown,
+    PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>,
+  >(
+    Page: new (...args: ConstructorParameters<typeof Pagination.AbstractPage>) => PageClass,
+    options: FinalRequestOptions,
+  ): Pagination.PagePromise<PageClass, Item> {
+    const request = this.makeRequest(options, null, undefined);
+    return new Pagination.PagePromise<PageClass, Item>(this as any as Ark, request, Page);
+  }
+
   async fetchWithTimeout(
     url: RequestInfo,
     init: RequestInit | undefined,
@@ -787,16 +819,21 @@ Ark.Tracking = Tracking;
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
 
+  export import PageNumberPagination = Pagination.PageNumberPagination;
+  export {
+    type PageNumberPaginationParams as PageNumberPaginationParams,
+    type PageNumberPaginationResponse as PageNumberPaginationResponse,
+  };
+
   export {
     Emails as Emails,
-    type Delivery as Delivery,
-    type Pagination as Pagination,
-    type SendEmail as SendEmail,
     type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailListResponse as EmailListResponse,
-    type EmailGetDeliveriesResponse as EmailGetDeliveriesResponse,
+    type EmailRetrieveDeliveriesResponse as EmailRetrieveDeliveriesResponse,
     type EmailRetryResponse as EmailRetryResponse,
+    type EmailSendResponse as EmailSendResponse,
     type EmailSendBatchResponse as EmailSendBatchResponse,
+    type EmailSendRawResponse as EmailSendRawResponse,
     type EmailRetrieveParams as EmailRetrieveParams,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
@@ -807,9 +844,11 @@ export declare namespace Ark {
   export {
     Domains as Domains,
     type DNSRecord as DNSRecord,
-    type DomainResponse as DomainResponse,
-    type SuccessResponse as SuccessResponse,
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
     type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainVerifyResponse as DomainVerifyResponse,
     type DomainCreateParams as DomainCreateParams,
   };
 
@@ -818,6 +857,7 @@ export declare namespace Ark {
     type SuppressionCreateResponse as SuppressionCreateResponse,
     type SuppressionRetrieveResponse as SuppressionRetrieveResponse,
     type SuppressionListResponse as SuppressionListResponse,
+    type SuppressionDeleteResponse as SuppressionDeleteResponse,
     type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
     type SuppressionCreateParams as SuppressionCreateParams,
     type SuppressionListParams as SuppressionListParams,
@@ -826,8 +866,11 @@ export declare namespace Ark {
 
   export {
     Webhooks as Webhooks,
-    type WebhookResponse as WebhookResponse,
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookRetrieveResponse as WebhookRetrieveResponse,
+    type WebhookUpdateResponse as WebhookUpdateResponse,
     type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
     type WebhookTestResponse as WebhookTestResponse,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
@@ -836,12 +879,16 @@ export declare namespace Ark {
 
   export {
     Tracking as Tracking,
-    type APIMeta as APIMeta,
     type TrackDomain as TrackDomain,
-    type TrackDomainResponse as TrackDomainResponse,
+    type TrackingCreateResponse as TrackingCreateResponse,
+    type TrackingRetrieveResponse as TrackingRetrieveResponse,
+    type TrackingUpdateResponse as TrackingUpdateResponse,
     type TrackingListResponse as TrackingListResponse,
+    type TrackingDeleteResponse as TrackingDeleteResponse,
     type TrackingVerifyResponse as TrackingVerifyResponse,
     type TrackingCreateParams as TrackingCreateParams,
     type TrackingUpdateParams as TrackingUpdateParams,
   };
+
+  export type APIMeta = API.APIMeta;
 }

@@ -5,6 +5,7 @@ import * as DomainsAPI from './domains';
 import * as EmailsAPI from './emails';
 import * as TrackingAPI from './tracking';
 import { APIPromise } from '../core/api-promise';
+import { EmailsPage, type EmailsPageParams, PagePromise } from '../core/pagination';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
@@ -45,14 +46,20 @@ export class Suppressions extends APIResource {
    *
    * @example
    * ```ts
-   * const suppressions = await client.suppressions.list();
+   * // Automatically fetches more pages as needed.
+   * for await (const suppressionListResponse of client.suppressions.list()) {
+   *   // ...
+   * }
    * ```
    */
   list(
     query: SuppressionListParams | null | undefined = {},
     options?: RequestOptions,
-  ): APIPromise<SuppressionListResponse> {
-    return this._client.get('/suppressions', { query, ...options });
+  ): PagePromise<SuppressionListResponsesEmailsPage, SuppressionListResponse> {
+    return this._client.getAPIList('/suppressions', EmailsPage<SuppressionListResponse>, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -87,6 +94,8 @@ export class Suppressions extends APIResource {
     return this._client.post('/suppressions/bulk', { body, ...options });
   }
 }
+
+export type SuppressionListResponsesEmailsPage = EmailsPage<SuppressionListResponse>;
 
 export interface SuppressionCreateResponse {
   data: SuppressionCreateResponse.Data;
@@ -207,11 +216,7 @@ export interface SuppressionCreateParams {
   reason?: string;
 }
 
-export interface SuppressionListParams {
-  page?: number;
-
-  perPage?: number;
-}
+export interface SuppressionListParams extends EmailsPageParams {}
 
 export interface SuppressionBulkCreateParams {
   suppressions: Array<SuppressionBulkCreateParams.Suppression>;
@@ -231,6 +236,7 @@ export declare namespace Suppressions {
     type SuppressionRetrieveResponse as SuppressionRetrieveResponse,
     type SuppressionListResponse as SuppressionListResponse,
     type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
+    type SuppressionListResponsesEmailsPage as SuppressionListResponsesEmailsPage,
     type SuppressionCreateParams as SuppressionCreateParams,
     type SuppressionListParams as SuppressionListParams,
     type SuppressionBulkCreateParams as SuppressionBulkCreateParams,

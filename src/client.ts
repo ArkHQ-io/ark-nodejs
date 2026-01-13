@@ -16,8 +16,8 @@ import * as Errors from './core/error';
 import * as Pagination from './core/pagination';
 import {
   AbstractPage,
-  type PageNumberParams,
-  PageNumberResponse,
+  type EmailsPageParams,
+  EmailsPageResponse,
   type SuppressionsPageParams,
   SuppressionsPageResponse,
 } from './core/pagination';
@@ -37,6 +37,7 @@ import {
   EmailGetDeliveriesResponse,
   EmailListParams,
   EmailListResponse,
+  EmailListResponsesEmailsPage,
   EmailRetrieveParams,
   EmailRetrieveResponse,
   EmailRetryResponse,
@@ -55,6 +56,7 @@ import {
   SuppressionCreateResponse,
   SuppressionListParams,
   SuppressionListResponse,
+  SuppressionListResponsesEmailsPage,
   SuppressionRetrieveResponse,
   Suppressions,
 } from './resources/suppressions';
@@ -814,8 +816,8 @@ Ark.Tracking = Tracking;
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
 
-  export import PageNumber = Pagination.PageNumber;
-  export { type PageNumberParams as PageNumberParams, type PageNumberResponse as PageNumberResponse };
+  export import EmailsPage = Pagination.EmailsPage;
+  export { type EmailsPageParams as EmailsPageParams, type EmailsPageResponse as EmailsPageResponse };
 
   export import SuppressionsPage = Pagination.SuppressionsPage;
   export {
@@ -833,6 +835,7 @@ export declare namespace Ark {
     type EmailGetDeliveriesResponse as EmailGetDeliveriesResponse,
     type EmailRetryResponse as EmailRetryResponse,
     type EmailSendBatchResponse as EmailSendBatchResponse,
+    type EmailListResponsesEmailsPage as EmailListResponsesEmailsPage,
     type EmailRetrieveParams as EmailRetrieveParams,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
@@ -855,6 +858,7 @@ export declare namespace Ark {
     type SuppressionRetrieveResponse as SuppressionRetrieveResponse,
     type SuppressionListResponse as SuppressionListResponse,
     type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
+    type SuppressionListResponsesEmailsPage as SuppressionListResponsesEmailsPage,
     type SuppressionCreateParams as SuppressionCreateParams,
     type SuppressionListParams as SuppressionListParams,
     type SuppressionBulkCreateParams as SuppressionBulkCreateParams,

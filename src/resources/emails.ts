@@ -704,7 +704,7 @@ export namespace EmailSendParams {
 
 export interface EmailSendBatchParams {
   /**
-   * Body param:
+   * Body param
    */
   emails: Array<EmailSendBatchParams.Email>;
 

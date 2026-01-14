@@ -40,6 +40,8 @@ const response = await client.emails.send({
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
+  metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+  tag: 'welcome',
 });
 
 console.log(response.data);
@@ -62,6 +64,8 @@ const params: Ark.EmailSendParams = {
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
+  metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+  tag: 'welcome',
 };
 const response: Ark.EmailSendResponse = await client.emails.send(params);
 ```
@@ -82,6 +86,8 @@ const response = await client.emails
     subject: 'Hello World',
     to: ['user@example.com'],
     html: '<h1>Welcome!</h1>',
+    metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+    tag: 'welcome',
   })
   .catch(async (err) => {
     if (err instanceof Ark.APIError) {
@@ -128,6 +134,8 @@ await client.emails.send({
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
+  metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+  tag: 'welcome',
 }, {
   maxRetries: 5,
 });
@@ -150,6 +158,8 @@ await client.emails.send({
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
+  metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+  tag: 'welcome',
 }, {
   timeout: 5 * 1000,
 });
@@ -210,6 +220,8 @@ const response = await client.emails
     subject: 'Hello World',
     to: ['user@example.com'],
     html: '<h1>Welcome!</h1>',
+    metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+    tag: 'welcome',
   })
   .asResponse();
 console.log(response.headers.get('X-My-Header'));
@@ -221,6 +233,8 @@ const { data: response, response: raw } = await client.emails
     subject: 'Hello World',
     to: ['user@example.com'],
     html: '<h1>Welcome!</h1>',
+    metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+    tag: 'welcome',
   })
   .withResponse();
 console.log(raw.headers.get('X-My-Header'));

@@ -108,6 +108,7 @@ export class Emails extends APIResource {
    *   subject: 'Hello World',
    *   to: ['user@example.com'],
    *   html: '<h1>Welcome!</h1><p>Thanks for signing up.</p>',
+   *   metadata: { user_id: 'usr_123', campaign: 'onboarding' },
    * });
    * ```
    */
@@ -661,6 +662,20 @@ export interface EmailSendParams {
   html?: string | null;
 
   /**
+   * Body param: Custom key-value pairs attached to an email for webhook correlation.
+   *
+   * When you send an email with metadata, these key-value pairs are:
+   *
+   * - **Stored** with the message
+   * - **Returned** in all webhook event payloads (MessageSent, MessageBounced, etc.)
+   * - **Never visible** to email recipients
+   *
+   * This is useful for correlating webhook events with your internal systems (e.g.,
+   * user IDs, order IDs, campaign identifiers).
+   */
+  metadata?: { [key: string]: string } | null;
+
+  /**
    * Body param: Reply-to address (accepts null)
    */
   replyTo?: string | null;
@@ -704,7 +719,7 @@ export namespace EmailSendParams {
 
 export interface EmailSendBatchParams {
   /**
-   * Body param:
+   * Body param
    */
   emails: Array<EmailSendBatchParams.Email>;
 
@@ -727,6 +742,20 @@ export namespace EmailSendBatchParams {
     to: Array<string>;
 
     html?: string | null;
+
+    /**
+     * Custom key-value pairs attached to an email for webhook correlation.
+     *
+     * When you send an email with metadata, these key-value pairs are:
+     *
+     * - **Stored** with the message
+     * - **Returned** in all webhook event payloads (MessageSent, MessageBounced, etc.)
+     * - **Never visible** to email recipients
+     *
+     * This is useful for correlating webhook events with your internal systems (e.g.,
+     * user IDs, order IDs, campaign identifiers).
+     */
+    metadata?: { [key: string]: string } | null;
 
     tag?: string | null;
 

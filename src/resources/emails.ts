@@ -757,6 +757,9 @@ export namespace EmailSendBatchParams {
      */
     metadata?: { [key: string]: string } | null;
 
+    /**
+     * Tag for categorization and filtering
+     */
     tag?: string | null;
 
     text?: string | null;

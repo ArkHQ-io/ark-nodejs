@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.0 (2026-01-14)
+
+Full Changelog: [v0.6.0...v0.7.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.6.0...v0.7.0)
+
+### Features
+
+* **api:** add metadata ([2679698](https://github.com/ArkHQ-io/ark-nodejs/commit/267969876f1b16776c73f5ef6eaba6bd72dd495c))
+
+
+### Chores
+
+* fix typo in descriptions ([da4ac06](https://github.com/ArkHQ-io/ark-nodejs/commit/da4ac068ee876cd5bcc7e70d8e9f094be7101ed1))
+
 ## 0.6.0 (2026-01-13)
 
 Full Changelog: [v0.5.2...v0.6.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.5.2...v0.6.0)

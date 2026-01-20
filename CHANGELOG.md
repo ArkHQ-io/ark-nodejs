@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.8.0 (2026-01-20)
+
+Full Changelog: [v0.7.0...v0.8.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.7.0...v0.8.0)
+
+### Features
+
+* **api:** add webhook deliveries ([ffda43d](https://github.com/ArkHQ-io/ark-nodejs/commit/ffda43d5983d16f059cf796e01a6f247bd2e5792))
+* **api:** api update ([2ba0809](https://github.com/ArkHQ-io/ark-nodejs/commit/2ba0809880889563637014f1d800df353e01e1d0))
+* **api:** api update ([1dd887d](https://github.com/ArkHQ-io/ark-nodejs/commit/1dd887d545f326131e3ed896ae8a91e839b592df))
+* **api:** manual updates ([cb41988](https://github.com/ArkHQ-io/ark-nodejs/commit/cb41988e77659b79af4e9f47481608e34ddde0e4))
+
+
+### Bug Fixes
+
+* **client:** invalid URL ([f083cbd](https://github.com/ArkHQ-io/ark-nodejs/commit/f083cbdeaf76340b0a5a6b7ccb89c5f77cd843a3))
+
+
+### Chores
+
+* bump debug version ([4d63010](https://github.com/ArkHQ-io/ark-nodejs/commit/4d6301016c1c13b1ac9bf854a508c137ff6c3b47))
+* **internal:** codegen related update ([026f6b9](https://github.com/ArkHQ-io/ark-nodejs/commit/026f6b97f23b702b20a9606d5f468b375004ee18))
+* **internal:** codegen related update ([48b3349](https://github.com/ArkHQ-io/ark-nodejs/commit/48b33490f7c4a8d07bbb766ad863b8668d2df378))
+* **internal:** update `actions/checkout` version ([35c6299](https://github.com/ArkHQ-io/ark-nodejs/commit/35c6299cc5162e23d2e94ab8b95eabae481957a6))
+* **internal:** update lock file ([e2d2f0d](https://github.com/ArkHQ-io/ark-nodejs/commit/e2d2f0d4a16bd6c72c0fd3ddabe5b57e93ea7e70))
+* **internal:** upgrade babel, qs, js-yaml ([fd3460d](https://github.com/ArkHQ-io/ark-nodejs/commit/fd3460d41713812fd73c799c8f0767840534fe93))
+* **internal:** upgrade brace-expansion and @babel/helpers ([0dcd33b](https://github.com/ArkHQ-io/ark-nodejs/commit/0dcd33b28db4b8602cca7107cd4587564af2c8ed))
+* **mcp:** add intent param to execute tool ([0b1e383](https://github.com/ArkHQ-io/ark-nodejs/commit/0b1e383d5d820da98279106a703f1efa4ed65dcf))
+* **mcp:** pass intent param to execute handler ([4ac583a](https://github.com/ArkHQ-io/ark-nodejs/commit/4ac583a545d726055a54c3d51ac288d7daa180e5))
+* **mcp:** upgrade dependencies ([2f8ec87](https://github.com/ArkHQ-io/ark-nodejs/commit/2f8ec8718aec2149f1a58aec4e06729b24a00c57))
+
 ## 0.7.0 (2026-01-14)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.6.0...v0.7.0)

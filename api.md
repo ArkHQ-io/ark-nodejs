@@ -72,6 +72,9 @@ Types:
 - <code><a href="./src/resources/webhooks.ts">WebhookUpdateResponse</a></code>
 - <code><a href="./src/resources/webhooks.ts">WebhookListResponse</a></code>
 - <code><a href="./src/resources/webhooks.ts">WebhookDeleteResponse</a></code>
+- <code><a href="./src/resources/webhooks.ts">WebhookListDeliveriesResponse</a></code>
+- <code><a href="./src/resources/webhooks.ts">WebhookReplayDeliveryResponse</a></code>
+- <code><a href="./src/resources/webhooks.ts">WebhookRetrieveDeliveryResponse</a></code>
 - <code><a href="./src/resources/webhooks.ts">WebhookTestResponse</a></code>
 
 Methods:
@@ -81,6 +84,9 @@ Methods:
 - <code title="patch /webhooks/{webhookId}">client.webhooks.<a href="./src/resources/webhooks.ts">update</a>(webhookID, { ...params }) -> WebhookUpdateResponse</code>
 - <code title="get /webhooks">client.webhooks.<a href="./src/resources/webhooks.ts">list</a>() -> WebhookListResponse</code>
 - <code title="delete /webhooks/{webhookId}">client.webhooks.<a href="./src/resources/webhooks.ts">delete</a>(webhookID) -> WebhookDeleteResponse</code>
+- <code title="get /webhooks/{webhookId}/deliveries">client.webhooks.<a href="./src/resources/webhooks.ts">listDeliveries</a>(webhookID, { ...params }) -> WebhookListDeliveriesResponse</code>
+- <code title="post /webhooks/{webhookId}/deliveries/{deliveryId}/replay">client.webhooks.<a href="./src/resources/webhooks.ts">replayDelivery</a>(deliveryID, { ...params }) -> WebhookReplayDeliveryResponse</code>
+- <code title="get /webhooks/{webhookId}/deliveries/{deliveryId}">client.webhooks.<a href="./src/resources/webhooks.ts">retrieveDelivery</a>(deliveryID, { ...params }) -> WebhookRetrieveDeliveryResponse</code>
 - <code title="post /webhooks/{webhookId}/test">client.webhooks.<a href="./src/resources/webhooks.ts">test</a>(webhookID, { ...params }) -> WebhookTestResponse</code>
 
 # Tracking

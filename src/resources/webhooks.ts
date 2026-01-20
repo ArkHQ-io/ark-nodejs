@@ -91,6 +91,103 @@ export class Webhooks extends APIResource {
   }
 
   /**
+   * Get a paginated list of delivery attempts for a specific webhook.
+   *
+   * Use this to:
+   *
+   * - Monitor webhook health and delivery success rate
+   * - Debug failed deliveries
+   * - Find specific events to replay
+   *
+   * **Filtering:**
+   *
+   * - Filter by success/failure to find problematic deliveries
+   * - Filter by event type to find specific events
+   * - Filter by time range for debugging recent issues
+   *
+   * **Retry behavior:** Failed deliveries are automatically retried with exponential
+   * backoff over ~3 days. Check `willRetry` to see if more attempts are scheduled.
+   *
+   * @example
+   * ```ts
+   * const response = await client.webhooks.listDeliveries(
+   *   'webhookId',
+   * );
+   * ```
+   */
+  listDeliveries(
+    webhookID: string,
+    query: WebhookListDeliveriesParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<WebhookListDeliveriesResponse> {
+    return this._client.get(path`/webhooks/${webhookID}/deliveries`, { query, ...options });
+  }
+
+  /**
+   * Re-send a webhook delivery to your endpoint.
+   *
+   * **Use cases:**
+   *
+   * - Recover from transient failures after fixing your endpoint
+   * - Test endpoint changes with real historical data
+   * - Retry deliveries that failed due to downtime
+   *
+   * **How it works:**
+   *
+   * 1. Fetches the original payload from the delivery
+   * 2. Generates a new timestamp and signature
+   * 3. Sends to your webhook URL immediately
+   * 4. Returns the result (does not queue for retry if it fails)
+   *
+   * **Note:** The webhook must be enabled to replay deliveries.
+   *
+   * @example
+   * ```ts
+   * const response = await client.webhooks.replayDelivery(
+   *   'deliveryId',
+   *   { webhookId: 'webhookId' },
+   * );
+   * ```
+   */
+  replayDelivery(
+    deliveryID: string,
+    params: WebhookReplayDeliveryParams,
+    options?: RequestOptions,
+  ): APIPromise<WebhookReplayDeliveryResponse> {
+    const { webhookId } = params;
+    return this._client.post(path`/webhooks/${webhookId}/deliveries/${deliveryID}/replay`, options);
+  }
+
+  /**
+   * Get detailed information about a specific webhook delivery attempt.
+   *
+   * Returns:
+   *
+   * - The complete request payload that was sent
+   * - Request headers including the signature
+   * - Response status code and body from your endpoint
+   * - Timing information
+   *
+   * Use this to debug why a delivery failed or verify what data was sent.
+   *
+   * @example
+   * ```ts
+   * const response = await client.webhooks.retrieveDelivery(
+   *   'deliveryId',
+   *   { webhookId: 'webhookId' },
+   * );
+   * ```
+   */
+  retrieveDelivery(
+    deliveryID: string,
+    params: WebhookRetrieveDeliveryParams,
+    options?: RequestOptions,
+  ): APIPromise<WebhookRetrieveDeliveryResponse> {
+    const { webhookId } = params;
+    return this._client.get(path`/webhooks/${webhookId}/deliveries/${deliveryID}`, options);
+  }
+
+  /**
    * Send a test payload to your webhook endpoint and verify it receives the data
    * correctly.
    *
@@ -330,6 +427,261 @@ export namespace WebhookDeleteResponse {
   }
 }
 
+/**
+ * Paginated list of webhook delivery attempts
+ */
+export interface WebhookListDeliveriesResponse {
+  data: Array<WebhookListDeliveriesResponse.Data>;
+
+  meta: Shared.APIMeta;
+
+  /**
+   * Current page number
+   */
+  page: number;
+
+  /**
+   * Items per page
+   */
+  perPage: number;
+
+  /**
+   * Total number of deliveries matching the filter
+   */
+  total: number;
+
+  /**
+   * Total number of pages
+   */
+  totalPages: number;
+}
+
+export namespace WebhookListDeliveriesResponse {
+  /**
+   * Summary of a webhook delivery attempt
+   */
+  export interface Data {
+    /**
+     * Unique delivery ID (UUID)
+     */
+    id: string;
+
+    /**
+     * Attempt number (1 for first attempt, increments with retries)
+     */
+    attempt: number;
+
+    /**
+     * Event type that triggered this delivery
+     */
+    event:
+      | 'MessageSent'
+      | 'MessageDelayed'
+      | 'MessageDeliveryFailed'
+      | 'MessageHeld'
+      | 'MessageBounced'
+      | 'MessageLinkClicked'
+      | 'MessageLoaded'
+      | 'DomainDNSError';
+
+    /**
+     * HTTP status code returned by the endpoint (null if connection failed)
+     */
+    statusCode: number | null;
+
+    /**
+     * Whether the delivery was successful (2xx response)
+     */
+    success: boolean;
+
+    /**
+     * When this delivery attempt occurred
+     */
+    timestamp: string;
+
+    /**
+     * URL the webhook was delivered to
+     */
+    url: string;
+
+    /**
+     * ID of the webhook this delivery belongs to
+     */
+    webhookId: string;
+
+    /**
+     * Whether this delivery will be retried (true if failed and retries remaining)
+     */
+    willRetry: boolean;
+  }
+}
+
+/**
+ * Result of replaying a webhook delivery
+ */
+export interface WebhookReplayDeliveryResponse {
+  data: WebhookReplayDeliveryResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace WebhookReplayDeliveryResponse {
+  export interface Data {
+    /**
+     * Request duration in milliseconds
+     */
+    duration: number;
+
+    /**
+     * ID of the new delivery created by the replay
+     */
+    newDeliveryId: string;
+
+    /**
+     * ID of the original delivery that was replayed
+     */
+    originalDeliveryId: string;
+
+    /**
+     * HTTP status code from your endpoint
+     */
+    statusCode: number | null;
+
+    /**
+     * Whether the replay was successful (2xx response from endpoint)
+     */
+    success: boolean;
+
+    /**
+     * When the replay was executed
+     */
+    timestamp: string;
+  }
+}
+
+/**
+ * Detailed information about a webhook delivery attempt
+ */
+export interface WebhookRetrieveDeliveryResponse {
+  /**
+   * Full details of a webhook delivery including request and response
+   */
+  data: WebhookRetrieveDeliveryResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace WebhookRetrieveDeliveryResponse {
+  /**
+   * Full details of a webhook delivery including request and response
+   */
+  export interface Data {
+    /**
+     * Unique delivery ID (UUID)
+     */
+    id: string;
+
+    /**
+     * Attempt number for this delivery
+     */
+    attempt: number;
+
+    /**
+     * Event type that triggered this delivery
+     */
+    event:
+      | 'MessageSent'
+      | 'MessageDelayed'
+      | 'MessageDeliveryFailed'
+      | 'MessageHeld'
+      | 'MessageBounced'
+      | 'MessageLinkClicked'
+      | 'MessageLoaded'
+      | 'DomainDNSError';
+
+    /**
+     * The request that was sent to your endpoint
+     */
+    request: Data.Request;
+
+    /**
+     * The response received from your endpoint
+     */
+    response: Data.Response;
+
+    /**
+     * HTTP status code returned by the endpoint
+     */
+    statusCode: number | null;
+
+    /**
+     * Whether the delivery was successful (2xx response)
+     */
+    success: boolean;
+
+    /**
+     * When this delivery attempt occurred
+     */
+    timestamp: string;
+
+    /**
+     * URL the webhook was delivered to
+     */
+    url: string;
+
+    /**
+     * ID of the webhook this delivery belongs to
+     */
+    webhookId: string;
+
+    /**
+     * Name of the webhook for easy identification
+     */
+    webhookName: string;
+
+    /**
+     * Whether this delivery will be retried
+     */
+    willRetry: boolean;
+  }
+
+  export namespace Data {
+    /**
+     * The request that was sent to your endpoint
+     */
+    export interface Request {
+      /**
+       * HTTP headers that were sent with the request
+       */
+      headers: { [key: string]: string };
+
+      /**
+       * The complete webhook payload that was sent
+       */
+      payload: { [key: string]: unknown };
+    }
+
+    /**
+     * The response received from your endpoint
+     */
+    export interface Response {
+      /**
+       * HTTP status code from your endpoint
+       */
+      statusCode: number | null;
+
+      /**
+       * Response body from your endpoint (may be truncated)
+       */
+      body?: string | null;
+    }
+  }
+}
+
 export interface WebhookTestResponse {
   data: WebhookTestResponse.Data;
 
@@ -429,6 +781,60 @@ export interface WebhookUpdateParams {
   url?: string | null;
 }
 
+export interface WebhookListDeliveriesParams {
+  /**
+   * Only deliveries after this Unix timestamp
+   */
+  after?: number;
+
+  /**
+   * Only deliveries before this Unix timestamp
+   */
+  before?: number;
+
+  /**
+   * Filter by event type
+   */
+  event?:
+    | 'MessageSent'
+    | 'MessageDelayed'
+    | 'MessageDeliveryFailed'
+    | 'MessageHeld'
+    | 'MessageBounced'
+    | 'MessageLinkClicked'
+    | 'MessageLoaded'
+    | 'DomainDNSError';
+
+  /**
+   * Page number (default 1)
+   */
+  page?: number;
+
+  /**
+   * Items per page (default 30, max 100)
+   */
+  perPage?: number;
+
+  /**
+   * Filter by delivery success (true = 2xx response, false = non-2xx or error)
+   */
+  success?: boolean;
+}
+
+export interface WebhookReplayDeliveryParams {
+  /**
+   * Webhook ID or UUID
+   */
+  webhookId: string;
+}
+
+export interface WebhookRetrieveDeliveryParams {
+  /**
+   * Webhook ID or UUID
+   */
+  webhookId: string;
+}
+
 export interface WebhookTestParams {
   /**
    * Event type to simulate
@@ -451,9 +857,15 @@ export declare namespace Webhooks {
     type WebhookUpdateResponse as WebhookUpdateResponse,
     type WebhookListResponse as WebhookListResponse,
     type WebhookDeleteResponse as WebhookDeleteResponse,
+    type WebhookListDeliveriesResponse as WebhookListDeliveriesResponse,
+    type WebhookReplayDeliveryResponse as WebhookReplayDeliveryResponse,
+    type WebhookRetrieveDeliveryResponse as WebhookRetrieveDeliveryResponse,
     type WebhookTestResponse as WebhookTestResponse,
     type WebhookCreateParams as WebhookCreateParams,
     type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookListDeliveriesParams as WebhookListDeliveriesParams,
+    type WebhookReplayDeliveryParams as WebhookReplayDeliveryParams,
+    type WebhookRetrieveDeliveryParams as WebhookRetrieveDeliveryParams,
     type WebhookTestParams as WebhookTestParams,
   };
 }

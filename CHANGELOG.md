@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.0 (2026-01-21)
+
+Full Changelog: [v0.8.0...v0.9.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.8.0...v0.9.0)
+
+### Features
+
+* **api:** add sandbox domain ([71ae6bf](https://github.com/ArkHQ-io/ark-nodejs/commit/71ae6bfc4dea99c0af32fd010bdec1c21d73c0d1))
+
 ## 0.8.0 (2026-01-20)
 
 Full Changelog: [v0.7.0...v0.8.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.7.0...v0.8.0)

@@ -482,6 +482,12 @@ export namespace EmailSendResponse {
      * SMTP Message-ID header value
      */
     messageId?: string;
+
+    /**
+     * Whether this email was sent in sandbox mode. Only present (and true) for sandbox
+     * emails sent from @arkhq.io addresses.
+     */
+    sandbox?: boolean;
   }
 }
 
@@ -514,6 +520,12 @@ export namespace EmailSendBatchResponse {
      * Total emails in the batch
      */
     total: number;
+
+    /**
+     * Whether this batch was sent in sandbox mode. Only present (and true) for sandbox
+     * emails sent from @arkhq.io addresses.
+     */
+    sandbox?: boolean;
   }
 
   export namespace Data {
@@ -557,6 +569,12 @@ export namespace EmailSendRawResponse {
      * SMTP Message-ID header value
      */
     messageId?: string;
+
+    /**
+     * Whether this email was sent in sandbox mode. Only present (and true) for sandbox
+     * emails sent from @arkhq.io addresses.
+     */
+    sandbox?: boolean;
   }
 }
 
@@ -613,7 +631,8 @@ export interface EmailListParams extends PageNumberPaginationParams {
 
 export interface EmailSendParams {
   /**
-   * Body param: Sender email address. Must be from a verified domain.
+   * Body param: Sender email address. Must be from a verified domain OR use sandbox
+   * mode.
    *
    * **Supported formats:**
    *
@@ -622,6 +641,10 @@ export interface EmailSendParams {
    * - With quoted name: `"Acme Support" <support@yourdomain.com>`
    *
    * The domain portion must match a verified sending domain in your account.
+   *
+   * **Sandbox mode:** Use `sandbox@arkhq.io` to send test emails without domain
+   * verification. Sandbox emails can only be sent to organization members and are
+   * limited to 10 per day.
    */
   from: string;
 

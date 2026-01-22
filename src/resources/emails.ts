@@ -56,13 +56,47 @@ export class Emails extends APIResource {
   }
 
   /**
-   * Get the history of delivery attempts for an email, including SMTP response codes
-   * and timestamps.
+   * Get the complete delivery history for an email, including SMTP response codes,
+   * timestamps, and current retry state.
+   *
+   * ## Response Fields
+   *
+   * ### Status
+   *
+   * The current status of the email:
+   *
+   * - `pending` - Awaiting first delivery attempt
+   * - `sent` - Successfully delivered to recipient server
+   * - `softfail` - Temporary failure, automatic retry scheduled
+   * - `hardfail` - Permanent failure, will not retry
+   * - `held` - Held for manual review
+   * - `bounced` - Bounced by recipient server
+   *
+   * ### Retry State
+   *
+   * When the email is in the delivery queue (`pending` or `softfail` status),
+   * `retryState` provides information about the retry schedule:
+   *
+   * - `attempt` - Current attempt number (0 = first attempt)
+   * - `maxAttempts` - Maximum attempts before hard-fail (typically 18)
+   * - `attemptsRemaining` - Attempts left before hard-fail
+   * - `nextRetryAt` - When the next retry is scheduled (Unix timestamp)
+   * - `processing` - Whether the email is currently being processed
+   * - `manual` - Whether this was triggered by a manual retry
+   *
+   * When the email has finished processing (`sent`, `hardfail`, `held`, `bounced`),
+   * `retryState` is `null`.
+   *
+   * ### Can Retry Manually
+   *
+   * Indicates whether you can call `POST /emails/{emailId}/retry` to manually retry
+   * the email. This is `true` when the raw message content is still available (not
+   * expired due to retention policy).
    *
    * @example
    * ```ts
    * const response = await client.emails.retrieveDeliveries(
-   *   'emailId',
+   *   'msg_12345_aBc123XyZ',
    * );
    * ```
    */
@@ -381,17 +415,46 @@ export interface EmailRetrieveDeliveriesResponse {
 
 export namespace EmailRetrieveDeliveriesResponse {
   export interface Data {
+    /**
+     * Whether the message can be manually retried via `POST /emails/{emailId}/retry`.
+     * `true` when the raw message content is still available (not expired). Messages
+     * older than the retention period cannot be retried.
+     */
+    canRetryManually: boolean;
+
+    /**
+     * Chronological list of delivery attempts for this message. Each attempt includes
+     * SMTP response codes and timestamps.
+     */
     deliveries: Array<Data.Delivery>;
 
     /**
-     * Internal message ID
+     * Internal numeric message ID
      */
-    messageId: string;
+    messageId: number;
 
     /**
-     * Message token
+     * Unique message token for API references
      */
     messageToken: string;
+
+    /**
+     * Information about the current retry state of a message that is queued for
+     * delivery. Only present when the message is in the delivery queue.
+     */
+    retryState: Data.RetryState | null;
+
+    /**
+     * Current message status (lowercase). Possible values:
+     *
+     * - `pending` - Initial state, awaiting first delivery attempt
+     * - `sent` - Successfully delivered
+     * - `softfail` - Temporary failure, will retry automatically
+     * - `hardfail` - Permanent failure, will not retry
+     * - `held` - Held for manual review (suppression list, etc.)
+     * - `bounced` - Bounced by recipient server
+     */
+    status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'held' | 'bounced';
   }
 
   export namespace Data {
@@ -435,6 +498,54 @@ export namespace EmailRetrieveDeliveriesResponse {
        * Whether TLS was used
        */
       sentWithSsl?: boolean;
+    }
+
+    /**
+     * Information about the current retry state of a message that is queued for
+     * delivery. Only present when the message is in the delivery queue.
+     */
+    export interface RetryState {
+      /**
+       * Current attempt number (0-indexed). The first delivery attempt is 0, the first
+       * retry is 1, and so on.
+       */
+      attempt: number;
+
+      /**
+       * Number of attempts remaining before the message is hard-failed. Calculated as
+       * `maxAttempts - attempt`.
+       */
+      attemptsRemaining: number;
+
+      /**
+       * Whether this queue entry was created by a manual retry request. Manual retries
+       * bypass certain hold conditions like suppression lists.
+       */
+      manual: boolean;
+
+      /**
+       * Maximum number of delivery attempts before the message is hard-failed.
+       * Configured at the server level.
+       */
+      maxAttempts: number;
+
+      /**
+       * Whether the message is currently being processed by a delivery worker. When
+       * `true`, the message is actively being sent.
+       */
+      processing: boolean;
+
+      /**
+       * Unix timestamp of when the next retry attempt is scheduled. `null` if the
+       * message is ready for immediate processing or currently being processed.
+       */
+      nextRetryAt?: number | null;
+
+      /**
+       * ISO 8601 formatted timestamp of the next retry attempt. `null` if the message is
+       * ready for immediate processing.
+       */
+      nextRetryAtIso?: string | null;
     }
   }
 }

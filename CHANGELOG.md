@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0 (2026-01-22)
+
+Full Changelog: [v0.9.0...v0.10.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.9.0...v0.10.0)
+
+### Features
+
+* **api:** improve GET delivery attempts ([e8307a5](https://github.com/ArkHQ-io/ark-nodejs/commit/e8307a540da03a58c6ade2ca444a4f2dcf265b8d))
+
 ## 0.9.0 (2026-01-21)
 
 Full Changelog: [v0.8.0...v0.9.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.8.0...v0.9.0)

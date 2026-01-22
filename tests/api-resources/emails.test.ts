@@ -61,7 +61,7 @@ describe('resource emails', () => {
   });
 
   test('retrieveDeliveries', async () => {
-    const responsePromise = client.emails.retrieveDeliveries('emailId');
+    const responsePromise = client.emails.retrieveDeliveries('msg_12345_aBc123XyZ');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

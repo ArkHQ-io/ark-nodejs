@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.0 (2026-01-22)
+
+Full Changelog: [v0.10.0...v0.11.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.10.0...v0.11.0)
+
+### Features
+
+* **api:** api update ([942ac0c](https://github.com/ArkHQ-io/ark-nodejs/commit/942ac0c134761a2406fdf871a4a89137251f284c))
+* **api:** api update ([e8b7d3e](https://github.com/ArkHQ-io/ark-nodejs/commit/e8b7d3e42697d35c9fa517248a437886e0d97898))
+* **api:** fix incorrect webhook payload examples ([060b86a](https://github.com/ArkHQ-io/ark-nodejs/commit/060b86a38f7c5660717578af867ab78e20123e50))
+* **api:** manual updates ([e816eb2](https://github.com/ArkHQ-io/ark-nodejs/commit/e816eb29acf534c27986d83a2bfbe35981285078))
+
 ## 0.10.0 (2026-01-22)
 
 Full Changelog: [v0.9.0...v0.10.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.9.0...v0.10.0)

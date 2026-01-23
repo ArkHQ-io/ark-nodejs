@@ -209,9 +209,9 @@ export class Emails extends APIResource {
    * @example
    * ```ts
    * const response = await client.emails.sendRaw({
-   *   from: 'dev@stainless.com',
-   *   rawMessage: 'rawMessage',
-   *   to: ['dev@stainless.com'],
+   *   from: 'Acme <hello@acme.com>',
+   *   rawMessage: 'x',
+   *   to: ['user@example.com'],
    * });
    * ```
    */
@@ -918,7 +918,15 @@ export namespace EmailSendBatchParams {
 
 export interface EmailSendRawParams {
   /**
-   * Sender email address
+   * Sender email address. Must be from a verified domain.
+   *
+   * **Supported formats:**
+   *
+   * - Email only: `hello@yourdomain.com`
+   * - With display name: `Acme <hello@yourdomain.com>`
+   * - With quoted name: `"Acme Support" <support@yourdomain.com>`
+   *
+   * The domain portion must match a verified sending domain in your account.
    */
   from: string;
 

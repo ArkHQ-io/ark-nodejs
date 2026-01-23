@@ -21,7 +21,7 @@ export const newMcpServer = () =>
   new McpServer(
     {
       name: 'ark_email_api',
-      version: '0.11.0',
+      version: '0.12.0',
     },
     { capabilities: { tools: {}, logging: {} } },
   );

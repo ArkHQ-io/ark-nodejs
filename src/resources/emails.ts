@@ -204,14 +204,14 @@ export class Emails extends APIResource {
    * Send a pre-formatted RFC 2822 MIME message. Use this for advanced use cases or
    * when migrating from systems that generate raw email content.
    *
-   * The `data` field should contain the base64-encoded raw email.
+   * The `rawMessage` field should contain the base64-encoded raw email.
    *
    * @example
    * ```ts
    * const response = await client.emails.sendRaw({
-   *   data: 'data',
-   *   mailFrom: 'dev@stainless.com',
-   *   rcptTo: ['dev@stainless.com'],
+   *   from: 'dev@stainless.com',
+   *   rawMessage: 'rawMessage',
+   *   to: ['dev@stainless.com'],
    * });
    * ```
    */
@@ -918,19 +918,19 @@ export namespace EmailSendBatchParams {
 
 export interface EmailSendRawParams {
   /**
-   * Base64-encoded RFC 2822 message
+   * Sender email address
    */
-  data: string;
+  from: string;
 
   /**
-   * Envelope sender address
+   * Base64-encoded RFC 2822 MIME message
    */
-  mailFrom: string;
+  rawMessage: string;
 
   /**
-   * Envelope recipient addresses
+   * Recipient email addresses
    */
-  rcptTo: Array<string>;
+  to: Array<string>;
 
   /**
    * Whether this is a bounce message (accepts null)

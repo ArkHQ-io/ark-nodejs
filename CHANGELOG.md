@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.0 (2026-01-23)
+
+Full Changelog: [v0.11.0...v0.12.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.11.0...v0.12.0)
+
+### Features
+
+* **api:** improve raw endpoint ([e1a5e58](https://github.com/ArkHQ-io/ark-nodejs/commit/e1a5e58177c7a84a0d67b7515fb934a530932c70))
+
 ## 0.11.0 (2026-01-22)
 
 Full Changelog: [v0.10.0...v0.11.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.10.0...v0.11.0)

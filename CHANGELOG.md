@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0 (2026-01-23)
+
+Full Changelog: [v0.12.0...v0.13.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.12.0...v0.13.0)
+
+### Features
+
+* **api:** fix from in Send raw MIME email ([c839a48](https://github.com/ArkHQ-io/ark-nodejs/commit/c839a4843060616e3573fb4931f9a2f9c9c9a269))
+* **api:** improve raw MIME error handling ([c859430](https://github.com/ArkHQ-io/ark-nodejs/commit/c859430e4a04aefc66e4e8b64d4b0fee61499cd8))
+
 ## 0.12.0 (2026-01-23)
 
 Full Changelog: [v0.11.0...v0.12.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.11.0...v0.12.0)

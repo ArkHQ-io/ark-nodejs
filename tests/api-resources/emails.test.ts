@@ -173,9 +173,9 @@ describe('resource emails', () => {
 
   test('sendRaw: only required params', async () => {
     const responsePromise = client.emails.sendRaw({
-      from: 'dev@stainless.com',
-      rawMessage: 'rawMessage',
-      to: ['dev@stainless.com'],
+      from: 'Acme <hello@acme.com>',
+      rawMessage: 'x',
+      to: ['user@example.com'],
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -188,9 +188,9 @@ describe('resource emails', () => {
 
   test('sendRaw: required and optional params', async () => {
     const response = await client.emails.sendRaw({
-      from: 'dev@stainless.com',
-      rawMessage: 'rawMessage',
-      to: ['dev@stainless.com'],
+      from: 'Acme <hello@acme.com>',
+      rawMessage: 'x',
+      to: ['user@example.com'],
       bounce: true,
     });
   });

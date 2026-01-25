@@ -109,3 +109,16 @@ Methods:
 - <code title="get /tracking">client.tracking.<a href="./src/resources/tracking.ts">list</a>() -> TrackingListResponse</code>
 - <code title="delete /tracking/{trackingId}">client.tracking.<a href="./src/resources/tracking.ts">delete</a>(trackingID) -> TrackingDeleteResponse</code>
 - <code title="post /tracking/{trackingId}/verify">client.tracking.<a href="./src/resources/tracking.ts">verify</a>(trackingID) -> TrackingVerifyResponse</code>
+
+# Logs
+
+Types:
+
+- <code><a href="./src/resources/logs.ts">LogEntry</a></code>
+- <code><a href="./src/resources/logs.ts">LogEntryDetail</a></code>
+- <code><a href="./src/resources/logs.ts">LogRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /logs/{requestId}">client.logs.<a href="./src/resources/logs.ts">retrieve</a>(requestID) -> LogRetrieveResponse</code>
+- <code title="get /logs">client.logs.<a href="./src/resources/logs.ts">list</a>({ ...params }) -> LogEntriesPageNumberPagination</code>

@@ -289,6 +289,16 @@ export namespace EmailRetrieveResponse {
     to: string;
 
     /**
+     * Opens and clicks tracking data (included if expand=activity)
+     */
+    activity?: Data.Activity;
+
+    /**
+     * File attachments (included if expand=attachments)
+     */
+    attachments?: Array<Data.Attachment>;
+
+    /**
      * Delivery attempt history (included if expand=deliveries)
      */
     deliveries?: Array<Data.Delivery>;
@@ -314,6 +324,12 @@ export namespace EmailRetrieveResponse {
     plainBody?: string;
 
     /**
+     * Complete raw MIME message, base64 encoded (included if expand=raw). Decode this
+     * to get the original RFC 2822 formatted email.
+     */
+    rawMessage?: string;
+
+    /**
      * Whether the message was flagged as spam
      */
     spam?: boolean;
@@ -330,6 +346,102 @@ export namespace EmailRetrieveResponse {
   }
 
   export namespace Data {
+    /**
+     * Opens and clicks tracking data (included if expand=activity)
+     */
+    export interface Activity {
+      /**
+       * List of link click events
+       */
+      clicks?: Array<Activity.Click>;
+
+      /**
+       * List of email open events
+       */
+      opens?: Array<Activity.Open>;
+    }
+
+    export namespace Activity {
+      export interface Click {
+        /**
+         * IP address of the clicker
+         */
+        ipAddress?: string;
+
+        /**
+         * Unix timestamp of the click event
+         */
+        timestamp?: number;
+
+        /**
+         * ISO 8601 timestamp of the click event
+         */
+        timestampIso?: string;
+
+        /**
+         * URL that was clicked
+         */
+        url?: string;
+
+        /**
+         * User agent of the email client
+         */
+        userAgent?: string;
+      }
+
+      export interface Open {
+        /**
+         * IP address of the opener
+         */
+        ipAddress?: string;
+
+        /**
+         * Unix timestamp of the open event
+         */
+        timestamp?: number;
+
+        /**
+         * ISO 8601 timestamp of the open event
+         */
+        timestampIso?: string;
+
+        /**
+         * User agent of the email client
+         */
+        userAgent?: string;
+      }
+    }
+
+    /**
+     * An email attachment retrieved from a sent message
+     */
+    export interface Attachment {
+      /**
+       * MIME type of the attachment
+       */
+      contentType: string;
+
+      /**
+       * Base64 encoded attachment content. Decode this to get the raw file bytes.
+       */
+      data: string;
+
+      /**
+       * Original filename of the attachment
+       */
+      filename: string;
+
+      /**
+       * SHA256 hash of the attachment content for verification
+       */
+      hash: string;
+
+      /**
+       * Size of the attachment in bytes
+       */
+      size: number;
+    }
+
     export interface Delivery {
       /**
        * Delivery attempt ID
@@ -695,10 +807,13 @@ export interface EmailRetrieveParams {
   /**
    * Comma-separated list of fields to include:
    *
+   * - `full` - Include all expanded fields in a single request
    * - `content` - HTML and plain text body
    * - `headers` - Email headers
    * - `deliveries` - Delivery attempt history
-   * - `activity` - Opens and clicks
+   * - `activity` - Opens and clicks tracking data
+   * - `attachments` - File attachments with content (base64 encoded)
+   * - `raw` - Complete raw MIME message (base64 encoded)
    */
   expand?: string;
 }

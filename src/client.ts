@@ -49,6 +49,14 @@ import {
   Emails,
 } from './resources/emails';
 import {
+  LogEntriesPageNumberPagination,
+  LogEntry,
+  LogEntryDetail,
+  LogListParams,
+  LogRetrieveResponse,
+  Logs,
+} from './resources/logs';
+import {
   SuppressionBulkCreateParams,
   SuppressionBulkCreateResponse,
   SuppressionCreateParams,
@@ -816,6 +824,7 @@ export class Ark {
   suppressions: API.Suppressions = new API.Suppressions(this);
   webhooks: API.Webhooks = new API.Webhooks(this);
   tracking: API.Tracking = new API.Tracking(this);
+  logs: API.Logs = new API.Logs(this);
 }
 
 Ark.Emails = Emails;
@@ -823,6 +832,7 @@ Ark.Domains = Domains;
 Ark.Suppressions = Suppressions;
 Ark.Webhooks = Webhooks;
 Ark.Tracking = Tracking;
+Ark.Logs = Logs;
 
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
@@ -904,6 +914,15 @@ export declare namespace Ark {
     type TrackingVerifyResponse as TrackingVerifyResponse,
     type TrackingCreateParams as TrackingCreateParams,
     type TrackingUpdateParams as TrackingUpdateParams,
+  };
+
+  export {
+    Logs as Logs,
+    type LogEntry as LogEntry,
+    type LogEntryDetail as LogEntryDetail,
+    type LogRetrieveResponse as LogRetrieveResponse,
+    type LogEntriesPageNumberPagination as LogEntriesPageNumberPagination,
+    type LogListParams as LogListParams,
   };
 
   export type APIMeta = API.APIMeta;

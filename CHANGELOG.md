@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.14.0 (2026-01-25)
+
+Full Changelog: [v0.13.0...v0.14.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.13.0...v0.14.0)
+
+### Features
+
+* **api:** manual updates ([8c3c143](https://github.com/ArkHQ-io/ark-nodejs/commit/8c3c1439bf23574d4c60b0fe36ac7ad65c53b112))
+* **api:** update email details to include attachments ([5694d32](https://github.com/ArkHQ-io/ark-nodejs/commit/5694d32305945e20ea42e6d4d48c1e390c7e8518))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([121d128](https://github.com/ArkHQ-io/ark-nodejs/commit/121d1287418f72e2d6a148428fb73f98db1d0b4b))
+
 ## 0.13.0 (2026-01-23)
 
 Full Changelog: [v0.12.0...v0.13.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.12.0...v0.13.0)

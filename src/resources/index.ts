@@ -28,6 +28,14 @@ export {
   type EmailListResponsesPageNumberPagination,
 } from './emails';
 export {
+  Logs,
+  type LogEntry,
+  type LogEntryDetail,
+  type LogRetrieveResponse,
+  type LogListParams,
+  type LogEntriesPageNumberPagination,
+} from './logs';
+export {
   Suppressions,
   type SuppressionCreateResponse,
   type SuppressionRetrieveResponse,

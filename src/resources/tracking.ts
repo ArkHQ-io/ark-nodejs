@@ -117,7 +117,8 @@ export interface TrackDomain {
   createdAt: string;
 
   /**
-   * Whether DNS is correctly configured
+   * Whether the tracking CNAME record is correctly configured. Must be true to use
+   * tracking features.
    */
   dnsOk: boolean;
 

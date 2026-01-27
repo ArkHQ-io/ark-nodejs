@@ -86,29 +86,32 @@ export class Domains extends APIResource {
   }
 }
 
+/**
+ * A DNS record that needs to be configured in your domain's DNS settings
+ */
 export interface DNSRecord {
   /**
-   * DNS record name (hostname)
+   * The hostname where the record should be created (relative to your domain)
    */
   name: string;
 
   /**
-   * DNS record type
+   * The DNS record type to create
    */
   type: 'TXT' | 'CNAME' | 'MX';
 
   /**
-   * DNS record value
+   * The value to set for the DNS record
    */
   value: string;
 
   /**
-   * DNS verification status:
+   * Current verification status of this DNS record:
    *
-   * - `OK` - Record is correctly configured
-   * - `Missing` - Record not found in DNS
-   * - `Invalid` - Record exists but has wrong value
-   * - `null` - Not yet checked
+   * - `OK` - Record is correctly configured and verified
+   * - `Missing` - Record was not found in your DNS
+   * - `Invalid` - Record exists but has an incorrect value
+   * - `null` - Record has not been checked yet
    */
   status?: 'OK' | 'Missing' | 'Invalid' | null;
 }
@@ -124,39 +127,63 @@ export interface DomainCreateResponse {
 export namespace DomainCreateResponse {
   export interface Data {
     /**
-     * Domain ID
+     * Unique domain identifier
      */
-    id: string;
-
-    createdAt: string;
-
-    dnsRecords: Data.DNSRecords;
+    id: number;
 
     /**
-     * Domain name
+     * Timestamp when the domain was added
+     */
+    createdAt: string;
+
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     */
+    dnsRecords: Data.DNSRecords | null;
+
+    /**
+     * The domain name used for sending emails
      */
     name: string;
 
+    /**
+     * UUID of the domain
+     */
     uuid: string;
 
     /**
-     * Whether DNS is verified
+     * Whether all DNS records (SPF, DKIM, Return Path) are correctly configured.
+     * Domain must be verified before sending emails.
      */
     verified: boolean;
 
     /**
-     * When the domain was verified (null if not verified)
+     * Timestamp when the domain ownership was verified, or null if not yet verified
      */
     verifiedAt?: string | null;
   }
 
   export namespace Data {
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     */
     export interface DNSRecords {
-      dkim: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      dkim?: DomainsAPI.DNSRecord | null;
 
-      returnPath: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      returnPath?: DomainsAPI.DNSRecord | null;
 
-      spf: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      spf?: DomainsAPI.DNSRecord | null;
     }
   }
 }
@@ -172,39 +199,63 @@ export interface DomainRetrieveResponse {
 export namespace DomainRetrieveResponse {
   export interface Data {
     /**
-     * Domain ID
+     * Unique domain identifier
      */
-    id: string;
-
-    createdAt: string;
-
-    dnsRecords: Data.DNSRecords;
+    id: number;
 
     /**
-     * Domain name
+     * Timestamp when the domain was added
+     */
+    createdAt: string;
+
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     */
+    dnsRecords: Data.DNSRecords | null;
+
+    /**
+     * The domain name used for sending emails
      */
     name: string;
 
+    /**
+     * UUID of the domain
+     */
     uuid: string;
 
     /**
-     * Whether DNS is verified
+     * Whether all DNS records (SPF, DKIM, Return Path) are correctly configured.
+     * Domain must be verified before sending emails.
      */
     verified: boolean;
 
     /**
-     * When the domain was verified (null if not verified)
+     * Timestamp when the domain ownership was verified, or null if not yet verified
      */
     verifiedAt?: string | null;
   }
 
   export namespace Data {
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     */
     export interface DNSRecords {
-      dkim: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      dkim?: DomainsAPI.DNSRecord | null;
 
-      returnPath: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      returnPath?: DomainsAPI.DNSRecord | null;
 
-      spf: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      spf?: DomainsAPI.DNSRecord | null;
     }
   }
 }
@@ -225,14 +276,19 @@ export namespace DomainListResponse {
   export namespace Data {
     export interface Domain {
       /**
-       * Domain ID
+       * Unique domain identifier
        */
-      id: string;
+      id: number;
 
-      dnsOk: boolean;
-
+      /**
+       * The domain name used for sending emails
+       */
       name: string;
 
+      /**
+       * Whether all DNS records (SPF, DKIM, Return Path) are correctly configured.
+       * Domain must be verified before sending emails.
+       */
       verified: boolean;
     }
   }
@@ -263,39 +319,63 @@ export interface DomainVerifyResponse {
 export namespace DomainVerifyResponse {
   export interface Data {
     /**
-     * Domain ID
+     * Unique domain identifier
      */
-    id: string;
-
-    createdAt: string;
-
-    dnsRecords: Data.DNSRecords;
+    id: number;
 
     /**
-     * Domain name
+     * Timestamp when the domain was added
+     */
+    createdAt: string;
+
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     */
+    dnsRecords: Data.DNSRecords | null;
+
+    /**
+     * The domain name used for sending emails
      */
     name: string;
 
+    /**
+     * UUID of the domain
+     */
     uuid: string;
 
     /**
-     * Whether DNS is verified
+     * Whether all DNS records (SPF, DKIM, Return Path) are correctly configured.
+     * Domain must be verified before sending emails.
      */
     verified: boolean;
 
     /**
-     * When the domain was verified (null if not verified)
+     * Timestamp when the domain ownership was verified, or null if not yet verified
      */
     verifiedAt?: string | null;
   }
 
   export namespace Data {
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     */
     export interface DNSRecords {
-      dkim: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      dkim?: DomainsAPI.DNSRecord | null;
 
-      returnPath: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      returnPath?: DomainsAPI.DNSRecord | null;
 
-      spf: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings
+       */
+      spf?: DomainsAPI.DNSRecord | null;
     }
   }
 }

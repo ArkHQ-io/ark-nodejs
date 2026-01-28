@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.15.0 (2026-01-28)
+
+Full Changelog: [v0.14.0...v0.15.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.14.0...v0.15.0)
+
+### Features
+
+* **api:** api update ([99d6f72](https://github.com/ArkHQ-io/ark-nodejs/commit/99d6f720ac84fec7749a3c3b704f083f8b38f9d6))
+* **api:** domain list improvement ([f923eb4](https://github.com/ArkHQ-io/ark-nodejs/commit/f923eb4873d76b90c5141f6a42ad4f672e8a9eb1))
+
+
+### Bug Fixes
+
+* **mcp:** allow falling back for required env variables ([6a4afe9](https://github.com/ArkHQ-io/ark-nodejs/commit/6a4afe9dcee95c51a64dab727a8c5e8f52dc292b))
+
+
+### Chores
+
+* **internal:** codegen related update ([6bc6e19](https://github.com/ArkHQ-io/ark-nodejs/commit/6bc6e190404d671c69af638b853e04cec5098965))
+
 ## 0.14.0 (2026-01-25)
 
 Full Changelog: [v0.13.0...v0.14.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.13.0...v0.14.0)

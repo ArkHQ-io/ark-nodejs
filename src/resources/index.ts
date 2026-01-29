@@ -59,6 +59,7 @@ export {
   type TrackingCreateParams,
   type TrackingUpdateParams,
 } from './tracking';
+export { Usage, type UsageRetrieveResponse } from './usage';
 export {
   Webhooks,
   type WebhookCreateResponse,

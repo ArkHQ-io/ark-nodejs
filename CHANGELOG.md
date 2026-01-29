@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.15.0 (2026-01-29)
+
+Full Changelog: [v0.14.0...v0.15.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.14.0...v0.15.0)
+
+### Features
+
+* **api:** add usage and SendLimit Headers ([4da45ed](https://github.com/ArkHQ-io/ark-nodejs/commit/4da45ed0e1a9631991bc4590736d0faa652e76c5))
+* **api:** api update ([99d6f72](https://github.com/ArkHQ-io/ark-nodejs/commit/99d6f720ac84fec7749a3c3b704f083f8b38f9d6))
+* **api:** domain list improvement ([f923eb4](https://github.com/ArkHQ-io/ark-nodejs/commit/f923eb4873d76b90c5141f6a42ad4f672e8a9eb1))
+
+
+### Bug Fixes
+
+* **docs:** fix mcp installation instructions for remote servers ([fba93be](https://github.com/ArkHQ-io/ark-nodejs/commit/fba93bed40ee7e2927d35441960b671321437128))
+* **mcp:** allow falling back for required env variables ([6a4afe9](https://github.com/ArkHQ-io/ark-nodejs/commit/6a4afe9dcee95c51a64dab727a8c5e8f52dc292b))
+
+
+### Chores
+
+* **internal:** codegen related update ([6bc6e19](https://github.com/ArkHQ-io/ark-nodejs/commit/6bc6e190404d671c69af638b853e04cec5098965))
+* **mcp:** up tsconfig lib version to es2022 ([659edb2](https://github.com/ArkHQ-io/ark-nodejs/commit/659edb25f192b964c95a91489ef9b4e9c2d1ac84))
+
 ## 0.14.0 (2026-01-25)
 
 Full Changelog: [v0.13.0...v0.14.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.13.0...v0.14.0)

@@ -86,29 +86,57 @@ export class Domains extends APIResource {
   }
 }
 
+/**
+ * A DNS record that needs to be configured in your domain's DNS settings.
+ *
+ * The `name` field contains the relative hostname to enter in your DNS provider
+ * (which auto-appends the zone). The `fullName` field contains the complete
+ * fully-qualified domain name (FQDN) for reference.
+ *
+ * **Example for subdomain `mail.example.com`:**
+ *
+ * - `name`: `"mail"` (what you enter in DNS provider)
+ * - `fullName`: `"mail.example.com"` (the complete hostname)
+ *
+ * **Example for root domain `example.com`:**
+ *
+ * - `name`: `"@"` (DNS shorthand for apex/root)
+ * - `fullName`: `"example.com"`
+ */
 export interface DNSRecord {
   /**
-   * DNS record name (hostname)
+   * The complete fully-qualified domain name (FQDN). Use this as a reference to
+   * verify the record is configured correctly.
+   */
+  fullName: string;
+
+  /**
+   * The relative hostname to enter in your DNS provider. Most DNS providers
+   * auto-append the zone name, so you only need to enter this relative part.
+   *
+   * - `"@"` means the apex/root of the zone (for root domains)
+   * - `"mail"` for a subdomain like `mail.example.com`
+   * - `"ark-xyz._domainkey.mail"` for DKIM on a subdomain
    */
   name: string;
 
   /**
-   * DNS record type
+   * The DNS record type to create
    */
   type: 'TXT' | 'CNAME' | 'MX';
 
   /**
-   * DNS record value
+   * The value to set for the DNS record
    */
   value: string;
 
   /**
-   * DNS verification status:
+   * Current verification status of this DNS record:
    *
-   * - `OK` - Record is correctly configured
-   * - `Missing` - Record not found in DNS
-   * - `Invalid` - Record exists but has wrong value
-   * - `null` - Not yet checked
+   * - `OK` - Record is correctly configured and verified
+   * - `Missing` - Record was not found in your DNS
+   * - `Invalid` - Record exists but has an incorrect value
+   * - `null` - Record has not been checked yet
    */
   status?: 'OK' | 'Missing' | 'Invalid' | null;
 }
@@ -124,39 +152,132 @@ export interface DomainCreateResponse {
 export namespace DomainCreateResponse {
   export interface Data {
     /**
-     * Domain ID
+     * Unique domain identifier
      */
-    id: string;
-
-    createdAt: string;
-
-    dnsRecords: Data.DNSRecords;
+    id: number;
 
     /**
-     * Domain name
+     * Timestamp when the domain was added
+     */
+    createdAt: string;
+
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     *
+     * **Important:** The `name` field contains the relative hostname that you should
+     * enter in your DNS provider. Most DNS providers auto-append the zone name, so you
+     * only need to enter the relative part.
+     *
+     * For subdomains like `mail.example.com`, the zone is `example.com`, so:
+     *
+     * - SPF `name` would be `mail` (not `@`)
+     * - DKIM `name` would be `ark-xyz._domainkey.mail`
+     * - Return Path `name` would be `psrp.mail`
+     */
+    dnsRecords: Data.DNSRecords | null;
+
+    /**
+     * The domain name used for sending emails
      */
     name: string;
 
+    /**
+     * UUID of the domain
+     */
     uuid: string;
 
     /**
-     * Whether DNS is verified
+     * Whether all DNS records (SPF, DKIM, Return Path) are correctly configured.
+     * Domain must be verified before sending emails.
      */
     verified: boolean;
 
     /**
-     * When the domain was verified (null if not verified)
+     * Timestamp when the domain ownership was verified, or null if not yet verified
      */
     verifiedAt?: string | null;
   }
 
   export namespace Data {
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     *
+     * **Important:** The `name` field contains the relative hostname that you should
+     * enter in your DNS provider. Most DNS providers auto-append the zone name, so you
+     * only need to enter the relative part.
+     *
+     * For subdomains like `mail.example.com`, the zone is `example.com`, so:
+     *
+     * - SPF `name` would be `mail` (not `@`)
+     * - DKIM `name` would be `ark-xyz._domainkey.mail`
+     * - Return Path `name` would be `psrp.mail`
+     */
     export interface DNSRecords {
-      dkim: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      dkim?: DomainsAPI.DNSRecord | null;
 
-      returnPath: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      returnPath?: DomainsAPI.DNSRecord | null;
 
-      spf: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      spf?: DomainsAPI.DNSRecord | null;
+
+      /**
+       * The DNS zone (registrable domain) where records should be added. This is the
+       * root domain that your DNS provider manages. For `mail.example.com`, the zone is
+       * `example.com`. For `example.co.uk`, the zone is `example.co.uk`.
+       */
+      zone?: string;
     }
   }
 }
@@ -172,39 +293,132 @@ export interface DomainRetrieveResponse {
 export namespace DomainRetrieveResponse {
   export interface Data {
     /**
-     * Domain ID
+     * Unique domain identifier
      */
-    id: string;
-
-    createdAt: string;
-
-    dnsRecords: Data.DNSRecords;
+    id: number;
 
     /**
-     * Domain name
+     * Timestamp when the domain was added
+     */
+    createdAt: string;
+
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     *
+     * **Important:** The `name` field contains the relative hostname that you should
+     * enter in your DNS provider. Most DNS providers auto-append the zone name, so you
+     * only need to enter the relative part.
+     *
+     * For subdomains like `mail.example.com`, the zone is `example.com`, so:
+     *
+     * - SPF `name` would be `mail` (not `@`)
+     * - DKIM `name` would be `ark-xyz._domainkey.mail`
+     * - Return Path `name` would be `psrp.mail`
+     */
+    dnsRecords: Data.DNSRecords | null;
+
+    /**
+     * The domain name used for sending emails
      */
     name: string;
 
+    /**
+     * UUID of the domain
+     */
     uuid: string;
 
     /**
-     * Whether DNS is verified
+     * Whether all DNS records (SPF, DKIM, Return Path) are correctly configured.
+     * Domain must be verified before sending emails.
      */
     verified: boolean;
 
     /**
-     * When the domain was verified (null if not verified)
+     * Timestamp when the domain ownership was verified, or null if not yet verified
      */
     verifiedAt?: string | null;
   }
 
   export namespace Data {
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     *
+     * **Important:** The `name` field contains the relative hostname that you should
+     * enter in your DNS provider. Most DNS providers auto-append the zone name, so you
+     * only need to enter the relative part.
+     *
+     * For subdomains like `mail.example.com`, the zone is `example.com`, so:
+     *
+     * - SPF `name` would be `mail` (not `@`)
+     * - DKIM `name` would be `ark-xyz._domainkey.mail`
+     * - Return Path `name` would be `psrp.mail`
+     */
     export interface DNSRecords {
-      dkim: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      dkim?: DomainsAPI.DNSRecord | null;
 
-      returnPath: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      returnPath?: DomainsAPI.DNSRecord | null;
 
-      spf: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      spf?: DomainsAPI.DNSRecord | null;
+
+      /**
+       * The DNS zone (registrable domain) where records should be added. This is the
+       * root domain that your DNS provider manages. For `mail.example.com`, the zone is
+       * `example.com`. For `example.co.uk`, the zone is `example.co.uk`.
+       */
+      zone?: string;
     }
   }
 }
@@ -225,14 +439,19 @@ export namespace DomainListResponse {
   export namespace Data {
     export interface Domain {
       /**
-       * Domain ID
+       * Unique domain identifier
        */
-      id: string;
+      id: number;
 
-      dnsOk: boolean;
-
+      /**
+       * The domain name used for sending emails
+       */
       name: string;
 
+      /**
+       * Whether all DNS records (SPF, DKIM, Return Path) are correctly configured.
+       * Domain must be verified before sending emails.
+       */
       verified: boolean;
     }
   }
@@ -263,39 +482,132 @@ export interface DomainVerifyResponse {
 export namespace DomainVerifyResponse {
   export interface Data {
     /**
-     * Domain ID
+     * Unique domain identifier
      */
-    id: string;
-
-    createdAt: string;
-
-    dnsRecords: Data.DNSRecords;
+    id: number;
 
     /**
-     * Domain name
+     * Timestamp when the domain was added
+     */
+    createdAt: string;
+
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     *
+     * **Important:** The `name` field contains the relative hostname that you should
+     * enter in your DNS provider. Most DNS providers auto-append the zone name, so you
+     * only need to enter the relative part.
+     *
+     * For subdomains like `mail.example.com`, the zone is `example.com`, so:
+     *
+     * - SPF `name` would be `mail` (not `@`)
+     * - DKIM `name` would be `ark-xyz._domainkey.mail`
+     * - Return Path `name` would be `psrp.mail`
+     */
+    dnsRecords: Data.DNSRecords | null;
+
+    /**
+     * The domain name used for sending emails
      */
     name: string;
 
+    /**
+     * UUID of the domain
+     */
     uuid: string;
 
     /**
-     * Whether DNS is verified
+     * Whether all DNS records (SPF, DKIM, Return Path) are correctly configured.
+     * Domain must be verified before sending emails.
      */
     verified: boolean;
 
     /**
-     * When the domain was verified (null if not verified)
+     * Timestamp when the domain ownership was verified, or null if not yet verified
      */
     verifiedAt?: string | null;
   }
 
   export namespace Data {
+    /**
+     * DNS records that must be added to your domain's DNS settings. Null if records
+     * are not yet generated.
+     *
+     * **Important:** The `name` field contains the relative hostname that you should
+     * enter in your DNS provider. Most DNS providers auto-append the zone name, so you
+     * only need to enter the relative part.
+     *
+     * For subdomains like `mail.example.com`, the zone is `example.com`, so:
+     *
+     * - SPF `name` would be `mail` (not `@`)
+     * - DKIM `name` would be `ark-xyz._domainkey.mail`
+     * - Return Path `name` would be `psrp.mail`
+     */
     export interface DNSRecords {
-      dkim: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      dkim?: DomainsAPI.DNSRecord | null;
 
-      returnPath: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      returnPath?: DomainsAPI.DNSRecord | null;
 
-      spf: DomainsAPI.DNSRecord;
+      /**
+       * A DNS record that needs to be configured in your domain's DNS settings.
+       *
+       * The `name` field contains the relative hostname to enter in your DNS provider
+       * (which auto-appends the zone). The `fullName` field contains the complete
+       * fully-qualified domain name (FQDN) for reference.
+       *
+       * **Example for subdomain `mail.example.com`:**
+       *
+       * - `name`: `"mail"` (what you enter in DNS provider)
+       * - `fullName`: `"mail.example.com"` (the complete hostname)
+       *
+       * **Example for root domain `example.com`:**
+       *
+       * - `name`: `"@"` (DNS shorthand for apex/root)
+       * - `fullName`: `"example.com"`
+       */
+      spf?: DomainsAPI.DNSRecord | null;
+
+      /**
+       * The DNS zone (registrable domain) where records should be added. This is the
+       * root domain that your DNS provider manages. For `mail.example.com`, the zone is
+       * `example.com`. For `example.co.uk`, the zone is `example.co.uk`.
+       */
+      zone?: string;
     }
   }
 }

@@ -2,8 +2,9 @@
 
 import { McpTool, Metadata, ToolCallResult, asErrorResult, asTextContentResult } from './types';
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { readEnv, readEnvOrError } from './server';
+import { readEnv, requireValue } from './server';
 import { WorkerInput, WorkerOutput } from './code-tool-types';
+import { Ark } from 'ark-email';
 
 const prompt = `Runs JavaScript code to interact with the Ark API.
 
@@ -61,7 +62,7 @@ export function codeTool(): McpTool {
       required: ['code'],
     },
   };
-  const handler = async (_: unknown, args: any): Promise<ToolCallResult> => {
+  const handler = async (client: Ark, args: any): Promise<ToolCallResult> => {
     const code = args.code as string;
     const intent = args.intent as string | undefined;
 
@@ -77,8 +78,11 @@ export function codeTool(): McpTool {
         ...(stainlessAPIKey && { Authorization: stainlessAPIKey }),
         'Content-Type': 'application/json',
         client_envs: JSON.stringify({
-          ARK_API_KEY: readEnvOrError('ARK_API_KEY'),
-          ARK_BASE_URL: readEnv('ARK_BASE_URL'),
+          ARK_API_KEY: requireValue(
+            readEnv('ARK_API_KEY') ?? client.apiKey,
+            'set ARK_API_KEY environment variable or provide apiKey client option',
+          ),
+          ARK_BASE_URL: readEnv('ARK_BASE_URL') ?? client.baseURL ?? undefined,
         }),
       },
       body: JSON.stringify({

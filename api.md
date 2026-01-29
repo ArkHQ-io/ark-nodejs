@@ -122,3 +122,13 @@ Methods:
 
 - <code title="get /logs/{requestId}">client.logs.<a href="./src/resources/logs.ts">retrieve</a>(requestID) -> LogRetrieveResponse</code>
 - <code title="get /logs">client.logs.<a href="./src/resources/logs.ts">list</a>({ ...params }) -> LogEntriesPageNumberPagination</code>
+
+# Usage
+
+Types:
+
+- <code><a href="./src/resources/usage.ts">UsageRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /usage">client.usage.<a href="./src/resources/usage.ts">retrieve</a>() -> UsageRetrieveResponse</code>

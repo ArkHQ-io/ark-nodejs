@@ -80,6 +80,7 @@ import {
   TrackingUpdateResponse,
   TrackingVerifyResponse,
 } from './resources/tracking';
+import { Usage, UsageRetrieveResponse } from './resources/usage';
 import {
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -825,6 +826,7 @@ export class Ark {
   webhooks: API.Webhooks = new API.Webhooks(this);
   tracking: API.Tracking = new API.Tracking(this);
   logs: API.Logs = new API.Logs(this);
+  usage: API.Usage = new API.Usage(this);
 }
 
 Ark.Emails = Emails;
@@ -833,6 +835,7 @@ Ark.Suppressions = Suppressions;
 Ark.Webhooks = Webhooks;
 Ark.Tracking = Tracking;
 Ark.Logs = Logs;
+Ark.Usage = Usage;
 
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
@@ -924,6 +927,8 @@ export declare namespace Ark {
     type LogEntriesPageNumberPagination as LogEntriesPageNumberPagination,
     type LogListParams as LogListParams,
   };
+
+  export { Usage as Usage, type UsageRetrieveResponse as UsageRetrieveResponse };
 
   export type APIMeta = API.APIMeta;
 }

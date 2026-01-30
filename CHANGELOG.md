@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.16.0 (2026-01-30)
+
+Full Changelog: [v0.15.0...v0.16.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.15.0...v0.16.0)
+
+### Features
+
+* **api:** api update ([64e38a0](https://github.com/ArkHQ-io/ark-nodejs/commit/64e38a022bbdc89c32166d9caaac3f22fd505d22))
+* **api:** api update ([f4de7b3](https://github.com/ArkHQ-io/ark-nodejs/commit/f4de7b333b463faac5e6d64e01b607b6c3d3613a))
+* **api:** manual updates ([7bb8ad0](https://github.com/ArkHQ-io/ark-nodejs/commit/7bb8ad06c7030ee9510b4e10394dc1af6197ce45))
+* **api:** manual updates ([f693fce](https://github.com/ArkHQ-io/ark-nodejs/commit/f693fceba49fa8b425ba2b200856dbaee20f19fc))
+* **api:** manual updates ([94a42ef](https://github.com/ArkHQ-io/ark-nodejs/commit/94a42efd1005d63f47412a7db54429761e760967))
+
 ## 0.15.0 (2026-01-29)
 
 Full Changelog: [v0.14.0...v0.15.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.14.0...v0.15.0)

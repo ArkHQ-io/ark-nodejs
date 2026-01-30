@@ -18,7 +18,7 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const email = await client.emails.retrieve('emailId');
+   * const email = await client.emails.retrieve('aBc123XyZ');
    * ```
    */
   retrieve(
@@ -96,7 +96,7 @@ export class Emails extends APIResource {
    * @example
    * ```ts
    * const response = await client.emails.retrieveDeliveries(
-   *   'msg_12345_aBc123XyZ',
+   *   'aBc123XyZ',
    * );
    * ```
    */
@@ -112,7 +112,7 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.emails.retry('emailId');
+   * const response = await client.emails.retry('aBc123XyZ');
    * ```
    */
   retry(emailID: string, options?: RequestOptions): APIPromise<EmailRetryResponse> {
@@ -235,16 +235,9 @@ export interface EmailRetrieveResponse {
 export namespace EmailRetrieveResponse {
   export interface Data {
     /**
-     * Internal message ID
+     * Unique message identifier (token)
      */
     id: string;
-
-    /**
-     * Unique message token used to retrieve this email via API. Combined with id to
-     * form the full message identifier: msg*{id}*{token} Use this token with GET
-     * /emails/{emailId} where emailId = "msg*{id}*{token}"
-     */
-    token: string;
 
     /**
      * Sender address
@@ -530,6 +523,11 @@ export interface EmailRetrieveDeliveriesResponse {
 export namespace EmailRetrieveDeliveriesResponse {
   export interface Data {
     /**
+     * Message identifier (token)
+     */
+    id: string;
+
+    /**
      * Whether the message can be manually retried via `POST /emails/{emailId}/retry`.
      * `true` when the raw message content is still available (not expired). Messages
      * older than the retention period cannot be retried.
@@ -541,16 +539,6 @@ export namespace EmailRetrieveDeliveriesResponse {
      * SMTP response codes and timestamps.
      */
     deliveries: Array<Data.Delivery>;
-
-    /**
-     * Internal numeric message ID
-     */
-    messageId: number;
-
-    /**
-     * Unique message token for API references
-     */
-    messageToken: string;
 
     /**
      * Information about the current retry state of a message that is queued for
@@ -674,6 +662,11 @@ export interface EmailRetryResponse {
 
 export namespace EmailRetryResponse {
   export interface Data {
+    /**
+     * Email identifier (token)
+     */
+    id: string;
+
     message: string;
   }
 }
@@ -689,7 +682,7 @@ export interface EmailSendResponse {
 export namespace EmailSendResponse {
   export interface Data {
     /**
-     * Unique message ID (format: msg*{id}*{token})
+     * Unique message identifier (token)
      */
     id: string;
 
@@ -756,11 +749,9 @@ export namespace EmailSendBatchResponse {
   export namespace Data {
     export interface Messages {
       /**
-       * Message ID
+       * Message identifier (token)
        */
       id: string;
-
-      token: string;
     }
   }
 }
@@ -776,7 +767,7 @@ export interface EmailSendRawResponse {
 export namespace EmailSendRawResponse {
   export interface Data {
     /**
-     * Unique message ID (format: msg*{id}*{token})
+     * Unique message identifier (token)
      */
     id: string;
 

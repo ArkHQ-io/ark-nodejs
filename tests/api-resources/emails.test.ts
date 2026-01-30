@@ -9,7 +9,7 @@ const client = new Ark({
 
 describe('resource emails', () => {
   test('retrieve', async () => {
-    const responsePromise = client.emails.retrieve('emailId');
+    const responsePromise = client.emails.retrieve('aBc123XyZ');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,7 +22,7 @@ describe('resource emails', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.emails.retrieve('emailId', { expand: 'full' }, { path: '/_stainless_unknown_path' }),
+      client.emails.retrieve('aBc123XyZ', { expand: 'full' }, { path: '/_stainless_unknown_path' }),
     ).rejects.toThrow(Ark.NotFoundError);
   });
 
@@ -57,7 +57,7 @@ describe('resource emails', () => {
   });
 
   test('retrieveDeliveries', async () => {
-    const responsePromise = client.emails.retrieveDeliveries('msg_12345_aBc123XyZ');
+    const responsePromise = client.emails.retrieveDeliveries('aBc123XyZ');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -68,7 +68,7 @@ describe('resource emails', () => {
   });
 
   test('retry', async () => {
-    const responsePromise = client.emails.retry('emailId');
+    const responsePromise = client.emails.retry('aBc123XyZ');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;

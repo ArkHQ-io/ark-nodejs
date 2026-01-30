@@ -18,15 +18,15 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const email = await client.emails.retrieve('emailId');
+   * const email = await client.emails.retrieve('aBc123XyZ');
    * ```
    */
   retrieve(
-    emailID: string,
+    id: string,
     query: EmailRetrieveParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<EmailRetrieveResponse> {
-    return this._client.get(path`/emails/${emailID}`, { query, ...options });
+    return this._client.get(path`/emails/${id}`, { query, ...options });
   }
 
   /**
@@ -89,19 +89,19 @@ export class Emails extends APIResource {
    *
    * ### Can Retry Manually
    *
-   * Indicates whether you can call `POST /emails/{emailId}/retry` to manually retry
-   * the email. This is `true` when the raw message content is still available (not
+   * Indicates whether you can call `POST /emails/{id}/retry` to manually retry the
+   * email. This is `true` when the raw message content is still available (not
    * expired due to retention policy).
    *
    * @example
    * ```ts
    * const response = await client.emails.retrieveDeliveries(
-   *   'msg_12345_aBc123XyZ',
+   *   'aBc123XyZ',
    * );
    * ```
    */
-  retrieveDeliveries(emailID: string, options?: RequestOptions): APIPromise<EmailRetrieveDeliveriesResponse> {
-    return this._client.get(path`/emails/${emailID}/deliveries`, options);
+  retrieveDeliveries(id: string, options?: RequestOptions): APIPromise<EmailRetrieveDeliveriesResponse> {
+    return this._client.get(path`/emails/${id}/deliveries`, options);
   }
 
   /**
@@ -112,11 +112,11 @@ export class Emails extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.emails.retry('emailId');
+   * const response = await client.emails.retry('aBc123XyZ');
    * ```
    */
-  retry(emailID: string, options?: RequestOptions): APIPromise<EmailRetryResponse> {
-    return this._client.post(path`/emails/${emailID}/retry`, options);
+  retry(id: string, options?: RequestOptions): APIPromise<EmailRetryResponse> {
+    return this._client.post(path`/emails/${id}/retry`, options);
   }
 
   /**
@@ -235,16 +235,9 @@ export interface EmailRetrieveResponse {
 export namespace EmailRetrieveResponse {
   export interface Data {
     /**
-     * Internal message ID
+     * Unique message identifier (token)
      */
     id: string;
-
-    /**
-     * Unique message token used to retrieve this email via API. Combined with id to
-     * form the full message identifier: msg*{id}*{token} Use this token with GET
-     * /emails/{emailId} where emailId = "msg*{id}*{token}"
-     */
-    token: string;
 
     /**
      * Sender address
@@ -488,11 +481,9 @@ export namespace EmailRetrieveResponse {
 
 export interface EmailListResponse {
   /**
-   * Internal message ID
+   * Unique message identifier (token)
    */
   id: string;
-
-  token: string;
 
   from: string;
 
@@ -530,7 +521,12 @@ export interface EmailRetrieveDeliveriesResponse {
 export namespace EmailRetrieveDeliveriesResponse {
   export interface Data {
     /**
-     * Whether the message can be manually retried via `POST /emails/{emailId}/retry`.
+     * Message identifier (token)
+     */
+    id: string;
+
+    /**
+     * Whether the message can be manually retried via `POST /emails/{id}/retry`.
      * `true` when the raw message content is still available (not expired). Messages
      * older than the retention period cannot be retried.
      */
@@ -541,16 +537,6 @@ export namespace EmailRetrieveDeliveriesResponse {
      * SMTP response codes and timestamps.
      */
     deliveries: Array<Data.Delivery>;
-
-    /**
-     * Internal numeric message ID
-     */
-    messageId: number;
-
-    /**
-     * Unique message token for API references
-     */
-    messageToken: string;
 
     /**
      * Information about the current retry state of a message that is queued for
@@ -674,6 +660,11 @@ export interface EmailRetryResponse {
 
 export namespace EmailRetryResponse {
   export interface Data {
+    /**
+     * Email identifier (token)
+     */
+    id: string;
+
     message: string;
   }
 }
@@ -689,7 +680,7 @@ export interface EmailSendResponse {
 export namespace EmailSendResponse {
   export interface Data {
     /**
-     * Unique message ID (format: msg*{id}*{token})
+     * Unique message identifier (token)
      */
     id: string;
 
@@ -756,11 +747,9 @@ export namespace EmailSendBatchResponse {
   export namespace Data {
     export interface Messages {
       /**
-       * Message ID
+       * Message identifier (token)
        */
       id: string;
-
-      token: string;
     }
   }
 }
@@ -776,7 +765,7 @@ export interface EmailSendRawResponse {
 export namespace EmailSendRawResponse {
   export interface Data {
     /**
-     * Unique message ID (format: msg*{id}*{token})
+     * Unique message identifier (token)
      */
     id: string;
 

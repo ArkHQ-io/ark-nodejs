@@ -22,11 +22,11 @@ export class Emails extends APIResource {
    * ```
    */
   retrieve(
-    emailID: string,
+    id: string,
     query: EmailRetrieveParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<EmailRetrieveResponse> {
-    return this._client.get(path`/emails/${emailID}`, { query, ...options });
+    return this._client.get(path`/emails/${id}`, { query, ...options });
   }
 
   /**
@@ -89,8 +89,8 @@ export class Emails extends APIResource {
    *
    * ### Can Retry Manually
    *
-   * Indicates whether you can call `POST /emails/{emailId}/retry` to manually retry
-   * the email. This is `true` when the raw message content is still available (not
+   * Indicates whether you can call `POST /emails/{id}/retry` to manually retry the
+   * email. This is `true` when the raw message content is still available (not
    * expired due to retention policy).
    *
    * @example
@@ -100,8 +100,8 @@ export class Emails extends APIResource {
    * );
    * ```
    */
-  retrieveDeliveries(emailID: string, options?: RequestOptions): APIPromise<EmailRetrieveDeliveriesResponse> {
-    return this._client.get(path`/emails/${emailID}/deliveries`, options);
+  retrieveDeliveries(id: string, options?: RequestOptions): APIPromise<EmailRetrieveDeliveriesResponse> {
+    return this._client.get(path`/emails/${id}/deliveries`, options);
   }
 
   /**
@@ -115,8 +115,8 @@ export class Emails extends APIResource {
    * const response = await client.emails.retry('aBc123XyZ');
    * ```
    */
-  retry(emailID: string, options?: RequestOptions): APIPromise<EmailRetryResponse> {
-    return this._client.post(path`/emails/${emailID}/retry`, options);
+  retry(id: string, options?: RequestOptions): APIPromise<EmailRetryResponse> {
+    return this._client.post(path`/emails/${id}/retry`, options);
   }
 
   /**
@@ -481,11 +481,9 @@ export namespace EmailRetrieveResponse {
 
 export interface EmailListResponse {
   /**
-   * Internal message ID
+   * Unique message identifier (token)
    */
   id: string;
-
-  token: string;
 
   from: string;
 
@@ -528,7 +526,7 @@ export namespace EmailRetrieveDeliveriesResponse {
     id: string;
 
     /**
-     * Whether the message can be manually retried via `POST /emails/{emailId}/retry`.
+     * Whether the message can be manually retried via `POST /emails/{id}/retry`.
      * `true` when the raw message content is still available (not expired). Messages
      * older than the retention period cannot be retried.
      */

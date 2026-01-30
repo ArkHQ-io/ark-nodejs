@@ -18,10 +18,10 @@ Types:
 
 Methods:
 
-- <code title="get /emails/{emailId}">client.emails.<a href="./src/resources/emails.ts">retrieve</a>(emailID, { ...params }) -> EmailRetrieveResponse</code>
+- <code title="get /emails/{id}">client.emails.<a href="./src/resources/emails.ts">retrieve</a>(id, { ...params }) -> EmailRetrieveResponse</code>
 - <code title="get /emails">client.emails.<a href="./src/resources/emails.ts">list</a>({ ...params }) -> EmailListResponsesPageNumberPagination</code>
-- <code title="get /emails/{emailId}/deliveries">client.emails.<a href="./src/resources/emails.ts">retrieveDeliveries</a>(emailID) -> EmailRetrieveDeliveriesResponse</code>
-- <code title="post /emails/{emailId}/retry">client.emails.<a href="./src/resources/emails.ts">retry</a>(emailID) -> EmailRetryResponse</code>
+- <code title="get /emails/{id}/deliveries">client.emails.<a href="./src/resources/emails.ts">retrieveDeliveries</a>(id) -> EmailRetrieveDeliveriesResponse</code>
+- <code title="post /emails/{id}/retry">client.emails.<a href="./src/resources/emails.ts">retry</a>(id) -> EmailRetryResponse</code>
 - <code title="post /emails">client.emails.<a href="./src/resources/emails.ts">send</a>({ ...params }) -> EmailSendResponse</code>
 - <code title="post /emails/batch">client.emails.<a href="./src/resources/emails.ts">sendBatch</a>({ ...params }) -> EmailSendBatchResponse</code>
 - <code title="post /emails/raw">client.emails.<a href="./src/resources/emails.ts">sendRaw</a>({ ...params }) -> EmailSendRawResponse</code>

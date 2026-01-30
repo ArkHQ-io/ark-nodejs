@@ -6,8 +6,29 @@ import { APIPromise } from '../core/api-promise';
 import { PageNumberPagination, type PageNumberPaginationParams, PagePromise } from '../core/pagination';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
+import { path } from '../internal/utils/path';
 
 export class Emails extends APIResource {
+  /**
+   * Retrieve detailed information about a specific email including delivery status,
+   * timestamps, and optionally the email content.
+   *
+   * Use the `expand` parameter to include additional data like the HTML/text body,
+   * headers, or delivery attempts.
+   *
+   * @example
+   * ```ts
+   * const email = await client.emails.retrieve('aBc123XyZ');
+   * ```
+   */
+  retrieve(
+    id: string,
+    query: EmailRetrieveParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<EmailRetrieveResponse> {
+    return this._client.get(path`/emails/${id}`, { query, ...options });
+  }
+
   /**
    * Retrieve a paginated list of sent emails. Results are ordered by send time,
    * newest first.
@@ -32,6 +53,70 @@ export class Emails extends APIResource {
     options?: RequestOptions,
   ): PagePromise<EmailListResponsesPageNumberPagination, EmailListResponse> {
     return this._client.getAPIList('/emails', PageNumberPagination<EmailListResponse>, { query, ...options });
+  }
+
+  /**
+   * Get the complete delivery history for an email, including SMTP response codes,
+   * timestamps, and current retry state.
+   *
+   * ## Response Fields
+   *
+   * ### Status
+   *
+   * The current status of the email:
+   *
+   * - `pending` - Awaiting first delivery attempt
+   * - `sent` - Successfully delivered to recipient server
+   * - `softfail` - Temporary failure, automatic retry scheduled
+   * - `hardfail` - Permanent failure, will not retry
+   * - `held` - Held for manual review
+   * - `bounced` - Bounced by recipient server
+   *
+   * ### Retry State
+   *
+   * When the email is in the delivery queue (`pending` or `softfail` status),
+   * `retryState` provides information about the retry schedule:
+   *
+   * - `attempt` - Current attempt number (0 = first attempt)
+   * - `maxAttempts` - Maximum attempts before hard-fail (typically 18)
+   * - `attemptsRemaining` - Attempts left before hard-fail
+   * - `nextRetryAt` - When the next retry is scheduled (Unix timestamp)
+   * - `processing` - Whether the email is currently being processed
+   * - `manual` - Whether this was triggered by a manual retry
+   *
+   * When the email has finished processing (`sent`, `hardfail`, `held`, `bounced`),
+   * `retryState` is `null`.
+   *
+   * ### Can Retry Manually
+   *
+   * Indicates whether you can call `POST /emails/{id}/retry` to manually retry the
+   * email. This is `true` when the raw message content is still available (not
+   * expired due to retention policy).
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.retrieveDeliveries(
+   *   'aBc123XyZ',
+   * );
+   * ```
+   */
+  retrieveDeliveries(id: string, options?: RequestOptions): APIPromise<EmailRetrieveDeliveriesResponse> {
+    return this._client.get(path`/emails/${id}/deliveries`, options);
+  }
+
+  /**
+   * Retry delivery of a failed or soft-bounced email. Creates a new delivery
+   * attempt.
+   *
+   * Only works for emails that have failed or are in a retryable state.
+   *
+   * @example
+   * ```ts
+   * const response = await client.emails.retry('aBc123XyZ');
+   * ```
+   */
+  retry(id: string, options?: RequestOptions): APIPromise<EmailRetryResponse> {
+    return this._client.post(path`/emails/${id}/retry`, options);
   }
 
   /**
@@ -139,13 +224,266 @@ export class Emails extends APIResource {
 
 export type EmailListResponsesPageNumberPagination = PageNumberPagination<EmailListResponse>;
 
+export interface EmailRetrieveResponse {
+  data: EmailRetrieveResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace EmailRetrieveResponse {
+  export interface Data {
+    /**
+     * Unique message identifier (token)
+     */
+    id: string;
+
+    /**
+     * Sender address
+     */
+    from: string;
+
+    /**
+     * Message direction
+     */
+    scope: 'outgoing' | 'incoming';
+
+    /**
+     * Current delivery status:
+     *
+     * - `pending` - Email accepted, waiting to be processed
+     * - `sent` - Email transmitted to recipient's mail server
+     * - `softfail` - Temporary delivery failure, will retry
+     * - `hardfail` - Permanent delivery failure
+     * - `bounced` - Email bounced back
+     * - `held` - Held for manual review
+     */
+    status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'bounced' | 'held';
+
+    /**
+     * Email subject line
+     */
+    subject: string;
+
+    /**
+     * Unix timestamp when the email was sent
+     */
+    timestamp: number;
+
+    /**
+     * ISO 8601 formatted timestamp
+     */
+    timestampIso: string;
+
+    /**
+     * Recipient address
+     */
+    to: string;
+
+    /**
+     * Opens and clicks tracking data (included if expand=activity)
+     */
+    activity?: Data.Activity;
+
+    /**
+     * File attachments (included if expand=attachments)
+     */
+    attachments?: Array<Data.Attachment>;
+
+    /**
+     * Delivery attempt history (included if expand=deliveries)
+     */
+    deliveries?: Array<Data.Delivery>;
+
+    /**
+     * Email headers (included if expand=headers)
+     */
+    headers?: { [key: string]: string };
+
+    /**
+     * HTML body content (included if expand=content)
+     */
+    htmlBody?: string;
+
+    /**
+     * SMTP Message-ID header
+     */
+    messageId?: string;
+
+    /**
+     * Plain text body (included if expand=content)
+     */
+    plainBody?: string;
+
+    /**
+     * Complete raw MIME message, base64 encoded (included if expand=raw). Decode this
+     * to get the original RFC 2822 formatted email.
+     */
+    rawMessage?: string;
+
+    /**
+     * Whether the message was flagged as spam
+     */
+    spam?: boolean;
+
+    /**
+     * Spam score (if applicable)
+     */
+    spamScore?: number;
+
+    /**
+     * Optional categorization tag
+     */
+    tag?: string;
+  }
+
+  export namespace Data {
+    /**
+     * Opens and clicks tracking data (included if expand=activity)
+     */
+    export interface Activity {
+      /**
+       * List of link click events
+       */
+      clicks?: Array<Activity.Click>;
+
+      /**
+       * List of email open events
+       */
+      opens?: Array<Activity.Open>;
+    }
+
+    export namespace Activity {
+      export interface Click {
+        /**
+         * IP address of the clicker
+         */
+        ipAddress?: string;
+
+        /**
+         * Unix timestamp of the click event
+         */
+        timestamp?: number;
+
+        /**
+         * ISO 8601 timestamp of the click event
+         */
+        timestampIso?: string;
+
+        /**
+         * URL that was clicked
+         */
+        url?: string;
+
+        /**
+         * User agent of the email client
+         */
+        userAgent?: string;
+      }
+
+      export interface Open {
+        /**
+         * IP address of the opener
+         */
+        ipAddress?: string;
+
+        /**
+         * Unix timestamp of the open event
+         */
+        timestamp?: number;
+
+        /**
+         * ISO 8601 timestamp of the open event
+         */
+        timestampIso?: string;
+
+        /**
+         * User agent of the email client
+         */
+        userAgent?: string;
+      }
+    }
+
+    /**
+     * An email attachment retrieved from a sent message
+     */
+    export interface Attachment {
+      /**
+       * MIME type of the attachment
+       */
+      contentType: string;
+
+      /**
+       * Base64 encoded attachment content. Decode this to get the raw file bytes.
+       */
+      data: string;
+
+      /**
+       * Original filename of the attachment
+       */
+      filename: string;
+
+      /**
+       * SHA256 hash of the attachment content for verification
+       */
+      hash: string;
+
+      /**
+       * Size of the attachment in bytes
+       */
+      size: number;
+    }
+
+    export interface Delivery {
+      /**
+       * Delivery attempt ID
+       */
+      id: string;
+
+      /**
+       * Delivery status (lowercase)
+       */
+      status: string;
+
+      /**
+       * Unix timestamp
+       */
+      timestamp: number;
+
+      /**
+       * ISO 8601 timestamp
+       */
+      timestampIso: string;
+
+      /**
+       * SMTP response code
+       */
+      code?: number;
+
+      /**
+       * Status details
+       */
+      details?: string;
+
+      /**
+       * SMTP server response from the receiving mail server
+       */
+      output?: string;
+
+      /**
+       * Whether TLS was used
+       */
+      sentWithSsl?: boolean;
+    }
+  }
+}
+
 export interface EmailListResponse {
   /**
-   * Internal message ID
+   * Unique message identifier (token)
    */
   id: string;
-
-  token: string;
 
   from: string;
 
@@ -172,6 +510,165 @@ export interface EmailListResponse {
   tag?: string;
 }
 
+export interface EmailRetrieveDeliveriesResponse {
+  data: EmailRetrieveDeliveriesResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace EmailRetrieveDeliveriesResponse {
+  export interface Data {
+    /**
+     * Message identifier (token)
+     */
+    id: string;
+
+    /**
+     * Whether the message can be manually retried via `POST /emails/{id}/retry`.
+     * `true` when the raw message content is still available (not expired). Messages
+     * older than the retention period cannot be retried.
+     */
+    canRetryManually: boolean;
+
+    /**
+     * Chronological list of delivery attempts for this message. Each attempt includes
+     * SMTP response codes and timestamps.
+     */
+    deliveries: Array<Data.Delivery>;
+
+    /**
+     * Information about the current retry state of a message that is queued for
+     * delivery. Only present when the message is in the delivery queue.
+     */
+    retryState: Data.RetryState | null;
+
+    /**
+     * Current message status (lowercase). Possible values:
+     *
+     * - `pending` - Initial state, awaiting first delivery attempt
+     * - `sent` - Successfully delivered
+     * - `softfail` - Temporary failure, will retry automatically
+     * - `hardfail` - Permanent failure, will not retry
+     * - `held` - Held for manual review (suppression list, etc.)
+     * - `bounced` - Bounced by recipient server
+     */
+    status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'held' | 'bounced';
+  }
+
+  export namespace Data {
+    export interface Delivery {
+      /**
+       * Delivery attempt ID
+       */
+      id: string;
+
+      /**
+       * Delivery status (lowercase)
+       */
+      status: string;
+
+      /**
+       * Unix timestamp
+       */
+      timestamp: number;
+
+      /**
+       * ISO 8601 timestamp
+       */
+      timestampIso: string;
+
+      /**
+       * SMTP response code
+       */
+      code?: number;
+
+      /**
+       * Status details
+       */
+      details?: string;
+
+      /**
+       * SMTP server response from the receiving mail server
+       */
+      output?: string;
+
+      /**
+       * Whether TLS was used
+       */
+      sentWithSsl?: boolean;
+    }
+
+    /**
+     * Information about the current retry state of a message that is queued for
+     * delivery. Only present when the message is in the delivery queue.
+     */
+    export interface RetryState {
+      /**
+       * Current attempt number (0-indexed). The first delivery attempt is 0, the first
+       * retry is 1, and so on.
+       */
+      attempt: number;
+
+      /**
+       * Number of attempts remaining before the message is hard-failed. Calculated as
+       * `maxAttempts - attempt`.
+       */
+      attemptsRemaining: number;
+
+      /**
+       * Whether this queue entry was created by a manual retry request. Manual retries
+       * bypass certain hold conditions like suppression lists.
+       */
+      manual: boolean;
+
+      /**
+       * Maximum number of delivery attempts before the message is hard-failed.
+       * Configured at the server level.
+       */
+      maxAttempts: number;
+
+      /**
+       * Whether the message is currently being processed by a delivery worker. When
+       * `true`, the message is actively being sent.
+       */
+      processing: boolean;
+
+      /**
+       * Unix timestamp of when the next retry attempt is scheduled. `null` if the
+       * message is ready for immediate processing or currently being processed.
+       */
+      nextRetryAt?: number | null;
+
+      /**
+       * ISO 8601 formatted timestamp of the next retry attempt. `null` if the message is
+       * ready for immediate processing.
+       */
+      nextRetryAtIso?: string | null;
+    }
+  }
+}
+
+export interface EmailRetryResponse {
+  data: EmailRetryResponse.Data;
+
+  meta: Shared.APIMeta;
+
+  success: true;
+}
+
+export namespace EmailRetryResponse {
+  export interface Data {
+    /**
+     * Email identifier (token)
+     */
+    id: string;
+
+    message: string;
+  }
+}
+
 export interface EmailSendResponse {
   data: EmailSendResponse.Data;
 
@@ -183,7 +680,7 @@ export interface EmailSendResponse {
 export namespace EmailSendResponse {
   export interface Data {
     /**
-     * Unique message ID (format: msg*{id}*{token})
+     * Unique message identifier (token)
      */
     id: string;
 
@@ -250,11 +747,9 @@ export namespace EmailSendBatchResponse {
   export namespace Data {
     export interface Messages {
       /**
-       * Message ID
+       * Message identifier (token)
        */
       id: string;
-
-      token: string;
     }
   }
 }
@@ -270,7 +765,7 @@ export interface EmailSendRawResponse {
 export namespace EmailSendRawResponse {
   export interface Data {
     /**
-     * Unique message ID (format: msg*{id}*{token})
+     * Unique message identifier (token)
      */
     id: string;
 
@@ -295,6 +790,21 @@ export namespace EmailSendRawResponse {
      */
     sandbox?: boolean;
   }
+}
+
+export interface EmailRetrieveParams {
+  /**
+   * Comma-separated list of fields to include:
+   *
+   * - `full` - Include all expanded fields in a single request
+   * - `content` - HTML and plain text body
+   * - `headers` - Email headers
+   * - `deliveries` - Delivery attempt history
+   * - `activity` - Opens and clicks tracking data
+   * - `attachments` - File attachments with content (base64 encoded)
+   * - `raw` - Complete raw MIME message (base64 encoded)
+   */
+  expand?: string;
 }
 
 export interface EmailListParams extends PageNumberPaginationParams {
@@ -548,11 +1058,15 @@ export interface EmailSendRawParams {
 
 export declare namespace Emails {
   export {
+    type EmailRetrieveResponse as EmailRetrieveResponse,
     type EmailListResponse as EmailListResponse,
+    type EmailRetrieveDeliveriesResponse as EmailRetrieveDeliveriesResponse,
+    type EmailRetryResponse as EmailRetryResponse,
     type EmailSendResponse as EmailSendResponse,
     type EmailSendBatchResponse as EmailSendBatchResponse,
     type EmailSendRawResponse as EmailSendRawResponse,
     type EmailListResponsesPageNumberPagination as EmailListResponsesPageNumberPagination,
+    type EmailRetrieveParams as EmailRetrieveParams,
     type EmailListParams as EmailListParams,
     type EmailSendParams as EmailSendParams,
     type EmailSendBatchParams as EmailSendBatchParams,

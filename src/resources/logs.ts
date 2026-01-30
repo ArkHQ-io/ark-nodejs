@@ -221,7 +221,7 @@ export namespace LogEntry {
    */
   export interface Email {
     /**
-     * Email message identifier (token)
+     * Email message ID
      */
     id?: string;
 

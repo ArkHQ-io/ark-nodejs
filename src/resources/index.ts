@@ -13,10 +13,14 @@ export {
 } from './domains';
 export {
   Emails,
+  type EmailRetrieveResponse,
   type EmailListResponse,
+  type EmailRetrieveDeliveriesResponse,
+  type EmailRetryResponse,
   type EmailSendResponse,
   type EmailSendBatchResponse,
   type EmailSendRawResponse,
+  type EmailRetrieveParams,
   type EmailListParams,
   type EmailSendParams,
   type EmailSendBatchParams,

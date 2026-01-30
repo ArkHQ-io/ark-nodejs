@@ -256,6 +256,8 @@ export namespace WebhookCreateResponse {
       | 'MessageLinkClicked'
       | 'MessageLoaded'
       | 'DomainDNSError'
+      | 'SendLimitApproaching'
+      | 'SendLimitExceeded'
     >;
 
     /**
@@ -311,6 +313,8 @@ export namespace WebhookRetrieveResponse {
       | 'MessageLinkClicked'
       | 'MessageLoaded'
       | 'DomainDNSError'
+      | 'SendLimitApproaching'
+      | 'SendLimitExceeded'
     >;
 
     /**
@@ -366,6 +370,8 @@ export namespace WebhookUpdateResponse {
       | 'MessageLinkClicked'
       | 'MessageLoaded'
       | 'DomainDNSError'
+      | 'SendLimitApproaching'
+      | 'SendLimitExceeded'
     >;
 
     /**
@@ -482,7 +488,9 @@ export namespace WebhookListDeliveriesResponse {
       | 'MessageBounced'
       | 'MessageLinkClicked'
       | 'MessageLoaded'
-      | 'DomainDNSError';
+      | 'DomainDNSError'
+      | 'SendLimitApproaching'
+      | 'SendLimitExceeded';
 
     /**
      * HTTP status code returned by the endpoint (null if connection failed)
@@ -601,7 +609,9 @@ export namespace WebhookRetrieveDeliveryResponse {
       | 'MessageBounced'
       | 'MessageLinkClicked'
       | 'MessageLoaded'
-      | 'DomainDNSError';
+      | 'DomainDNSError'
+      | 'SendLimitApproaching'
+      | 'SendLimitExceeded';
 
     /**
      * The request that was sent to your endpoint
@@ -766,6 +776,8 @@ export interface WebhookCreateParams {
     | 'MessageLinkClicked'
     | 'MessageLoaded'
     | 'DomainDNSError'
+    | 'SendLimitApproaching'
+    | 'SendLimitExceeded'
   > | null;
 }
 
@@ -803,7 +815,9 @@ export interface WebhookListDeliveriesParams {
     | 'MessageBounced'
     | 'MessageLinkClicked'
     | 'MessageLoaded'
-    | 'DomainDNSError';
+    | 'DomainDNSError'
+    | 'SendLimitApproaching'
+    | 'SendLimitExceeded';
 
   /**
    * Page number (default 1)
@@ -847,7 +861,9 @@ export interface WebhookTestParams {
     | 'MessageBounced'
     | 'MessageLinkClicked'
     | 'MessageLoaded'
-    | 'DomainDNSError';
+    | 'DomainDNSError'
+    | 'SendLimitApproaching'
+    | 'SendLimitExceeded';
 }
 
 export declare namespace Webhooks {

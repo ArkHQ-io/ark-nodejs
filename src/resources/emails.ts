@@ -457,6 +457,35 @@ export namespace EmailRetrieveResponse {
       timestampIso: string;
 
       /**
+       * Bounce classification category (present for failed deliveries). Helps understand
+       * why delivery failed for analytics and automated handling.
+       */
+      classification?:
+        | 'invalid_recipient'
+        | 'mailbox_full'
+        | 'message_too_large'
+        | 'spam_block'
+        | 'policy_violation'
+        | 'no_mailbox'
+        | 'not_accepting_mail'
+        | 'temporarily_unavailable'
+        | 'protocol_error'
+        | 'tls_required'
+        | 'connection_error'
+        | 'dns_error'
+        | 'unclassified'
+        | null;
+
+      /**
+       * Numeric bounce classification code for programmatic handling. Codes:
+       * 10=invalid_recipient, 11=no_mailbox, 12=not_accepting_mail, 20=mailbox_full,
+       * 21=message_too_large, 30=spam_block, 31=policy_violation, 32=tls_required,
+       * 40=connection_error, 41=dns_error, 42=temporarily_unavailable,
+       * 50=protocol_error, 99=unclassified
+       */
+      classificationCode?: number | null;
+
+      /**
        * SMTP response code
        */
       code?: number;
@@ -476,9 +505,22 @@ export namespace EmailRetrieveResponse {
       output?: string;
 
       /**
+       * Hostname of the remote mail server that processed the delivery. Present for all
+       * delivery attempts (successful and failed).
+       */
+      remoteHost?: string | null;
+
+      /**
        * Whether TLS was used
        */
       sentWithSsl?: boolean;
+
+      /**
+       * RFC 3463 enhanced status code from SMTP response (e.g., "5.1.1", "4.2.2"). First
+       * digit: 2=success, 4=temporary, 5=permanent. Second digit: category (1=address,
+       * 2=mailbox, 7=security, etc.).
+       */
+      smtpEnhancedCode?: string | null;
     }
   }
 }
@@ -584,6 +626,35 @@ export namespace EmailRetrieveDeliveriesResponse {
       timestampIso: string;
 
       /**
+       * Bounce classification category (present for failed deliveries). Helps understand
+       * why delivery failed for analytics and automated handling.
+       */
+      classification?:
+        | 'invalid_recipient'
+        | 'mailbox_full'
+        | 'message_too_large'
+        | 'spam_block'
+        | 'policy_violation'
+        | 'no_mailbox'
+        | 'not_accepting_mail'
+        | 'temporarily_unavailable'
+        | 'protocol_error'
+        | 'tls_required'
+        | 'connection_error'
+        | 'dns_error'
+        | 'unclassified'
+        | null;
+
+      /**
+       * Numeric bounce classification code for programmatic handling. Codes:
+       * 10=invalid_recipient, 11=no_mailbox, 12=not_accepting_mail, 20=mailbox_full,
+       * 21=message_too_large, 30=spam_block, 31=policy_violation, 32=tls_required,
+       * 40=connection_error, 41=dns_error, 42=temporarily_unavailable,
+       * 50=protocol_error, 99=unclassified
+       */
+      classificationCode?: number | null;
+
+      /**
        * SMTP response code
        */
       code?: number;
@@ -603,9 +674,22 @@ export namespace EmailRetrieveDeliveriesResponse {
       output?: string;
 
       /**
+       * Hostname of the remote mail server that processed the delivery. Present for all
+       * delivery attempts (successful and failed).
+       */
+      remoteHost?: string | null;
+
+      /**
        * Whether TLS was used
        */
       sentWithSsl?: boolean;
+
+      /**
+       * RFC 3463 enhanced status code from SMTP response (e.g., "5.1.1", "4.2.2"). First
+       * digit: 2=success, 4=temporary, 5=permanent. Second digit: category (1=address,
+       * 2=mailbox, 7=security, etc.).
+       */
+      smtpEnhancedCode?: string | null;
     }
 
     /**

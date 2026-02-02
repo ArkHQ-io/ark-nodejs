@@ -462,12 +462,16 @@ export namespace EmailRetrieveResponse {
       code?: number;
 
       /**
-       * Status details
+       * Human-readable delivery summary. Format varies by status:
+       *
+       * - **sent**: `Message for {recipient} accepted by {ip}:{port} ({hostname})`
+       * - **softfail/hardfail**:
+       *   `{code} {classification}: Delivery to {recipient} failed at {ip}:{port} ({hostname})`
        */
       details?: string;
 
       /**
-       * SMTP server response from the receiving mail server
+       * Raw SMTP response from the receiving mail server
        */
       output?: string;
 
@@ -585,12 +589,16 @@ export namespace EmailRetrieveDeliveriesResponse {
       code?: number;
 
       /**
-       * Status details
+       * Human-readable delivery summary. Format varies by status:
+       *
+       * - **sent**: `Message for {recipient} accepted by {ip}:{port} ({hostname})`
+       * - **softfail/hardfail**:
+       *   `{code} {classification}: Delivery to {recipient} failed at {ip}:{port} ({hostname})`
        */
       details?: string;
 
       /**
-       * SMTP server response from the receiving mail server
+       * Raw SMTP response from the receiving mail server
        */
       output?: string;
 

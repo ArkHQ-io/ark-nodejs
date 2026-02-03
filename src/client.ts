@@ -69,6 +69,18 @@ import {
   Suppressions,
 } from './resources/suppressions';
 import {
+  Tenant,
+  TenantCreateParams,
+  TenantCreateResponse,
+  TenantDeleteResponse,
+  TenantListParams,
+  TenantRetrieveResponse,
+  TenantUpdateParams,
+  TenantUpdateResponse,
+  Tenants,
+  TenantsPageNumberPagination,
+} from './resources/tenants';
+import {
   TrackDomain,
   Tracking,
   TrackingCreateParams,
@@ -828,6 +840,7 @@ export class Ark {
   tracking: API.Tracking = new API.Tracking(this);
   logs: API.Logs = new API.Logs(this);
   usage: API.Usage = new API.Usage(this);
+  tenants: API.Tenants = new API.Tenants(this);
 }
 
 Ark.Emails = Emails;
@@ -837,6 +850,7 @@ Ark.Webhooks = Webhooks;
 Ark.Tracking = Tracking;
 Ark.Logs = Logs;
 Ark.Usage = Usage;
+Ark.Tenants = Tenants;
 
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
@@ -930,6 +944,19 @@ export declare namespace Ark {
   };
 
   export { Usage as Usage, type UsageRetrieveResponse as UsageRetrieveResponse };
+
+  export {
+    Tenants as Tenants,
+    type Tenant as Tenant,
+    type TenantCreateResponse as TenantCreateResponse,
+    type TenantRetrieveResponse as TenantRetrieveResponse,
+    type TenantUpdateResponse as TenantUpdateResponse,
+    type TenantDeleteResponse as TenantDeleteResponse,
+    type TenantsPageNumberPagination as TenantsPageNumberPagination,
+    type TenantCreateParams as TenantCreateParams,
+    type TenantUpdateParams as TenantUpdateParams,
+    type TenantListParams as TenantListParams,
+  };
 
   export type APIMeta = API.APIMeta;
 }

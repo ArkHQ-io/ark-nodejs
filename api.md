@@ -41,7 +41,7 @@ Methods:
 
 - <code title="post /domains">client.domains.<a href="./src/resources/domains.ts">create</a>({ ...params }) -> DomainCreateResponse</code>
 - <code title="get /domains/{domainId}">client.domains.<a href="./src/resources/domains.ts">retrieve</a>(domainID) -> DomainRetrieveResponse</code>
-- <code title="get /domains">client.domains.<a href="./src/resources/domains.ts">list</a>() -> DomainListResponse</code>
+- <code title="get /domains">client.domains.<a href="./src/resources/domains.ts">list</a>({ ...params }) -> DomainListResponse</code>
 - <code title="delete /domains/{domainId}">client.domains.<a href="./src/resources/domains.ts">delete</a>(domainID) -> DomainDeleteResponse</code>
 - <code title="post /domains/{domainId}/verify">client.domains.<a href="./src/resources/domains.ts">verify</a>(domainID) -> DomainVerifyResponse</code>
 
@@ -137,16 +137,34 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/tenants.ts">Tenant</a></code>
-- <code><a href="./src/resources/tenants.ts">TenantCreateResponse</a></code>
-- <code><a href="./src/resources/tenants.ts">TenantRetrieveResponse</a></code>
-- <code><a href="./src/resources/tenants.ts">TenantUpdateResponse</a></code>
-- <code><a href="./src/resources/tenants.ts">TenantDeleteResponse</a></code>
+- <code><a href="./src/resources/tenants/tenants.ts">Tenant</a></code>
+- <code><a href="./src/resources/tenants/tenants.ts">TenantCreateResponse</a></code>
+- <code><a href="./src/resources/tenants/tenants.ts">TenantRetrieveResponse</a></code>
+- <code><a href="./src/resources/tenants/tenants.ts">TenantUpdateResponse</a></code>
+- <code><a href="./src/resources/tenants/tenants.ts">TenantDeleteResponse</a></code>
 
 Methods:
 
-- <code title="post /tenants">client.tenants.<a href="./src/resources/tenants.ts">create</a>({ ...params }) -> TenantCreateResponse</code>
-- <code title="get /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants.ts">retrieve</a>(tenantID) -> TenantRetrieveResponse</code>
-- <code title="patch /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants.ts">update</a>(tenantID, { ...params }) -> TenantUpdateResponse</code>
-- <code title="get /tenants">client.tenants.<a href="./src/resources/tenants.ts">list</a>({ ...params }) -> TenantsPageNumberPagination</code>
-- <code title="delete /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants.ts">delete</a>(tenantID) -> TenantDeleteResponse</code>
+- <code title="post /tenants">client.tenants.<a href="./src/resources/tenants/tenants.ts">create</a>({ ...params }) -> TenantCreateResponse</code>
+- <code title="get /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants/tenants.ts">retrieve</a>(tenantID) -> TenantRetrieveResponse</code>
+- <code title="patch /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants/tenants.ts">update</a>(tenantID, { ...params }) -> TenantUpdateResponse</code>
+- <code title="get /tenants">client.tenants.<a href="./src/resources/tenants/tenants.ts">list</a>({ ...params }) -> TenantsPageNumberPagination</code>
+- <code title="delete /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants/tenants.ts">delete</a>(tenantID) -> TenantDeleteResponse</code>
+
+## Credentials
+
+Types:
+
+- <code><a href="./src/resources/tenants/credentials.ts">CredentialCreateResponse</a></code>
+- <code><a href="./src/resources/tenants/credentials.ts">CredentialRetrieveResponse</a></code>
+- <code><a href="./src/resources/tenants/credentials.ts">CredentialUpdateResponse</a></code>
+- <code><a href="./src/resources/tenants/credentials.ts">CredentialListResponse</a></code>
+- <code><a href="./src/resources/tenants/credentials.ts">CredentialDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /tenants/{tenantId}/credentials">client.tenants.credentials.<a href="./src/resources/tenants/credentials.ts">create</a>(tenantID, { ...params }) -> CredentialCreateResponse</code>
+- <code title="get /tenants/{tenantId}/credentials/{credentialId}">client.tenants.credentials.<a href="./src/resources/tenants/credentials.ts">retrieve</a>(credentialID, { ...params }) -> CredentialRetrieveResponse</code>
+- <code title="patch /tenants/{tenantId}/credentials/{credentialId}">client.tenants.credentials.<a href="./src/resources/tenants/credentials.ts">update</a>(credentialID, { ...params }) -> CredentialUpdateResponse</code>
+- <code title="get /tenants/{tenantId}/credentials">client.tenants.credentials.<a href="./src/resources/tenants/credentials.ts">list</a>(tenantID, { ...params }) -> CredentialListResponsesPageNumberPagination</code>
+- <code title="delete /tenants/{tenantId}/credentials/{credentialId}">client.tenants.credentials.<a href="./src/resources/tenants/credentials.ts">delete</a>(credentialID, { ...params }) -> CredentialDeleteResponse</code>

@@ -7,11 +7,11 @@ const client = new Ark({
   baseURL: process.env['TEST_API_BASE_URL'] ?? 'http://127.0.0.1:4010',
 });
 
-describe('resource domains', () => {
+describe('resource credentials', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.domains.create({
-      name: 'notifications.myapp.com',
-      tenant_id: 'cm6abc123def456',
+    const responsePromise = client.tenants.credentials.create('cm6abc123def456', {
+      name: 'production-smtp',
+      type: 'smtp',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,14 +23,14 @@ describe('resource domains', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.domains.create({
-      name: 'notifications.myapp.com',
-      tenant_id: 'cm6abc123def456',
+    const response = await client.tenants.credentials.create('cm6abc123def456', {
+      name: 'production-smtp',
+      type: 'smtp',
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.domains.retrieve('domainId');
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.tenants.credentials.retrieve(123, { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -40,8 +40,34 @@ describe('resource domains', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: required and optional params', async () => {
+    const response = await client.tenants.credentials.retrieve(123, {
+      tenantId: 'cm6abc123def456',
+      reveal: true,
+    });
+  });
+
+  test('update: only required params', async () => {
+    const responsePromise = client.tenants.credentials.update(123, { tenantId: 'cm6abc123def456' });
+    const rawResponse = await responsePromise.asResponse();
+    expect(rawResponse).toBeInstanceOf(Response);
+    const response = await responsePromise;
+    expect(response).not.toBeInstanceOf(Response);
+    const dataAndResponse = await responsePromise.withResponse();
+    expect(dataAndResponse.data).toBe(response);
+    expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: required and optional params', async () => {
+    const response = await client.tenants.credentials.update(123, {
+      tenantId: 'cm6abc123def456',
+      hold: true,
+      name: 'production-smtp-v2',
+    });
+  });
+
   test('list', async () => {
-    const responsePromise = client.domains.list();
+    const responsePromise = client.tenants.credentials.list('cm6abc123def456');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -54,12 +80,20 @@ describe('resource domains', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.domains.list({ tenant_id: 'tenant_id' }, { path: '/_stainless_unknown_path' }),
+      client.tenants.credentials.list(
+        'cm6abc123def456',
+        {
+          page: 1,
+          perPage: 1,
+          type: 'smtp',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Ark.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.domains.delete('domainId');
+  test('delete: only required params', async () => {
+    const responsePromise = client.tenants.credentials.delete(123, { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,14 +103,7 @@ describe('resource domains', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('verify', async () => {
-    const responsePromise = client.domains.verify('domainId');
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
+  test('delete: required and optional params', async () => {
+    const response = await client.tenants.credentials.delete(123, { tenantId: 'cm6abc123def456' });
   });
 });

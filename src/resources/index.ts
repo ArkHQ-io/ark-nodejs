@@ -10,6 +10,7 @@ export {
   type DomainDeleteResponse,
   type DomainVerifyResponse,
   type DomainCreateParams,
+  type DomainListParams,
 } from './domains';
 export {
   Emails,
@@ -58,7 +59,7 @@ export {
   type TenantUpdateParams,
   type TenantListParams,
   type TenantsPageNumberPagination,
-} from './tenants';
+} from './tenants/tenants';
 export {
   Tracking,
   type TrackDomain,

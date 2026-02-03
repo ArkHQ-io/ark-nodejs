@@ -27,6 +27,7 @@ import {
   DomainCreateParams,
   DomainCreateResponse,
   DomainDeleteResponse,
+  DomainListParams,
   DomainListResponse,
   DomainRetrieveResponse,
   DomainVerifyResponse,
@@ -69,18 +70,6 @@ import {
   Suppressions,
 } from './resources/suppressions';
 import {
-  Tenant,
-  TenantCreateParams,
-  TenantCreateResponse,
-  TenantDeleteResponse,
-  TenantListParams,
-  TenantRetrieveResponse,
-  TenantUpdateParams,
-  TenantUpdateResponse,
-  Tenants,
-  TenantsPageNumberPagination,
-} from './resources/tenants';
-import {
   TrackDomain,
   Tracking,
   TrackingCreateParams,
@@ -111,6 +100,18 @@ import {
   WebhookUpdateResponse,
   Webhooks,
 } from './resources/webhooks';
+import {
+  Tenant,
+  TenantCreateParams,
+  TenantCreateResponse,
+  TenantDeleteResponse,
+  TenantListParams,
+  TenantRetrieveResponse,
+  TenantUpdateParams,
+  TenantUpdateResponse,
+  Tenants,
+  TenantsPageNumberPagination,
+} from './resources/tenants/tenants';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -887,6 +888,7 @@ export declare namespace Ark {
     type DomainDeleteResponse as DomainDeleteResponse,
     type DomainVerifyResponse as DomainVerifyResponse,
     type DomainCreateParams as DomainCreateParams,
+    type DomainListParams as DomainListParams,
   };
 
   export {

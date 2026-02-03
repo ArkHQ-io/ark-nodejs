@@ -12,6 +12,9 @@ export class Domains extends APIResource {
    * Add a new domain for sending emails. Returns DNS records that must be configured
    * before the domain can be verified.
    *
+   * **Required:** `tenant_id` to specify which tenant the domain belongs to. Each
+   * tenant gets their own isolated mail server for domain isolation.
+   *
    * **Required DNS records:**
    *
    * - **SPF** - TXT record for sender authentication
@@ -24,6 +27,7 @@ export class Domains extends APIResource {
    * ```ts
    * const domain = await client.domains.create({
    *   name: 'notifications.myapp.com',
+   *   tenant_id: 'cm6abc123def456',
    * });
    * ```
    */
@@ -44,15 +48,21 @@ export class Domains extends APIResource {
   }
 
   /**
-   * Get all sending domains with their verification status
+   * Get all sending domains with their verification status.
+   *
+   * Optionally filter by `tenant_id` to list domains for a specific tenant. When
+   * filtered, response includes `tenant_id` and `tenant_name` for each domain.
    *
    * @example
    * ```ts
    * const domains = await client.domains.list();
    * ```
    */
-  list(options?: RequestOptions): APIPromise<DomainListResponse> {
-    return this._client.get('/domains', options);
+  list(
+    query: DomainListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<DomainListResponse> {
+    return this._client.get('/domains', { query, ...options });
   }
 
   /**
@@ -192,6 +202,16 @@ export namespace DomainCreateResponse {
      * Domain must be verified before sending emails.
      */
     verified: boolean;
+
+    /**
+     * ID of the tenant this domain belongs to
+     */
+    tenant_id?: string;
+
+    /**
+     * Name of the tenant this domain belongs to
+     */
+    tenant_name?: string;
 
     /**
      * Timestamp when the domain ownership was verified, or null if not yet verified
@@ -335,6 +355,16 @@ export namespace DomainRetrieveResponse {
     verified: boolean;
 
     /**
+     * ID of the tenant this domain belongs to
+     */
+    tenant_id?: string;
+
+    /**
+     * Name of the tenant this domain belongs to
+     */
+    tenant_name?: string;
+
+    /**
      * Timestamp when the domain ownership was verified, or null if not yet verified
      */
     verifiedAt?: string | null;
@@ -453,6 +483,16 @@ export namespace DomainListResponse {
        * Domain must be verified before sending emails.
        */
       verified: boolean;
+
+      /**
+       * ID of the tenant this domain belongs to (included when filtering by tenant_id)
+       */
+      tenant_id?: string;
+
+      /**
+       * Name of the tenant this domain belongs to (included when filtering by tenant_id)
+       */
+      tenant_name?: string;
     }
   }
 }
@@ -522,6 +562,16 @@ export namespace DomainVerifyResponse {
      * Domain must be verified before sending emails.
      */
     verified: boolean;
+
+    /**
+     * ID of the tenant this domain belongs to
+     */
+    tenant_id?: string;
+
+    /**
+     * Name of the tenant this domain belongs to
+     */
+    tenant_name?: string;
 
     /**
      * Timestamp when the domain ownership was verified, or null if not yet verified
@@ -617,6 +667,18 @@ export interface DomainCreateParams {
    * Domain name (e.g., "mail.example.com")
    */
   name: string;
+
+  /**
+   * ID of the tenant this domain belongs to
+   */
+  tenant_id: string;
+}
+
+export interface DomainListParams {
+  /**
+   * Filter domains by tenant ID
+   */
+  tenant_id?: string;
 }
 
 export declare namespace Domains {
@@ -628,5 +690,6 @@ export declare namespace Domains {
     type DomainDeleteResponse as DomainDeleteResponse,
     type DomainVerifyResponse as DomainVerifyResponse,
     type DomainCreateParams as DomainCreateParams,
+    type DomainListParams as DomainListParams,
   };
 }

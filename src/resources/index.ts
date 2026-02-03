@@ -48,6 +48,18 @@ export {
   type SuppressionListResponsesPageNumberPagination,
 } from './suppressions';
 export {
+  Tenants,
+  type Tenant,
+  type TenantCreateResponse,
+  type TenantRetrieveResponse,
+  type TenantUpdateResponse,
+  type TenantDeleteResponse,
+  type TenantCreateParams,
+  type TenantUpdateParams,
+  type TenantListParams,
+  type TenantsPageNumberPagination,
+} from './tenants';
+export {
   Tracking,
   type TrackDomain,
   type TrackingCreateResponse,

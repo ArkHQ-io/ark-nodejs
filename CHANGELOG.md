@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.18.0 (2026-02-03)
+
+Full Changelog: [v0.17.0...v0.18.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.17.0...v0.18.0)
+
+### Features
+
+* **api:** Add Tenants ([3da61b1](https://github.com/ArkHQ-io/ark-nodejs/commit/3da61b1cfa489b1f00db2c83f269566967043ac8))
+* **api:** api update ([afbabc0](https://github.com/ArkHQ-io/ark-nodejs/commit/afbabc0806983ccd8f63e16ba4839f98c5ab9118))
+* **api:** manual updates ([8825395](https://github.com/ArkHQ-io/ark-nodejs/commit/88253951d1d34643a86b40b547bbeae6b25533d0))
+* **api:** manual updates ([775842c](https://github.com/ArkHQ-io/ark-nodejs/commit/775842c4701afeca828156cb83938ee531b24f4b))
+* **api:** manual updates ([36ae874](https://github.com/ArkHQ-io/ark-nodejs/commit/36ae874419c22de822cbb0a4ba0085ae37479111))
+
+
+### Bug Fixes
+
+* **client:** avoid memory leak with abort signals ([60ac85e](https://github.com/ArkHQ-io/ark-nodejs/commit/60ac85e51287bb44347fc1905b93bfb842cf6891))
+
+
+### Chores
+
+* **client:** do not parse responses with empty content-length ([4e06830](https://github.com/ArkHQ-io/ark-nodejs/commit/4e068306b0aab7177f3f8b8c360ce9d8dce01fe1))
+* **internal:** support oauth authorization code flow for MCP servers ([d397739](https://github.com/ArkHQ-io/ark-nodejs/commit/d3977396bad9ea396ba0079287d2cd0383c235c1))
+
 ## 0.17.0 (2026-01-30)
 
 Full Changelog: [v0.16.0...v0.17.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.16.0...v0.17.0)

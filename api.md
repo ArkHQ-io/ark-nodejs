@@ -132,3 +132,21 @@ Types:
 Methods:
 
 - <code title="get /usage">client.usage.<a href="./src/resources/usage.ts">retrieve</a>() -> UsageRetrieveResponse</code>
+
+# Tenants
+
+Types:
+
+- <code><a href="./src/resources/tenants.ts">Tenant</a></code>
+- <code><a href="./src/resources/tenants.ts">TenantCreateResponse</a></code>
+- <code><a href="./src/resources/tenants.ts">TenantRetrieveResponse</a></code>
+- <code><a href="./src/resources/tenants.ts">TenantUpdateResponse</a></code>
+- <code><a href="./src/resources/tenants.ts">TenantDeleteResponse</a></code>
+
+Methods:
+
+- <code title="post /tenants">client.tenants.<a href="./src/resources/tenants.ts">create</a>({ ...params }) -> TenantCreateResponse</code>
+- <code title="get /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants.ts">retrieve</a>(tenantID) -> TenantRetrieveResponse</code>
+- <code title="patch /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants.ts">update</a>(tenantID, { ...params }) -> TenantUpdateResponse</code>
+- <code title="get /tenants">client.tenants.<a href="./src/resources/tenants.ts">list</a>({ ...params }) -> TenantsPageNumberPagination</code>
+- <code title="delete /tenants/{tenantId}">client.tenants.<a href="./src/resources/tenants.ts">delete</a>(tenantID) -> TenantDeleteResponse</code>

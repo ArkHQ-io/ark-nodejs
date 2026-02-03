@@ -185,3 +185,75 @@ export class PageNumberPagination<Item>
     };
   }
 }
+
+export interface OffsetPaginationResponse<Item> {
+  data: OffsetPaginationResponse.Data<Item>;
+}
+
+export namespace OffsetPaginationResponse {
+  export interface Data<Item> {
+    pagination?: Data.Pagination;
+
+    tenants?: Array<Item>;
+  }
+
+  export namespace Data {
+    export interface Pagination {
+      has_more?: boolean;
+
+      limit?: number;
+
+      offset?: number;
+
+      total?: number;
+    }
+  }
+}
+
+export interface OffsetPaginationParams {
+  limit?: number;
+
+  offset?: number;
+}
+
+export class OffsetPagination<Item> extends AbstractPage<Item> implements OffsetPaginationResponse<Item> {
+  data: OffsetPaginationResponse.Data<Item>;
+
+  constructor(
+    client: Ark,
+    response: Response,
+    body: OffsetPaginationResponse<Item>,
+    options: FinalRequestOptions,
+  ) {
+    super(client, response, body, options);
+
+    this.data = body.data || {};
+  }
+
+  getPaginatedItems(): Item[] {
+    return this.data?.tenants ?? [];
+  }
+
+  nextPageRequestOptions(): PageRequestOptions | null {
+    const offset = this.data?.pagination?.offset ?? 0;
+    const length = this.getPaginatedItems().length;
+    const currentCount = offset + length;
+
+    const totalCount = this.data?.pagination?.total;
+    if (!totalCount) {
+      return null;
+    }
+
+    if (currentCount < totalCount) {
+      return {
+        ...this.options,
+        query: {
+          ...maybeObj(this.options.query),
+          offset: currentCount,
+        },
+      };
+    }
+
+    return null;
+  }
+}

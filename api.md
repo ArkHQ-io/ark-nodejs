@@ -18,10 +18,10 @@ Types:
 
 Methods:
 
-- <code title="get /emails/{id}">client.emails.<a href="./src/resources/emails.ts">retrieve</a>(id, { ...params }) -> EmailRetrieveResponse</code>
+- <code title="get /emails/{emailId}">client.emails.<a href="./src/resources/emails.ts">retrieve</a>(emailID, { ...params }) -> EmailRetrieveResponse</code>
 - <code title="get /emails">client.emails.<a href="./src/resources/emails.ts">list</a>({ ...params }) -> EmailListResponsesPageNumberPagination</code>
-- <code title="get /emails/{id}/deliveries">client.emails.<a href="./src/resources/emails.ts">retrieveDeliveries</a>(id) -> EmailRetrieveDeliveriesResponse</code>
-- <code title="post /emails/{id}/retry">client.emails.<a href="./src/resources/emails.ts">retry</a>(id) -> EmailRetryResponse</code>
+- <code title="get /emails/{emailId}/deliveries">client.emails.<a href="./src/resources/emails.ts">retrieveDeliveries</a>(emailID) -> EmailRetrieveDeliveriesResponse</code>
+- <code title="post /emails/{emailId}/retry">client.emails.<a href="./src/resources/emails.ts">retry</a>(emailID) -> EmailRetryResponse</code>
 - <code title="post /emails">client.emails.<a href="./src/resources/emails.ts">send</a>({ ...params }) -> EmailSendResponse</code>
 - <code title="post /emails/batch">client.emails.<a href="./src/resources/emails.ts">sendBatch</a>({ ...params }) -> EmailSendBatchResponse</code>
 - <code title="post /emails/raw">client.emails.<a href="./src/resources/emails.ts">sendRaw</a>({ ...params }) -> EmailSendRawResponse</code>
@@ -123,15 +123,39 @@ Methods:
 - <code title="get /logs/{requestId}">client.logs.<a href="./src/resources/logs.ts">retrieve</a>(requestID) -> LogRetrieveResponse</code>
 - <code title="get /logs">client.logs.<a href="./src/resources/logs.ts">list</a>({ ...params }) -> LogEntriesPageNumberPagination</code>
 
+# Limits
+
+Types:
+
+- <code><a href="./src/resources/limits.ts">LimitsData</a></code>
+- <code><a href="./src/resources/limits.ts">LimitRetrieveResponse</a></code>
+
+Methods:
+
+- <code title="get /limits">client.limits.<a href="./src/resources/limits.ts">retrieve</a>() -> LimitRetrieveResponse</code>
+
 # Usage
 
 Types:
 
+- <code><a href="./src/resources/usage.ts">BulkTenantUsage</a></code>
+- <code><a href="./src/resources/usage.ts">EmailCounts</a></code>
+- <code><a href="./src/resources/usage.ts">EmailRates</a></code>
+- <code><a href="./src/resources/usage.ts">TenantUsage</a></code>
+- <code><a href="./src/resources/usage.ts">TenantUsageTimeseries</a></code>
+- <code><a href="./src/resources/usage.ts">UsagePeriod</a></code>
 - <code><a href="./src/resources/usage.ts">UsageRetrieveResponse</a></code>
+- <code><a href="./src/resources/usage.ts">UsageExportResponse</a></code>
+- <code><a href="./src/resources/usage.ts">UsageRetrieveTenantTimeseriesResponse</a></code>
+- <code><a href="./src/resources/usage.ts">UsageRetrieveTenantUsageResponse</a></code>
 
 Methods:
 
 - <code title="get /usage">client.usage.<a href="./src/resources/usage.ts">retrieve</a>() -> UsageRetrieveResponse</code>
+- <code title="get /usage/export">client.usage.<a href="./src/resources/usage.ts">export</a>({ ...params }) -> UsageExportResponse</code>
+- <code title="get /usage/by-tenant">client.usage.<a href="./src/resources/usage.ts">listByTenant</a>({ ...params }) -> BulkTenantUsageTenantsOffsetPagination</code>
+- <code title="get /tenants/{tenantId}/usage/timeseries">client.usage.<a href="./src/resources/usage.ts">retrieveTenantTimeseries</a>(tenantID, { ...params }) -> UsageRetrieveTenantTimeseriesResponse</code>
+- <code title="get /tenants/{tenantId}/usage">client.usage.<a href="./src/resources/usage.ts">retrieveTenantUsage</a>(tenantID, { ...params }) -> UsageRetrieveTenantUsageResponse</code>
 
 # Tenants
 

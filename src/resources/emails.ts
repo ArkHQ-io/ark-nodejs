@@ -22,11 +22,11 @@ export class Emails extends APIResource {
    * ```
    */
   retrieve(
-    id: string,
+    emailID: string,
     query: EmailRetrieveParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<EmailRetrieveResponse> {
-    return this._client.get(path`/emails/${id}`, { query, ...options });
+    return this._client.get(path`/emails/${emailID}`, { query, ...options });
   }
 
   /**
@@ -37,7 +37,7 @@ export class Emails extends APIResource {
    *
    * **Related endpoints:**
    *
-   * - `GET /emails/{id}` - Get full details of a specific email
+   * - `GET /emails/{emailId}` - Get full details of a specific email
    * - `POST /emails` - Send a new email
    *
    * @example
@@ -89,8 +89,8 @@ export class Emails extends APIResource {
    *
    * ### Can Retry Manually
    *
-   * Indicates whether you can call `POST /emails/{id}/retry` to manually retry the
-   * email. This is `true` when the raw message content is still available (not
+   * Indicates whether you can call `POST /emails/{emailId}/retry` to manually retry
+   * the email. This is `true` when the raw message content is still available (not
    * expired due to retention policy).
    *
    * @example
@@ -100,8 +100,8 @@ export class Emails extends APIResource {
    * );
    * ```
    */
-  retrieveDeliveries(id: string, options?: RequestOptions): APIPromise<EmailRetrieveDeliveriesResponse> {
-    return this._client.get(path`/emails/${id}/deliveries`, options);
+  retrieveDeliveries(emailID: string, options?: RequestOptions): APIPromise<EmailRetrieveDeliveriesResponse> {
+    return this._client.get(path`/emails/${emailID}/deliveries`, options);
   }
 
   /**
@@ -115,8 +115,8 @@ export class Emails extends APIResource {
    * const response = await client.emails.retry('aBc123XyZ');
    * ```
    */
-  retry(id: string, options?: RequestOptions): APIPromise<EmailRetryResponse> {
-    return this._client.post(path`/emails/${id}/retry`, options);
+  retry(emailID: string, options?: RequestOptions): APIPromise<EmailRetryResponse> {
+    return this._client.post(path`/emails/${emailID}/retry`, options);
   }
 
   /**
@@ -131,9 +131,9 @@ export class Emails extends APIResource {
    *
    * **Related endpoints:**
    *
-   * - `GET /emails/{id}` - Track delivery status
-   * - `GET /emails/{id}/deliveries` - View delivery attempts
-   * - `POST /emails/{id}/retry` - Retry failed delivery
+   * - `GET /emails/{emailId}` - Track delivery status
+   * - `GET /emails/{emailId}/deliveries` - View delivery attempts
+   * - `POST /emails/{emailId}/retry` - Retry failed delivery
    *
    * @example
    * ```ts
@@ -572,7 +572,7 @@ export namespace EmailRetrieveDeliveriesResponse {
     id: string;
 
     /**
-     * Whether the message can be manually retried via `POST /emails/{id}/retry`.
+     * Whether the message can be manually retried via `POST /emails/{emailId}/retry`.
      * `true` when the raw message content is still available (not expired). Messages
      * older than the retention period cannot be retried.
      */

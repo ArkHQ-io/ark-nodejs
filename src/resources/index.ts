@@ -28,6 +28,7 @@ export {
   type EmailSendRawParams,
   type EmailListResponsesPageNumberPagination,
 } from './emails';
+export { Limits, type LimitsData, type LimitRetrieveResponse } from './limits';
 export {
   Logs,
   type LogEntry,
@@ -72,7 +73,24 @@ export {
   type TrackingCreateParams,
   type TrackingUpdateParams,
 } from './tracking';
-export { Usage, type UsageRetrieveResponse } from './usage';
+export {
+  Usage,
+  type BulkTenantUsage,
+  type EmailCounts,
+  type EmailRates,
+  type TenantUsage,
+  type TenantUsageTimeseries,
+  type UsagePeriod,
+  type UsageRetrieveResponse,
+  type UsageExportResponse,
+  type UsageRetrieveTenantTimeseriesResponse,
+  type UsageRetrieveTenantUsageResponse,
+  type UsageExportParams,
+  type UsageListByTenantParams,
+  type UsageRetrieveTenantTimeseriesParams,
+  type UsageRetrieveTenantUsageParams,
+  type BulkTenantUsageTenantsOffsetPagination,
+} from './usage';
 export {
   Webhooks,
   type WebhookCreateResponse,

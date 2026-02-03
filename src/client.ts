@@ -16,6 +16,8 @@ import * as Errors from './core/error';
 import * as Pagination from './core/pagination';
 import {
   AbstractPage,
+  type OffsetPaginationParams,
+  OffsetPaginationResponse,
   type PageNumberPaginationParams,
   PageNumberPaginationResponse,
 } from './core/pagination';
@@ -49,6 +51,7 @@ import {
   EmailSendResponse,
   Emails,
 } from './resources/emails';
+import { LimitRetrieveResponse, Limits, LimitsData } from './resources/limits';
 import {
   LogEntriesPageNumberPagination,
   LogEntry,
@@ -81,7 +84,24 @@ import {
   TrackingUpdateResponse,
   TrackingVerifyResponse,
 } from './resources/tracking';
-import { Usage, UsageRetrieveResponse } from './resources/usage';
+import {
+  BulkTenantUsage,
+  BulkTenantUsageTenantsOffsetPagination,
+  EmailCounts,
+  EmailRates,
+  TenantUsage,
+  TenantUsageTimeseries,
+  Usage,
+  UsageExportParams,
+  UsageExportResponse,
+  UsageListByTenantParams,
+  UsagePeriod,
+  UsageRetrieveResponse,
+  UsageRetrieveTenantTimeseriesParams,
+  UsageRetrieveTenantTimeseriesResponse,
+  UsageRetrieveTenantUsageParams,
+  UsageRetrieveTenantUsageResponse,
+} from './resources/usage';
 import {
   WebhookCreateParams,
   WebhookCreateResponse,
@@ -840,6 +860,7 @@ export class Ark {
   webhooks: API.Webhooks = new API.Webhooks(this);
   tracking: API.Tracking = new API.Tracking(this);
   logs: API.Logs = new API.Logs(this);
+  limits: API.Limits = new API.Limits(this);
   usage: API.Usage = new API.Usage(this);
   tenants: API.Tenants = new API.Tenants(this);
 }
@@ -850,6 +871,7 @@ Ark.Suppressions = Suppressions;
 Ark.Webhooks = Webhooks;
 Ark.Tracking = Tracking;
 Ark.Logs = Logs;
+Ark.Limits = Limits;
 Ark.Usage = Usage;
 Ark.Tenants = Tenants;
 
@@ -860,6 +882,12 @@ export declare namespace Ark {
   export {
     type PageNumberPaginationParams as PageNumberPaginationParams,
     type PageNumberPaginationResponse as PageNumberPaginationResponse,
+  };
+
+  export import OffsetPagination = Pagination.OffsetPagination;
+  export {
+    type OffsetPaginationParams as OffsetPaginationParams,
+    type OffsetPaginationResponse as OffsetPaginationResponse,
   };
 
   export {
@@ -945,7 +973,30 @@ export declare namespace Ark {
     type LogListParams as LogListParams,
   };
 
-  export { Usage as Usage, type UsageRetrieveResponse as UsageRetrieveResponse };
+  export {
+    Limits as Limits,
+    type LimitsData as LimitsData,
+    type LimitRetrieveResponse as LimitRetrieveResponse,
+  };
+
+  export {
+    Usage as Usage,
+    type BulkTenantUsage as BulkTenantUsage,
+    type EmailCounts as EmailCounts,
+    type EmailRates as EmailRates,
+    type TenantUsage as TenantUsage,
+    type TenantUsageTimeseries as TenantUsageTimeseries,
+    type UsagePeriod as UsagePeriod,
+    type UsageRetrieveResponse as UsageRetrieveResponse,
+    type UsageExportResponse as UsageExportResponse,
+    type UsageRetrieveTenantTimeseriesResponse as UsageRetrieveTenantTimeseriesResponse,
+    type UsageRetrieveTenantUsageResponse as UsageRetrieveTenantUsageResponse,
+    type BulkTenantUsageTenantsOffsetPagination as BulkTenantUsageTenantsOffsetPagination,
+    type UsageExportParams as UsageExportParams,
+    type UsageListByTenantParams as UsageListByTenantParams,
+    type UsageRetrieveTenantTimeseriesParams as UsageRetrieveTenantTimeseriesParams,
+    type UsageRetrieveTenantUsageParams as UsageRetrieveTenantUsageParams,
+  };
 
   export {
     Tenants as Tenants,

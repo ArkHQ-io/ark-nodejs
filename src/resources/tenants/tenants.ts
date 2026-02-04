@@ -121,7 +121,7 @@ export interface Tenant {
   /**
    * When the tenant was created
    */
-  created_at: string;
+  createdAt: string;
 
   /**
    * Custom key-value pairs for storing additional data
@@ -145,7 +145,7 @@ export interface Tenant {
   /**
    * When the tenant was last updated
    */
-  updated_at: string;
+  updatedAt: string;
 }
 
 export interface TenantCreateResponse {

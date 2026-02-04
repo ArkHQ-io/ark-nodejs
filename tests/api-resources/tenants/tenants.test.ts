@@ -24,7 +24,7 @@ describe('resource tenants', () => {
       name: 'Acme Corp',
       metadata: {
         plan: 'pro',
-        internal_id: 'cust_12345',
+        internalId: 'cust_12345',
         region: 'us-west',
       },
     });

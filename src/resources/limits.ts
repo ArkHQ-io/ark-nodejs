@@ -21,7 +21,7 @@ export class Limits extends APIResource {
    * **Notes:**
    *
    * - This request counts against your rate limit
-   * - `sendLimit` may be null if Postal is temporarily unavailable
+   * - `sendLimit` may be null if the service is temporarily unavailable
    * - `billing` is null if billing is not configured
    * - Send limit resets at the top of each hour
    */

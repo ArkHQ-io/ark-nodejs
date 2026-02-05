@@ -9,7 +9,10 @@ const client = new Ark({
 
 describe('resource tracking', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.tracking.create({ domainId: 123, name: 'track' });
+    const responsePromise = client.tenants.tracking.create('cm6abc123def456', {
+      domainId: 123,
+      name: 'track',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,7 +23,7 @@ describe('resource tracking', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.tracking.create({
+    const response = await client.tenants.tracking.create('cm6abc123def456', {
       domainId: 123,
       name: 'track',
       sslEnabled: true,
@@ -29,8 +32,8 @@ describe('resource tracking', () => {
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.tracking.retrieve('trackingId');
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.tenants.tracking.retrieve('123', { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -40,8 +43,12 @@ describe('resource tracking', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('update', async () => {
-    const responsePromise = client.tracking.update('trackingId', {});
+  test('retrieve: required and optional params', async () => {
+    const response = await client.tenants.tracking.retrieve('123', { tenantId: 'cm6abc123def456' });
+  });
+
+  test('update: only required params', async () => {
+    const responsePromise = client.tenants.tracking.update('123', { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -49,10 +56,20 @@ describe('resource tracking', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('update: required and optional params', async () => {
+    const response = await client.tenants.tracking.update('123', {
+      tenantId: 'cm6abc123def456',
+      excludedClickDomains: 'example.com,mysite.org',
+      sslEnabled: true,
+      trackClicks: true,
+      trackOpens: true,
+    });
   });
 
   test('list', async () => {
-    const responsePromise = client.tracking.list();
+    const responsePromise = client.tenants.tracking.list('cm6abc123def456');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -62,8 +79,8 @@ describe('resource tracking', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.tracking.delete('trackingId');
+  test('delete: only required params', async () => {
+    const responsePromise = client.tenants.tracking.delete('123', { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -73,8 +90,12 @@ describe('resource tracking', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('verify', async () => {
-    const responsePromise = client.tracking.verify('trackingId');
+  test('delete: required and optional params', async () => {
+    const response = await client.tenants.tracking.delete('123', { tenantId: 'cm6abc123def456' });
+  });
+
+  test('verify: only required params', async () => {
+    const responsePromise = client.tenants.tracking.verify('123', { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -82,5 +103,9 @@ describe('resource tracking', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('verify: required and optional params', async () => {
+    const response = await client.tenants.tracking.verify('123', { tenantId: 'cm6abc123def456' });
   });
 });

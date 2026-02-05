@@ -1,19 +1,18 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../core/resource';
+import { APIResource } from '../../core/resource';
 import * as DomainsAPI from './domains';
-import * as Shared from './shared';
-import { APIPromise } from '../core/api-promise';
-import { RequestOptions } from '../internal/request-options';
-import { path } from '../internal/utils/path';
+import * as Shared from '../shared';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Domains extends APIResource {
   /**
-   * Add a new domain for sending emails. Returns DNS records that must be configured
-   * before the domain can be verified.
+   * Add a new sending domain to a tenant. Returns DNS records that must be
+   * configured before the domain can be verified.
    *
-   * **Required:** `tenant_id` to specify which tenant the domain belongs to. Each
-   * tenant gets their own isolated mail server for domain isolation.
+   * Each tenant gets their own isolated mail server for domain isolation.
    *
    * **Required DNS records:**
    *
@@ -21,63 +20,79 @@ export class Domains extends APIResource {
    * - **DKIM** - TXT record for email signing
    * - **Return Path** - CNAME for bounce handling
    *
-   * After adding DNS records, call `POST /domains/{id}/verify` to verify.
+   * After adding DNS records, call
+   * `POST /tenants/{tenantId}/domains/{domainId}/verify` to verify.
    *
    * @example
    * ```ts
-   * const domain = await client.domains.create({
-   *   name: 'notifications.myapp.com',
-   *   tenant_id: 'cm6abc123def456',
-   * });
+   * const domain = await client.tenants.domains.create(
+   *   'cm6abc123def456',
+   *   { name: 'notifications.myapp.com' },
+   * );
    * ```
    */
-  create(body: DomainCreateParams, options?: RequestOptions): APIPromise<DomainCreateResponse> {
-    return this._client.post('/domains', { body, ...options });
-  }
-
-  /**
-   * Get detailed information about a domain including DNS record status
-   *
-   * @example
-   * ```ts
-   * const domain = await client.domains.retrieve('domainId');
-   * ```
-   */
-  retrieve(domainID: string, options?: RequestOptions): APIPromise<DomainRetrieveResponse> {
-    return this._client.get(path`/domains/${domainID}`, options);
-  }
-
-  /**
-   * Get all sending domains with their verification status.
-   *
-   * Optionally filter by `tenant_id` to list domains for a specific tenant. When
-   * filtered, response includes `tenant_id` and `tenant_name` for each domain.
-   *
-   * @example
-   * ```ts
-   * const domains = await client.domains.list();
-   * ```
-   */
-  list(
-    query: DomainListParams | null | undefined = {},
+  create(
+    tenantID: string,
+    body: DomainCreateParams,
     options?: RequestOptions,
-  ): APIPromise<DomainListResponse> {
-    return this._client.get('/domains', { query, ...options });
+  ): APIPromise<DomainCreateResponse> {
+    return this._client.post(path`/tenants/${tenantID}/domains`, { body, ...options });
   }
 
   /**
-   * Remove a sending domain. You will no longer be able to send emails from this
-   * domain.
+   * Get detailed information about a domain including DNS record status.
+   *
+   * @example
+   * ```ts
+   * const domain = await client.tenants.domains.retrieve(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
+   * ```
+   */
+  retrieve(
+    domainID: string,
+    params: DomainRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<DomainRetrieveResponse> {
+    const { tenantId } = params;
+    return this._client.get(path`/tenants/${tenantId}/domains/${domainID}`, options);
+  }
+
+  /**
+   * Get all sending domains for a specific tenant with their verification status.
+   *
+   * @example
+   * ```ts
+   * const domains = await client.tenants.domains.list(
+   *   'cm6abc123def456',
+   * );
+   * ```
+   */
+  list(tenantID: string, options?: RequestOptions): APIPromise<DomainListResponse> {
+    return this._client.get(path`/tenants/${tenantID}/domains`, options);
+  }
+
+  /**
+   * Remove a sending domain from a tenant. You will no longer be able to send emails
+   * from this domain.
    *
    * **Warning:** This action cannot be undone.
    *
    * @example
    * ```ts
-   * const domain = await client.domains.delete('domainId');
+   * const domain = await client.tenants.domains.delete('123', {
+   *   tenantId: 'cm6abc123def456',
+   * });
    * ```
    */
-  delete(domainID: string, options?: RequestOptions): APIPromise<DomainDeleteResponse> {
-    return this._client.delete(path`/domains/${domainID}`, options);
+  delete(
+    domainID: string,
+    params: DomainDeleteParams,
+    options?: RequestOptions,
+  ): APIPromise<DomainDeleteResponse> {
+    const { tenantId } = params;
+    return this._client.delete(path`/tenants/${tenantId}/domains/${domainID}`, options);
   }
 
   /**
@@ -88,11 +103,19 @@ export class Domains extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.domains.verify('domainId');
+   * const response = await client.tenants.domains.verify(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
-  verify(domainID: string, options?: RequestOptions): APIPromise<DomainVerifyResponse> {
-    return this._client.post(path`/domains/${domainID}/verify`, options);
+  verify(
+    domainID: string,
+    params: DomainVerifyParams,
+    options?: RequestOptions,
+  ): APIPromise<DomainVerifyResponse> {
+    const { tenantId } = params;
+    return this._client.post(path`/tenants/${tenantId}/domains/${domainID}/verify`, options);
   }
 }
 
@@ -667,18 +690,27 @@ export interface DomainCreateParams {
    * Domain name (e.g., "mail.example.com")
    */
   name: string;
-
-  /**
-   * ID of the tenant this domain belongs to
-   */
-  tenant_id: string;
 }
 
-export interface DomainListParams {
+export interface DomainRetrieveParams {
   /**
-   * Filter domains by tenant ID
+   * The tenant ID
    */
-  tenant_id?: string;
+  tenantId: string;
+}
+
+export interface DomainDeleteParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
+}
+
+export interface DomainVerifyParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
 }
 
 export declare namespace Domains {
@@ -690,6 +722,8 @@ export declare namespace Domains {
     type DomainDeleteResponse as DomainDeleteResponse,
     type DomainVerifyResponse as DomainVerifyResponse,
     type DomainCreateParams as DomainCreateParams,
-    type DomainListParams as DomainListParams,
+    type DomainRetrieveParams as DomainRetrieveParams,
+    type DomainDeleteParams as DomainDeleteParams,
+    type DomainVerifyParams as DomainVerifyParams,
   };
 }

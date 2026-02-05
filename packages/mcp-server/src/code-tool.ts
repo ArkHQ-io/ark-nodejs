@@ -19,7 +19,7 @@ async function run(client) {
     subject: 'Hello World',
     to: ['user@example.com'],
     html: '<h1>Welcome!</h1>',
-    metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+    metadata: { user_id: 'usr_123456', campaign: 'onboarding' },
     tag: 'welcome',
   });
 

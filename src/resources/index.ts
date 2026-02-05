@@ -2,17 +2,6 @@
 
 export * from './shared';
 export {
-  Domains,
-  type DNSRecord,
-  type DomainCreateResponse,
-  type DomainRetrieveResponse,
-  type DomainListResponse,
-  type DomainDeleteResponse,
-  type DomainVerifyResponse,
-  type DomainCreateParams,
-  type DomainListParams,
-} from './domains';
-export {
   Emails,
   type EmailRetrieveResponse,
   type EmailListResponse,
@@ -38,18 +27,6 @@ export {
   type LogEntriesPageNumberPagination,
 } from './logs';
 export {
-  Suppressions,
-  type SuppressionCreateResponse,
-  type SuppressionRetrieveResponse,
-  type SuppressionListResponse,
-  type SuppressionDeleteResponse,
-  type SuppressionBulkCreateResponse,
-  type SuppressionCreateParams,
-  type SuppressionListParams,
-  type SuppressionBulkCreateParams,
-  type SuppressionListResponsesPageNumberPagination,
-} from './suppressions';
-export {
   Tenants,
   type Tenant,
   type TenantCreateResponse,
@@ -62,50 +39,15 @@ export {
   type TenantsPageNumberPagination,
 } from './tenants/tenants';
 export {
-  Tracking,
-  type TrackDomain,
-  type TrackingCreateResponse,
-  type TrackingRetrieveResponse,
-  type TrackingUpdateResponse,
-  type TrackingListResponse,
-  type TrackingDeleteResponse,
-  type TrackingVerifyResponse,
-  type TrackingCreateParams,
-  type TrackingUpdateParams,
-} from './tracking';
-export {
   Usage,
-  type BulkTenantUsage,
   type EmailCounts,
   type EmailRates,
-  type TenantUsage,
-  type TenantUsageTimeseries,
+  type OrgUsageSummary,
+  type TenantUsageItem,
   type UsagePeriod,
-  type UsageRetrieveResponse,
   type UsageExportResponse,
-  type UsageRetrieveTenantTimeseriesResponse,
-  type UsageRetrieveTenantUsageResponse,
+  type UsageRetrieveParams,
   type UsageExportParams,
-  type UsageListByTenantParams,
-  type UsageRetrieveTenantTimeseriesParams,
-  type UsageRetrieveTenantUsageParams,
-  type BulkTenantUsageTenantsOffsetPagination,
+  type UsageListTenantsParams,
+  type TenantUsageItemsPageNumberPagination,
 } from './usage';
-export {
-  Webhooks,
-  type WebhookCreateResponse,
-  type WebhookRetrieveResponse,
-  type WebhookUpdateResponse,
-  type WebhookListResponse,
-  type WebhookDeleteResponse,
-  type WebhookListDeliveriesResponse,
-  type WebhookReplayDeliveryResponse,
-  type WebhookRetrieveDeliveryResponse,
-  type WebhookTestResponse,
-  type WebhookCreateParams,
-  type WebhookUpdateParams,
-  type WebhookListDeliveriesParams,
-  type WebhookReplayDeliveryParams,
-  type WebhookRetrieveDeliveryParams,
-  type WebhookTestParams,
-} from './webhooks';

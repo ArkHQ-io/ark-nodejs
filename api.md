@@ -198,3 +198,31 @@ Methods:
 
 - <code title="get /tenants/{tenantId}/usage">client.tenants.usage.<a href="./src/resources/tenants/usage.ts">retrieve</a>(tenantID, { ...params }) -> UsageRetrieveResponse</code>
 - <code title="get /tenants/{tenantId}/usage/timeseries">client.tenants.usage.<a href="./src/resources/tenants/usage.ts">retrieveTimeseries</a>(tenantID, { ...params }) -> UsageRetrieveTimeseriesResponse</code>
+
+# Platform
+
+## Webhooks
+
+Types:
+
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookCreateResponse</a></code>
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookRetrieveResponse</a></code>
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookUpdateResponse</a></code>
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookListResponse</a></code>
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookDeleteResponse</a></code>
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookListDeliveriesResponse</a></code>
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookReplayDeliveryResponse</a></code>
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookRetrieveDeliveryResponse</a></code>
+- <code><a href="./src/resources/platform/webhooks.ts">WebhookTestResponse</a></code>
+
+Methods:
+
+- <code title="post /platform/webhooks">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">create</a>({ ...params }) -> WebhookCreateResponse</code>
+- <code title="get /platform/webhooks/{webhookId}">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">retrieve</a>(webhookID) -> WebhookRetrieveResponse</code>
+- <code title="patch /platform/webhooks/{webhookId}">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">update</a>(webhookID, { ...params }) -> WebhookUpdateResponse</code>
+- <code title="get /platform/webhooks">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">list</a>() -> WebhookListResponse</code>
+- <code title="delete /platform/webhooks/{webhookId}">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">delete</a>(webhookID) -> WebhookDeleteResponse</code>
+- <code title="get /platform/webhooks/deliveries">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">listDeliveries</a>({ ...params }) -> WebhookListDeliveriesResponsesPageNumberPagination</code>
+- <code title="post /platform/webhooks/deliveries/{deliveryId}/replay">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">replayDelivery</a>(deliveryID) -> WebhookReplayDeliveryResponse</code>
+- <code title="get /platform/webhooks/deliveries/{deliveryId}">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">retrieveDelivery</a>(deliveryID) -> WebhookRetrieveDeliveryResponse</code>
+- <code title="post /platform/webhooks/{webhookId}/test">client.platform.webhooks.<a href="./src/resources/platform/webhooks.ts">test</a>(webhookID, { ...params }) -> WebhookTestResponse</code>

@@ -26,6 +26,7 @@ export {
   type LogListParams,
   type LogEntriesPageNumberPagination,
 } from './logs';
+export { Platform } from './platform/platform';
 export {
   Tenants,
   type Tenant,

@@ -60,6 +60,7 @@ import {
   UsagePeriod,
   UsageRetrieveParams,
 } from './resources/usage';
+import { Platform } from './resources/platform/platform';
 import {
   Tenant,
   TenantCreateParams,
@@ -799,6 +800,7 @@ export class Ark {
   usage: API.Usage = new API.Usage(this);
   limits: API.Limits = new API.Limits(this);
   tenants: API.Tenants = new API.Tenants(this);
+  platform: API.Platform = new API.Platform(this);
 }
 
 Ark.Emails = Emails;
@@ -806,6 +808,7 @@ Ark.Logs = Logs;
 Ark.Usage = Usage;
 Ark.Limits = Limits;
 Ark.Tenants = Tenants;
+Ark.Platform = Platform;
 
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
@@ -874,6 +877,8 @@ export declare namespace Ark {
     type TenantUpdateParams as TenantUpdateParams,
     type TenantListParams as TenantListParams,
   };
+
+  export { Platform as Platform };
 
   export type APIMeta = API.APIMeta;
 }

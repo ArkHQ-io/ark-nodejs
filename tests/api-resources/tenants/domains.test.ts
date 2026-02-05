@@ -9,9 +9,8 @@ const client = new Ark({
 
 describe('resource domains', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.domains.create({
+    const responsePromise = client.tenants.domains.create('cm6abc123def456', {
       name: 'notifications.myapp.com',
-      tenant_id: 'cm6abc123def456',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -23,14 +22,13 @@ describe('resource domains', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.domains.create({
+    const response = await client.tenants.domains.create('cm6abc123def456', {
       name: 'notifications.myapp.com',
-      tenant_id: 'cm6abc123def456',
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.domains.retrieve('domainId');
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.tenants.domains.retrieve('123', { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -38,10 +36,14 @@ describe('resource domains', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('retrieve: required and optional params', async () => {
+    const response = await client.tenants.domains.retrieve('123', { tenantId: 'cm6abc123def456' });
   });
 
   test('list', async () => {
-    const responsePromise = client.domains.list();
+    const responsePromise = client.tenants.domains.list('cm6abc123def456');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -51,15 +53,8 @@ describe('resource domains', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('list: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.domains.list({ tenant_id: 'tenant_id' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Ark.NotFoundError);
-  });
-
-  test('delete', async () => {
-    const responsePromise = client.domains.delete('domainId');
+  test('delete: only required params', async () => {
+    const responsePromise = client.tenants.domains.delete('123', { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -69,8 +64,12 @@ describe('resource domains', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('verify', async () => {
-    const responsePromise = client.domains.verify('domainId');
+  test('delete: required and optional params', async () => {
+    const response = await client.tenants.domains.delete('123', { tenantId: 'cm6abc123def456' });
+  });
+
+  test('verify: only required params', async () => {
+    const responsePromise = client.tenants.domains.verify('123', { tenantId: 'cm6abc123def456' });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -78,5 +77,9 @@ describe('resource domains', () => {
     const dataAndResponse = await responsePromise.withResponse();
     expect(dataAndResponse.data).toBe(response);
     expect(dataAndResponse.response).toBe(rawResponse);
+  });
+
+  test('verify: required and optional params', async () => {
+    const response = await client.tenants.domains.verify('123', { tenantId: 'cm6abc123def456' });
   });
 });

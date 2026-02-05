@@ -10,7 +10,7 @@ import { path } from '../../internal/utils/path';
 export class Credentials extends APIResource {
   /**
    * Create a new SMTP or API credential for a tenant. The credential can be used to
-   * send emails through Postal on behalf of the tenant.
+   * send emails via Ark on behalf of the tenant.
    *
    * **Important:** The credential key is only returned once at creation time. Store
    * it securely - you cannot retrieve it again.
@@ -92,7 +92,7 @@ export class Credentials extends APIResource {
 
   /**
    * List all SMTP and API credentials for a tenant. Credentials are used to send
-   * emails through Postal on behalf of the tenant.
+   * emails via Ark on behalf of the tenant.
    *
    * **Security:** Credential keys are not returned in the list response. Use the
    * retrieve endpoint with `reveal=true` to get the key.

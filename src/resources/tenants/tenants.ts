@@ -17,6 +17,80 @@ import {
   CredentialUpdateResponse,
   Credentials,
 } from './credentials';
+import * as DomainsAPI from './domains';
+import {
+  DNSRecord,
+  DomainCreateParams,
+  DomainCreateResponse,
+  DomainDeleteParams,
+  DomainDeleteResponse,
+  DomainListResponse,
+  DomainRetrieveParams,
+  DomainRetrieveResponse,
+  DomainVerifyParams,
+  DomainVerifyResponse,
+  Domains,
+} from './domains';
+import * as SuppressionsAPI from './suppressions';
+import {
+  SuppressionCreateParams,
+  SuppressionCreateResponse,
+  SuppressionDeleteParams,
+  SuppressionDeleteResponse,
+  SuppressionListParams,
+  SuppressionListResponse,
+  SuppressionListResponsesPageNumberPagination,
+  SuppressionRetrieveParams,
+  SuppressionRetrieveResponse,
+  Suppressions,
+} from './suppressions';
+import * as TrackingAPI from './tracking';
+import {
+  TrackDomain,
+  Tracking,
+  TrackingCreateParams,
+  TrackingCreateResponse,
+  TrackingDeleteParams,
+  TrackingDeleteResponse,
+  TrackingListResponse,
+  TrackingRetrieveParams,
+  TrackingRetrieveResponse,
+  TrackingUpdateParams,
+  TrackingUpdateResponse,
+  TrackingVerifyParams,
+  TrackingVerifyResponse,
+} from './tracking';
+import * as UsageAPI from './usage';
+import {
+  TenantUsage,
+  TenantUsageTimeseries,
+  Usage,
+  UsageRetrieveParams,
+  UsageRetrieveResponse,
+  UsageRetrieveTimeseriesParams,
+  UsageRetrieveTimeseriesResponse,
+} from './usage';
+import * as WebhooksAPI from './webhooks';
+import {
+  WebhookCreateParams,
+  WebhookCreateResponse,
+  WebhookDeleteParams,
+  WebhookDeleteResponse,
+  WebhookListDeliveriesParams,
+  WebhookListDeliveriesResponse,
+  WebhookListResponse,
+  WebhookReplayDeliveryParams,
+  WebhookReplayDeliveryResponse,
+  WebhookRetrieveDeliveryParams,
+  WebhookRetrieveDeliveryResponse,
+  WebhookRetrieveParams,
+  WebhookRetrieveResponse,
+  WebhookTestParams,
+  WebhookTestResponse,
+  WebhookUpdateParams,
+  WebhookUpdateResponse,
+  Webhooks,
+} from './webhooks';
 import { APIPromise } from '../../core/api-promise';
 import { PageNumberPagination, type PageNumberPaginationParams, PagePromise } from '../../core/pagination';
 import { RequestOptions } from '../../internal/request-options';
@@ -24,6 +98,11 @@ import { path } from '../../internal/utils/path';
 
 export class Tenants extends APIResource {
   credentials: CredentialsAPI.Credentials = new CredentialsAPI.Credentials(this._client);
+  domains: DomainsAPI.Domains = new DomainsAPI.Domains(this._client);
+  suppressions: SuppressionsAPI.Suppressions = new SuppressionsAPI.Suppressions(this._client);
+  webhooks: WebhooksAPI.Webhooks = new WebhooksAPI.Webhooks(this._client);
+  tracking: TrackingAPI.Tracking = new TrackingAPI.Tracking(this._client);
+  usage: UsageAPI.Usage = new UsageAPI.Usage(this._client);
 
   /**
    * Create a new tenant.
@@ -237,6 +316,11 @@ export interface TenantListParams extends PageNumberPaginationParams {
 }
 
 Tenants.Credentials = Credentials;
+Tenants.Domains = Domains;
+Tenants.Suppressions = Suppressions;
+Tenants.Webhooks = Webhooks;
+Tenants.Tracking = Tracking;
+Tenants.Usage = Usage;
 
 export declare namespace Tenants {
   export {
@@ -264,5 +348,79 @@ export declare namespace Tenants {
     type CredentialUpdateParams as CredentialUpdateParams,
     type CredentialListParams as CredentialListParams,
     type CredentialDeleteParams as CredentialDeleteParams,
+  };
+
+  export {
+    Domains as Domains,
+    type DNSRecord as DNSRecord,
+    type DomainCreateResponse as DomainCreateResponse,
+    type DomainRetrieveResponse as DomainRetrieveResponse,
+    type DomainListResponse as DomainListResponse,
+    type DomainDeleteResponse as DomainDeleteResponse,
+    type DomainVerifyResponse as DomainVerifyResponse,
+    type DomainCreateParams as DomainCreateParams,
+    type DomainRetrieveParams as DomainRetrieveParams,
+    type DomainDeleteParams as DomainDeleteParams,
+    type DomainVerifyParams as DomainVerifyParams,
+  };
+
+  export {
+    Suppressions as Suppressions,
+    type SuppressionCreateResponse as SuppressionCreateResponse,
+    type SuppressionRetrieveResponse as SuppressionRetrieveResponse,
+    type SuppressionListResponse as SuppressionListResponse,
+    type SuppressionDeleteResponse as SuppressionDeleteResponse,
+    type SuppressionListResponsesPageNumberPagination as SuppressionListResponsesPageNumberPagination,
+    type SuppressionCreateParams as SuppressionCreateParams,
+    type SuppressionRetrieveParams as SuppressionRetrieveParams,
+    type SuppressionListParams as SuppressionListParams,
+    type SuppressionDeleteParams as SuppressionDeleteParams,
+  };
+
+  export {
+    Webhooks as Webhooks,
+    type WebhookCreateResponse as WebhookCreateResponse,
+    type WebhookRetrieveResponse as WebhookRetrieveResponse,
+    type WebhookUpdateResponse as WebhookUpdateResponse,
+    type WebhookListResponse as WebhookListResponse,
+    type WebhookDeleteResponse as WebhookDeleteResponse,
+    type WebhookListDeliveriesResponse as WebhookListDeliveriesResponse,
+    type WebhookReplayDeliveryResponse as WebhookReplayDeliveryResponse,
+    type WebhookRetrieveDeliveryResponse as WebhookRetrieveDeliveryResponse,
+    type WebhookTestResponse as WebhookTestResponse,
+    type WebhookCreateParams as WebhookCreateParams,
+    type WebhookRetrieveParams as WebhookRetrieveParams,
+    type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookDeleteParams as WebhookDeleteParams,
+    type WebhookListDeliveriesParams as WebhookListDeliveriesParams,
+    type WebhookReplayDeliveryParams as WebhookReplayDeliveryParams,
+    type WebhookRetrieveDeliveryParams as WebhookRetrieveDeliveryParams,
+    type WebhookTestParams as WebhookTestParams,
+  };
+
+  export {
+    Tracking as Tracking,
+    type TrackDomain as TrackDomain,
+    type TrackingCreateResponse as TrackingCreateResponse,
+    type TrackingRetrieveResponse as TrackingRetrieveResponse,
+    type TrackingUpdateResponse as TrackingUpdateResponse,
+    type TrackingListResponse as TrackingListResponse,
+    type TrackingDeleteResponse as TrackingDeleteResponse,
+    type TrackingVerifyResponse as TrackingVerifyResponse,
+    type TrackingCreateParams as TrackingCreateParams,
+    type TrackingRetrieveParams as TrackingRetrieveParams,
+    type TrackingUpdateParams as TrackingUpdateParams,
+    type TrackingDeleteParams as TrackingDeleteParams,
+    type TrackingVerifyParams as TrackingVerifyParams,
+  };
+
+  export {
+    Usage as Usage,
+    type TenantUsage as TenantUsage,
+    type TenantUsageTimeseries as TenantUsageTimeseries,
+    type UsageRetrieveResponse as UsageRetrieveResponse,
+    type UsageRetrieveTimeseriesResponse as UsageRetrieveTimeseriesResponse,
+    type UsageRetrieveParams as UsageRetrieveParams,
+    type UsageRetrieveTimeseriesParams as UsageRetrieveTimeseriesParams,
   };
 }

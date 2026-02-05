@@ -16,25 +16,12 @@ import * as Errors from './core/error';
 import * as Pagination from './core/pagination';
 import {
   AbstractPage,
-  type OffsetPaginationParams,
-  OffsetPaginationResponse,
   type PageNumberPaginationParams,
   PageNumberPaginationResponse,
 } from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
-import {
-  DNSRecord,
-  DomainCreateParams,
-  DomainCreateResponse,
-  DomainDeleteResponse,
-  DomainListParams,
-  DomainListResponse,
-  DomainRetrieveResponse,
-  DomainVerifyResponse,
-  Domains,
-} from './resources/domains';
 import {
   EmailListParams,
   EmailListResponse,
@@ -61,65 +48,18 @@ import {
   Logs,
 } from './resources/logs';
 import {
-  SuppressionBulkCreateParams,
-  SuppressionBulkCreateResponse,
-  SuppressionCreateParams,
-  SuppressionCreateResponse,
-  SuppressionDeleteResponse,
-  SuppressionListParams,
-  SuppressionListResponse,
-  SuppressionListResponsesPageNumberPagination,
-  SuppressionRetrieveResponse,
-  Suppressions,
-} from './resources/suppressions';
-import {
-  TrackDomain,
-  Tracking,
-  TrackingCreateParams,
-  TrackingCreateResponse,
-  TrackingDeleteResponse,
-  TrackingListResponse,
-  TrackingRetrieveResponse,
-  TrackingUpdateParams,
-  TrackingUpdateResponse,
-  TrackingVerifyResponse,
-} from './resources/tracking';
-import {
-  BulkTenantUsage,
-  BulkTenantUsageTenantsOffsetPagination,
   EmailCounts,
   EmailRates,
-  TenantUsage,
-  TenantUsageTimeseries,
+  OrgUsageSummary,
+  TenantUsageItem,
+  TenantUsageItemsPageNumberPagination,
   Usage,
   UsageExportParams,
   UsageExportResponse,
-  UsageListByTenantParams,
+  UsageListTenantsParams,
   UsagePeriod,
-  UsageRetrieveResponse,
-  UsageRetrieveTenantTimeseriesParams,
-  UsageRetrieveTenantTimeseriesResponse,
-  UsageRetrieveTenantUsageParams,
-  UsageRetrieveTenantUsageResponse,
+  UsageRetrieveParams,
 } from './resources/usage';
-import {
-  WebhookCreateParams,
-  WebhookCreateResponse,
-  WebhookDeleteResponse,
-  WebhookListDeliveriesParams,
-  WebhookListDeliveriesResponse,
-  WebhookListResponse,
-  WebhookReplayDeliveryParams,
-  WebhookReplayDeliveryResponse,
-  WebhookRetrieveDeliveryParams,
-  WebhookRetrieveDeliveryResponse,
-  WebhookRetrieveResponse,
-  WebhookTestParams,
-  WebhookTestResponse,
-  WebhookUpdateParams,
-  WebhookUpdateResponse,
-  Webhooks,
-} from './resources/webhooks';
 import {
   Tenant,
   TenantCreateParams,
@@ -855,24 +795,16 @@ export class Ark {
   static toFile = Uploads.toFile;
 
   emails: API.Emails = new API.Emails(this);
-  domains: API.Domains = new API.Domains(this);
-  suppressions: API.Suppressions = new API.Suppressions(this);
-  webhooks: API.Webhooks = new API.Webhooks(this);
-  tracking: API.Tracking = new API.Tracking(this);
   logs: API.Logs = new API.Logs(this);
-  limits: API.Limits = new API.Limits(this);
   usage: API.Usage = new API.Usage(this);
+  limits: API.Limits = new API.Limits(this);
   tenants: API.Tenants = new API.Tenants(this);
 }
 
 Ark.Emails = Emails;
-Ark.Domains = Domains;
-Ark.Suppressions = Suppressions;
-Ark.Webhooks = Webhooks;
-Ark.Tracking = Tracking;
 Ark.Logs = Logs;
-Ark.Limits = Limits;
 Ark.Usage = Usage;
+Ark.Limits = Limits;
 Ark.Tenants = Tenants;
 
 export declare namespace Ark {
@@ -882,12 +814,6 @@ export declare namespace Ark {
   export {
     type PageNumberPaginationParams as PageNumberPaginationParams,
     type PageNumberPaginationResponse as PageNumberPaginationResponse,
-  };
-
-  export import OffsetPagination = Pagination.OffsetPagination;
-  export {
-    type OffsetPaginationParams as OffsetPaginationParams,
-    type OffsetPaginationResponse as OffsetPaginationResponse,
   };
 
   export {
@@ -908,63 +834,6 @@ export declare namespace Ark {
   };
 
   export {
-    Domains as Domains,
-    type DNSRecord as DNSRecord,
-    type DomainCreateResponse as DomainCreateResponse,
-    type DomainRetrieveResponse as DomainRetrieveResponse,
-    type DomainListResponse as DomainListResponse,
-    type DomainDeleteResponse as DomainDeleteResponse,
-    type DomainVerifyResponse as DomainVerifyResponse,
-    type DomainCreateParams as DomainCreateParams,
-    type DomainListParams as DomainListParams,
-  };
-
-  export {
-    Suppressions as Suppressions,
-    type SuppressionCreateResponse as SuppressionCreateResponse,
-    type SuppressionRetrieveResponse as SuppressionRetrieveResponse,
-    type SuppressionListResponse as SuppressionListResponse,
-    type SuppressionDeleteResponse as SuppressionDeleteResponse,
-    type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
-    type SuppressionListResponsesPageNumberPagination as SuppressionListResponsesPageNumberPagination,
-    type SuppressionCreateParams as SuppressionCreateParams,
-    type SuppressionListParams as SuppressionListParams,
-    type SuppressionBulkCreateParams as SuppressionBulkCreateParams,
-  };
-
-  export {
-    Webhooks as Webhooks,
-    type WebhookCreateResponse as WebhookCreateResponse,
-    type WebhookRetrieveResponse as WebhookRetrieveResponse,
-    type WebhookUpdateResponse as WebhookUpdateResponse,
-    type WebhookListResponse as WebhookListResponse,
-    type WebhookDeleteResponse as WebhookDeleteResponse,
-    type WebhookListDeliveriesResponse as WebhookListDeliveriesResponse,
-    type WebhookReplayDeliveryResponse as WebhookReplayDeliveryResponse,
-    type WebhookRetrieveDeliveryResponse as WebhookRetrieveDeliveryResponse,
-    type WebhookTestResponse as WebhookTestResponse,
-    type WebhookCreateParams as WebhookCreateParams,
-    type WebhookUpdateParams as WebhookUpdateParams,
-    type WebhookListDeliveriesParams as WebhookListDeliveriesParams,
-    type WebhookReplayDeliveryParams as WebhookReplayDeliveryParams,
-    type WebhookRetrieveDeliveryParams as WebhookRetrieveDeliveryParams,
-    type WebhookTestParams as WebhookTestParams,
-  };
-
-  export {
-    Tracking as Tracking,
-    type TrackDomain as TrackDomain,
-    type TrackingCreateResponse as TrackingCreateResponse,
-    type TrackingRetrieveResponse as TrackingRetrieveResponse,
-    type TrackingUpdateResponse as TrackingUpdateResponse,
-    type TrackingListResponse as TrackingListResponse,
-    type TrackingDeleteResponse as TrackingDeleteResponse,
-    type TrackingVerifyResponse as TrackingVerifyResponse,
-    type TrackingCreateParams as TrackingCreateParams,
-    type TrackingUpdateParams as TrackingUpdateParams,
-  };
-
-  export {
     Logs as Logs,
     type LogEntry as LogEntry,
     type LogEntryDetail as LogEntryDetail,
@@ -974,28 +843,23 @@ export declare namespace Ark {
   };
 
   export {
-    Limits as Limits,
-    type LimitsData as LimitsData,
-    type LimitRetrieveResponse as LimitRetrieveResponse,
+    Usage as Usage,
+    type EmailCounts as EmailCounts,
+    type EmailRates as EmailRates,
+    type OrgUsageSummary as OrgUsageSummary,
+    type TenantUsageItem as TenantUsageItem,
+    type UsagePeriod as UsagePeriod,
+    type UsageExportResponse as UsageExportResponse,
+    type TenantUsageItemsPageNumberPagination as TenantUsageItemsPageNumberPagination,
+    type UsageRetrieveParams as UsageRetrieveParams,
+    type UsageExportParams as UsageExportParams,
+    type UsageListTenantsParams as UsageListTenantsParams,
   };
 
   export {
-    Usage as Usage,
-    type BulkTenantUsage as BulkTenantUsage,
-    type EmailCounts as EmailCounts,
-    type EmailRates as EmailRates,
-    type TenantUsage as TenantUsage,
-    type TenantUsageTimeseries as TenantUsageTimeseries,
-    type UsagePeriod as UsagePeriod,
-    type UsageRetrieveResponse as UsageRetrieveResponse,
-    type UsageExportResponse as UsageExportResponse,
-    type UsageRetrieveTenantTimeseriesResponse as UsageRetrieveTenantTimeseriesResponse,
-    type UsageRetrieveTenantUsageResponse as UsageRetrieveTenantUsageResponse,
-    type BulkTenantUsageTenantsOffsetPagination as BulkTenantUsageTenantsOffsetPagination,
-    type UsageExportParams as UsageExportParams,
-    type UsageListByTenantParams as UsageListByTenantParams,
-    type UsageRetrieveTenantTimeseriesParams as UsageRetrieveTenantTimeseriesParams,
-    type UsageRetrieveTenantUsageParams as UsageRetrieveTenantUsageParams,
+    Limits as Limits,
+    type LimitsData as LimitsData,
+    type LimitRetrieveResponse as LimitRetrieveResponse,
   };
 
   export {

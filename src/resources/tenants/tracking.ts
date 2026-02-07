@@ -1,43 +1,53 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../core/resource';
+import { APIResource } from '../../core/resource';
 import * as TrackingAPI from './tracking';
-import * as Shared from './shared';
-import { APIPromise } from '../core/api-promise';
-import { RequestOptions } from '../internal/request-options';
-import { path } from '../internal/utils/path';
+import * as Shared from '../shared';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Tracking extends APIResource {
   /**
-   * Create a new track domain for open/click tracking.
+   * Create a new track domain for open/click tracking for a tenant.
    *
    * After creation, you must configure a CNAME record pointing to the provided DNS
    * value before tracking will work.
    *
    * @example
    * ```ts
-   * const tracking = await client.tracking.create({
-   *   domainId: 123,
-   *   name: 'track',
-   * });
-   * ```
-   */
-  create(body: TrackingCreateParams, options?: RequestOptions): APIPromise<TrackingCreateResponse> {
-    return this._client.post('/tracking', { body, ...options });
-  }
-
-  /**
-   * Get details of a specific track domain including DNS configuration
-   *
-   * @example
-   * ```ts
-   * const tracking = await client.tracking.retrieve(
-   *   'trackingId',
+   * const tracking = await client.tenants.tracking.create(
+   *   'cm6abc123def456',
+   *   { domainId: 123, name: 'track' },
    * );
    * ```
    */
-  retrieve(trackingID: string, options?: RequestOptions): APIPromise<TrackingRetrieveResponse> {
-    return this._client.get(path`/tracking/${trackingID}`, options);
+  create(
+    tenantID: string,
+    body: TrackingCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<TrackingCreateResponse> {
+    return this._client.post(path`/tenants/${tenantID}/tracking`, { body, ...options });
+  }
+
+  /**
+   * Get details of a specific track domain including DNS configuration.
+   *
+   * @example
+   * ```ts
+   * const tracking = await client.tenants.tracking.retrieve(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
+   * ```
+   */
+  retrieve(
+    trackingID: string,
+    params: TrackingRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<TrackingRetrieveResponse> {
+    const { tenantId } = params;
+    return this._client.get(path`/tenants/${tenantId}/tracking/${trackingID}`, options);
   }
 
   /**
@@ -52,28 +62,34 @@ export class Tracking extends APIResource {
    *
    * @example
    * ```ts
-   * const tracking = await client.tracking.update('trackingId');
+   * const tracking = await client.tenants.tracking.update(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
   update(
     trackingID: string,
-    body: TrackingUpdateParams,
+    params: TrackingUpdateParams,
     options?: RequestOptions,
   ): APIPromise<TrackingUpdateResponse> {
-    return this._client.patch(path`/tracking/${trackingID}`, { body, ...options });
+    const { tenantId, ...body } = params;
+    return this._client.patch(path`/tenants/${tenantId}/tracking/${trackingID}`, { body, ...options });
   }
 
   /**
-   * List all track domains configured for your server. Track domains enable open and
-   * click tracking for your emails.
+   * List all track domains configured for a tenant. Track domains enable open and
+   * click tracking for emails.
    *
    * @example
    * ```ts
-   * const trackings = await client.tracking.list();
+   * const trackings = await client.tenants.tracking.list(
+   *   'cm6abc123def456',
+   * );
    * ```
    */
-  list(options?: RequestOptions): APIPromise<TrackingListResponse> {
-    return this._client.get('/tracking', options);
+  list(tenantID: string, options?: RequestOptions): APIPromise<TrackingListResponse> {
+    return this._client.get(path`/tenants/${tenantID}/tracking`, options);
   }
 
   /**
@@ -82,11 +98,19 @@ export class Tracking extends APIResource {
    *
    * @example
    * ```ts
-   * const tracking = await client.tracking.delete('trackingId');
+   * const tracking = await client.tenants.tracking.delete(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
-  delete(trackingID: string, options?: RequestOptions): APIPromise<TrackingDeleteResponse> {
-    return this._client.delete(path`/tracking/${trackingID}`, options);
+  delete(
+    trackingID: string,
+    params: TrackingDeleteParams,
+    options?: RequestOptions,
+  ): APIPromise<TrackingDeleteResponse> {
+    const { tenantId } = params;
+    return this._client.delete(path`/tenants/${tenantId}/tracking/${trackingID}`, options);
   }
 
   /**
@@ -97,11 +121,19 @@ export class Tracking extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.tracking.verify('trackingId');
+   * const response = await client.tenants.tracking.verify(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
-  verify(trackingID: string, options?: RequestOptions): APIPromise<TrackingVerifyResponse> {
-    return this._client.post(path`/tracking/${trackingID}/verify`, options);
+  verify(
+    trackingID: string,
+    params: TrackingVerifyParams,
+    options?: RequestOptions,
+  ): APIPromise<TrackingVerifyResponse> {
+    const { tenantId } = params;
+    return this._client.post(path`/tenants/${tenantId}/tracking/${trackingID}/verify`, options);
   }
 }
 
@@ -344,26 +376,53 @@ export interface TrackingCreateParams {
   trackOpens?: boolean | null;
 }
 
+export interface TrackingRetrieveParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
+}
+
 export interface TrackingUpdateParams {
   /**
-   * Comma-separated list of domains to exclude from click tracking (accepts null)
+   * Path param: The tenant ID
+   */
+  tenantId: string;
+
+  /**
+   * Body param: Comma-separated list of domains to exclude from click tracking
+   * (accepts null)
    */
   excludedClickDomains?: string | null;
 
   /**
-   * Enable or disable SSL for tracking URLs (accepts null)
+   * Body param: Enable or disable SSL for tracking URLs (accepts null)
    */
   sslEnabled?: boolean | null;
 
   /**
-   * Enable or disable click tracking (accepts null)
+   * Body param: Enable or disable click tracking (accepts null)
    */
   trackClicks?: boolean | null;
 
   /**
-   * Enable or disable open tracking (accepts null)
+   * Body param: Enable or disable open tracking (accepts null)
    */
   trackOpens?: boolean | null;
+}
+
+export interface TrackingDeleteParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
+}
+
+export interface TrackingVerifyParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
 }
 
 export declare namespace Tracking {
@@ -376,6 +435,9 @@ export declare namespace Tracking {
     type TrackingDeleteResponse as TrackingDeleteResponse,
     type TrackingVerifyResponse as TrackingVerifyResponse,
     type TrackingCreateParams as TrackingCreateParams,
+    type TrackingRetrieveParams as TrackingRetrieveParams,
     type TrackingUpdateParams as TrackingUpdateParams,
+    type TrackingDeleteParams as TrackingDeleteParams,
+    type TrackingVerifyParams as TrackingVerifyParams,
   };
 }

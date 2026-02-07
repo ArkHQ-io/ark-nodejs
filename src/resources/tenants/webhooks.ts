@@ -1,14 +1,14 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../core/resource';
-import * as Shared from './shared';
-import { APIPromise } from '../core/api-promise';
-import { RequestOptions } from '../internal/request-options';
-import { path } from '../internal/utils/path';
+import { APIResource } from '../../core/resource';
+import * as Shared from '../shared';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Webhooks extends APIResource {
   /**
-   * Create a webhook endpoint to receive email event notifications.
+   * Create a webhook endpoint to receive email event notifications for a tenant.
    *
    * **Available events:**
    *
@@ -23,19 +23,26 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const webhook = await client.webhooks.create({
-   *   name: 'My App Webhook',
-   *   url: 'https://myapp.com/webhooks/email',
-   *   events: [
-   *     'MessageSent',
-   *     'MessageDeliveryFailed',
-   *     'MessageBounced',
-   *   ],
-   * });
+   * const webhook = await client.tenants.webhooks.create(
+   *   'cm6abc123def456',
+   *   {
+   *     name: 'My App Webhook',
+   *     url: 'https://myapp.com/webhooks/email',
+   *     events: [
+   *       'MessageSent',
+   *       'MessageDeliveryFailed',
+   *       'MessageBounced',
+   *     ],
+   *   },
+   * );
    * ```
    */
-  create(body: WebhookCreateParams, options?: RequestOptions): APIPromise<WebhookCreateResponse> {
-    return this._client.post('/webhooks', { body, ...options });
+  create(
+    tenantID: string,
+    body: WebhookCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<WebhookCreateResponse> {
+    return this._client.post(path`/tenants/${tenantID}/webhooks`, { body, ...options });
   }
 
   /**
@@ -43,11 +50,19 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const webhook = await client.webhooks.retrieve('webhookId');
+   * const webhook = await client.tenants.webhooks.retrieve(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
-  retrieve(webhookID: string, options?: RequestOptions): APIPromise<WebhookRetrieveResponse> {
-    return this._client.get(path`/webhooks/${webhookID}`, options);
+  retrieve(
+    webhookID: string,
+    params: WebhookRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<WebhookRetrieveResponse> {
+    const { tenantId } = params;
+    return this._client.get(path`/tenants/${tenantId}/webhooks/${webhookID}`, options);
   }
 
   /**
@@ -55,27 +70,33 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const webhook = await client.webhooks.update('webhookId');
+   * const webhook = await client.tenants.webhooks.update(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
   update(
     webhookID: string,
-    body: WebhookUpdateParams,
+    params: WebhookUpdateParams,
     options?: RequestOptions,
   ): APIPromise<WebhookUpdateResponse> {
-    return this._client.patch(path`/webhooks/${webhookID}`, { body, ...options });
+    const { tenantId, ...body } = params;
+    return this._client.patch(path`/tenants/${tenantId}/webhooks/${webhookID}`, { body, ...options });
   }
 
   /**
-   * Get all configured webhook endpoints
+   * Get all configured webhook endpoints for a tenant.
    *
    * @example
    * ```ts
-   * const webhooks = await client.webhooks.list();
+   * const webhooks = await client.tenants.webhooks.list(
+   *   'cm6abc123def456',
+   * );
    * ```
    */
-  list(options?: RequestOptions): APIPromise<WebhookListResponse> {
-    return this._client.get('/webhooks', options);
+  list(tenantID: string, options?: RequestOptions): APIPromise<WebhookListResponse> {
+    return this._client.get(path`/tenants/${tenantID}/webhooks`, options);
   }
 
   /**
@@ -83,11 +104,19 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const webhook = await client.webhooks.delete('webhookId');
+   * const webhook = await client.tenants.webhooks.delete(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
-  delete(webhookID: string, options?: RequestOptions): APIPromise<WebhookDeleteResponse> {
-    return this._client.delete(path`/webhooks/${webhookID}`, options);
+  delete(
+    webhookID: string,
+    params: WebhookDeleteParams,
+    options?: RequestOptions,
+  ): APIPromise<WebhookDeleteResponse> {
+    const { tenantId } = params;
+    return this._client.delete(path`/tenants/${tenantId}/webhooks/${webhookID}`, options);
   }
 
   /**
@@ -110,17 +139,22 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.webhooks.listDeliveries(
-   *   'webhookId',
-   * );
+   * const response =
+   *   await client.tenants.webhooks.listDeliveries('123', {
+   *     tenantId: 'cm6abc123def456',
+   *   });
    * ```
    */
   listDeliveries(
     webhookID: string,
-    query: WebhookListDeliveriesParams | null | undefined = {},
+    params: WebhookListDeliveriesParams,
     options?: RequestOptions,
   ): APIPromise<WebhookListDeliveriesResponse> {
-    return this._client.get(path`/webhooks/${webhookID}/deliveries`, { query, ...options });
+    const { tenantId, ...query } = params;
+    return this._client.get(path`/tenants/${tenantId}/webhooks/${webhookID}/deliveries`, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -143,10 +177,11 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.webhooks.replayDelivery(
-   *   'deliveryId',
-   *   { webhookId: 'webhookId' },
-   * );
+   * const response =
+   *   await client.tenants.webhooks.replayDelivery(
+   *     'whr_abc123def456',
+   *     { tenantId: 'cm6abc123def456', webhookId: '123' },
+   *   );
    * ```
    */
   replayDelivery(
@@ -154,8 +189,11 @@ export class Webhooks extends APIResource {
     params: WebhookReplayDeliveryParams,
     options?: RequestOptions,
   ): APIPromise<WebhookReplayDeliveryResponse> {
-    const { webhookId } = params;
-    return this._client.post(path`/webhooks/${webhookId}/deliveries/${deliveryID}/replay`, options);
+    const { tenantId, webhookId } = params;
+    return this._client.post(
+      path`/tenants/${tenantId}/webhooks/${webhookId}/deliveries/${deliveryID}/replay`,
+      options,
+    );
   }
 
   /**
@@ -172,10 +210,11 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.webhooks.retrieveDelivery(
-   *   'deliveryId',
-   *   { webhookId: 'webhookId' },
-   * );
+   * const response =
+   *   await client.tenants.webhooks.retrieveDelivery(
+   *     'whr_abc123def456',
+   *     { tenantId: 'cm6abc123def456', webhookId: '123' },
+   *   );
    * ```
    */
   retrieveDelivery(
@@ -183,8 +222,11 @@ export class Webhooks extends APIResource {
     params: WebhookRetrieveDeliveryParams,
     options?: RequestOptions,
   ): APIPromise<WebhookRetrieveDeliveryResponse> {
-    const { webhookId } = params;
-    return this._client.get(path`/webhooks/${webhookId}/deliveries/${deliveryID}`, options);
+    const { tenantId, webhookId } = params;
+    return this._client.get(
+      path`/tenants/${tenantId}/webhooks/${webhookId}/deliveries/${deliveryID}`,
+      options,
+    );
   }
 
   /**
@@ -203,17 +245,19 @@ export class Webhooks extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.webhooks.test('webhookId', {
+   * const response = await client.tenants.webhooks.test('123', {
+   *   tenantId: 'cm6abc123def456',
    *   event: 'MessageSent',
    * });
    * ```
    */
   test(
     webhookID: string,
-    body: WebhookTestParams,
+    params: WebhookTestParams,
     options?: RequestOptions,
   ): APIPromise<WebhookTestResponse> {
-    return this._client.post(path`/webhooks/${webhookID}/test`, { body, ...options });
+    const { tenantId, ...body } = params;
+    return this._client.post(path`/tenants/${tenantId}/webhooks/${webhookID}/test`, { body, ...options });
   }
 }
 
@@ -769,31 +813,70 @@ export interface WebhookCreateParams {
   > | null;
 }
 
+export interface WebhookRetrieveParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
+}
+
 export interface WebhookUpdateParams {
+  /**
+   * Path param: The tenant ID
+   */
+  tenantId: string;
+
+  /**
+   * Body param
+   */
   allEvents?: boolean | null;
 
+  /**
+   * Body param
+   */
   enabled?: boolean | null;
 
+  /**
+   * Body param
+   */
   events?: Array<string> | null;
 
+  /**
+   * Body param
+   */
   name?: string | null;
 
+  /**
+   * Body param
+   */
   url?: string | null;
+}
+
+export interface WebhookDeleteParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
 }
 
 export interface WebhookListDeliveriesParams {
   /**
-   * Only deliveries after this Unix timestamp
+   * Path param: The tenant ID
+   */
+  tenantId: string;
+
+  /**
+   * Query param: Only deliveries after this Unix timestamp
    */
   after?: number;
 
   /**
-   * Only deliveries before this Unix timestamp
+   * Query param: Only deliveries before this Unix timestamp
    */
   before?: number;
 
   /**
-   * Filter by event type
+   * Query param: Filter by event type
    */
   event?:
     | 'MessageSent'
@@ -806,38 +889,54 @@ export interface WebhookListDeliveriesParams {
     | 'DomainDNSError';
 
   /**
-   * Page number (default 1)
+   * Query param: Page number (default 1)
    */
   page?: number;
 
   /**
-   * Items per page (default 30, max 100)
+   * Query param: Items per page (default 30, max 100)
    */
   perPage?: number;
 
   /**
-   * Filter by delivery success (true = 2xx response, false = non-2xx or error)
+   * Query param: Filter by delivery success (true = 2xx response, false = non-2xx or
+   * error)
    */
   success?: boolean;
 }
 
 export interface WebhookReplayDeliveryParams {
   /**
-   * Webhook ID or UUID
+   * The tenant ID
+   */
+  tenantId: string;
+
+  /**
+   * Webhook ID
    */
   webhookId: string;
 }
 
 export interface WebhookRetrieveDeliveryParams {
   /**
-   * Webhook ID or UUID
+   * The tenant ID
+   */
+  tenantId: string;
+
+  /**
+   * Webhook ID
    */
   webhookId: string;
 }
 
 export interface WebhookTestParams {
   /**
-   * Event type to simulate
+   * Path param: The tenant ID
+   */
+  tenantId: string;
+
+  /**
+   * Body param: Event type to simulate
    */
   event:
     | 'MessageSent'
@@ -862,7 +961,9 @@ export declare namespace Webhooks {
     type WebhookRetrieveDeliveryResponse as WebhookRetrieveDeliveryResponse,
     type WebhookTestResponse as WebhookTestResponse,
     type WebhookCreateParams as WebhookCreateParams,
+    type WebhookRetrieveParams as WebhookRetrieveParams,
     type WebhookUpdateParams as WebhookUpdateParams,
+    type WebhookDeleteParams as WebhookDeleteParams,
     type WebhookListDeliveriesParams as WebhookListDeliveriesParams,
     type WebhookReplayDeliveryParams as WebhookReplayDeliveryParams,
     type WebhookRetrieveDeliveryParams as WebhookRetrieveDeliveryParams,

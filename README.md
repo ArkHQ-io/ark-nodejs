@@ -40,7 +40,7 @@ const response = await client.emails.send({
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
-  metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+  metadata: { user_id: 'usr_123456', campaign: 'onboarding' },
   tag: 'welcome',
 });
 
@@ -64,7 +64,7 @@ const params: Ark.EmailSendParams = {
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
-  metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+  metadata: { user_id: 'usr_123456', campaign: 'onboarding' },
   tag: 'welcome',
 };
 const response: Ark.EmailSendResponse = await client.emails.send(params);
@@ -86,7 +86,7 @@ const response = await client.emails
     subject: 'Hello World',
     to: ['user@example.com'],
     html: '<h1>Welcome!</h1>',
-    metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+    metadata: { user_id: 'usr_123456', campaign: 'onboarding' },
     tag: 'welcome',
   })
   .catch(async (err) => {
@@ -134,7 +134,7 @@ await client.emails.send({
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
-  metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+  metadata: { user_id: 'usr_123456', campaign: 'onboarding' },
   tag: 'welcome',
 }, {
   maxRetries: 5,
@@ -158,7 +158,7 @@ await client.emails.send({
   subject: 'Hello World',
   to: ['user@example.com'],
   html: '<h1>Welcome!</h1>',
-  metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+  metadata: { user_id: 'usr_123456', campaign: 'onboarding' },
   tag: 'welcome',
 }, {
   timeout: 5 * 1000,
@@ -220,7 +220,7 @@ const response = await client.emails
     subject: 'Hello World',
     to: ['user@example.com'],
     html: '<h1>Welcome!</h1>',
-    metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+    metadata: { user_id: 'usr_123456', campaign: 'onboarding' },
     tag: 'welcome',
   })
   .asResponse();
@@ -233,7 +233,7 @@ const { data: response, response: raw } = await client.emails
     subject: 'Hello World',
     to: ['user@example.com'],
     html: '<h1>Welcome!</h1>',
-    metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+    metadata: { user_id: 'usr_123456', campaign: 'onboarding' },
     tag: 'welcome',
   })
   .withResponse();

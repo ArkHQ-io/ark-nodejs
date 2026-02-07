@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.19.0 (2026-02-07)
+
+Full Changelog: [v0.18.0...v0.19.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.18.0...v0.19.0)
+
+### Features
+
+* **api:** add Credentials endpoint ([3c4d4ed](https://github.com/ArkHQ-io/ark-nodejs/commit/3c4d4eda2b98b2d2ad5bc61e6c513f87551b20e5))
+* **api:** add Platform webhooks ([8875eea](https://github.com/ArkHQ-io/ark-nodejs/commit/8875eea8a0c58351dce385921011d56e8ded0898))
+* **api:** endpoint updates ([c67a1c5](https://github.com/ArkHQ-io/ark-nodejs/commit/c67a1c5857a6707071e9d468c4981362e7f1b435))
+* **api:** standardization improvements ([087adb7](https://github.com/ArkHQ-io/ark-nodejs/commit/087adb7559d5e36dd5fea346ba6770997d82864f))
+* **api:** tenant usage ([de82564](https://github.com/ArkHQ-io/ark-nodejs/commit/de82564e838b31e984121785eec473b821824e35))
+* **mcp:** add initial server instructions ([7c219ef](https://github.com/ArkHQ-io/ark-nodejs/commit/7c219ef9152d8a60a45e8101e665e8b430edbb38))
+
+
+### Bug Fixes
+
+* **client:** avoid removing abort listener too early ([baf7f06](https://github.com/ArkHQ-io/ark-nodejs/commit/baf7f06addf76c618407874e0c39c33f97fd8a43))
+
+
+### Chores
+
+* **client:** restructure abort controller binding ([c5b7f61](https://github.com/ArkHQ-io/ark-nodejs/commit/c5b7f6128f1bca05d6f8fc078665e385e45ae618))
+* **internal:** add health check to MCP server when running in HTTP mode ([c636579](https://github.com/ArkHQ-io/ark-nodejs/commit/c636579c23562a4c6d64fbb3a61f0931d1682def))
+* **internal:** fix pagination internals not accepting option promises ([62f477b](https://github.com/ArkHQ-io/ark-nodejs/commit/62f477b0133ec81cf20a5b5763bbc505f9060187))
+* **internal:** refactor flag parsing for MCP servers and add debug flag ([49c53e8](https://github.com/ArkHQ-io/ark-nodejs/commit/49c53e8c80b538ad6d233a082702fdda5ee7b237))
+* **internal:** upgrade pnpm ([b1cd8ca](https://github.com/ArkHQ-io/ark-nodejs/commit/b1cd8cabf3d025e6a7d1190448fb6352026756cf))
+
 ## 0.18.0 (2026-02-03)
 
 Full Changelog: [v0.17.0...v0.18.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.17.0...v0.18.0)

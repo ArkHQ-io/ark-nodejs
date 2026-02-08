@@ -23,16 +23,6 @@ import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import {
-  DNSRecord,
-  DomainCreateParams,
-  DomainCreateResponse,
-  DomainDeleteResponse,
-  DomainListResponse,
-  DomainRetrieveResponse,
-  DomainVerifyResponse,
-  Domains,
-} from './resources/domains';
-import {
   EmailListParams,
   EmailListResponse,
   EmailListResponsesPageNumberPagination,
@@ -48,6 +38,7 @@ import {
   EmailSendResponse,
   Emails,
 } from './resources/emails';
+import { LimitRetrieveResponse, Limits, LimitsData } from './resources/limits';
 import {
   LogEntriesPageNumberPagination,
   LogEntry,
@@ -57,17 +48,19 @@ import {
   Logs,
 } from './resources/logs';
 import {
-  SuppressionBulkCreateParams,
-  SuppressionBulkCreateResponse,
-  SuppressionCreateParams,
-  SuppressionCreateResponse,
-  SuppressionDeleteResponse,
-  SuppressionListParams,
-  SuppressionListResponse,
-  SuppressionListResponsesPageNumberPagination,
-  SuppressionRetrieveResponse,
-  Suppressions,
-} from './resources/suppressions';
+  EmailCounts,
+  EmailRates,
+  OrgUsageSummary,
+  TenantUsageItem,
+  TenantUsageItemsPageNumberPagination,
+  Usage,
+  UsageExportParams,
+  UsageExportResponse,
+  UsageListTenantsParams,
+  UsagePeriod,
+  UsageRetrieveParams,
+} from './resources/usage';
+import { Platform } from './resources/platform/platform';
 import {
   Tenant,
   TenantCreateParams,
@@ -79,38 +72,7 @@ import {
   TenantUpdateResponse,
   Tenants,
   TenantsPageNumberPagination,
-} from './resources/tenants';
-import {
-  TrackDomain,
-  Tracking,
-  TrackingCreateParams,
-  TrackingCreateResponse,
-  TrackingDeleteResponse,
-  TrackingListResponse,
-  TrackingRetrieveResponse,
-  TrackingUpdateParams,
-  TrackingUpdateResponse,
-  TrackingVerifyResponse,
-} from './resources/tracking';
-import { Usage, UsageRetrieveResponse } from './resources/usage';
-import {
-  WebhookCreateParams,
-  WebhookCreateResponse,
-  WebhookDeleteResponse,
-  WebhookListDeliveriesParams,
-  WebhookListDeliveriesResponse,
-  WebhookListResponse,
-  WebhookReplayDeliveryParams,
-  WebhookReplayDeliveryResponse,
-  WebhookRetrieveDeliveryParams,
-  WebhookRetrieveDeliveryResponse,
-  WebhookRetrieveResponse,
-  WebhookTestParams,
-  WebhookTestResponse,
-  WebhookUpdateParams,
-  WebhookUpdateResponse,
-  Webhooks,
-} from './resources/webhooks';
+} from './resources/tenants/tenants';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -584,9 +546,14 @@ export class Ark {
   getAPIList<Item, PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>>(
     path: string,
     Page: new (...args: any[]) => PageClass,
-    opts?: RequestOptions,
+    opts?: PromiseOrValue<RequestOptions>,
   ): Pagination.PagePromise<PageClass, Item> {
-    return this.requestAPIList(Page, { method: 'get', path, ...opts });
+    return this.requestAPIList(
+      Page,
+      opts && 'then' in opts ?
+        opts.then((opts) => ({ method: 'get', path, ...opts }))
+      : { method: 'get', path, ...opts },
+    );
   }
 
   requestAPIList<
@@ -594,7 +561,7 @@ export class Ark {
     PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>,
   >(
     Page: new (...args: ConstructorParameters<typeof Pagination.AbstractPage>) => PageClass,
-    options: FinalRequestOptions,
+    options: PromiseOrValue<FinalRequestOptions>,
   ): Pagination.PagePromise<PageClass, Item> {
     const request = this.makeRequest(options, null, undefined);
     return new Pagination.PagePromise<PageClass, Item>(this as any as Ark, request, Page);
@@ -607,7 +574,7 @@ export class Ark {
     controller: AbortController,
   ): Promise<Response> {
     const { signal, method, ...options } = init || {};
-    const abort = controller.abort.bind(controller);
+    const abort = this._makeAbort(controller);
     if (signal) signal.addEventListener('abort', abort, { once: true });
 
     const timeout = setTimeout(abort, ms);
@@ -777,6 +744,12 @@ export class Ark {
     return headers.values;
   }
 
+  private _makeAbort(controller: AbortController) {
+    // note: we can't just inline this method inside `fetchWithTimeout()` because then the closure
+    //       would capture all request options, and cause a memory leak.
+    return () => controller.abort();
+  }
+
   private buildBody({ options: { body, headers: rawHeaders } }: { options: FinalRequestOptions }): {
     bodyHeaders: HeadersLike;
     body: BodyInit | undefined;
@@ -834,23 +807,19 @@ export class Ark {
   static toFile = Uploads.toFile;
 
   emails: API.Emails = new API.Emails(this);
-  domains: API.Domains = new API.Domains(this);
-  suppressions: API.Suppressions = new API.Suppressions(this);
-  webhooks: API.Webhooks = new API.Webhooks(this);
-  tracking: API.Tracking = new API.Tracking(this);
   logs: API.Logs = new API.Logs(this);
   usage: API.Usage = new API.Usage(this);
+  limits: API.Limits = new API.Limits(this);
   tenants: API.Tenants = new API.Tenants(this);
+  platform: API.Platform = new API.Platform(this);
 }
 
 Ark.Emails = Emails;
-Ark.Domains = Domains;
-Ark.Suppressions = Suppressions;
-Ark.Webhooks = Webhooks;
-Ark.Tracking = Tracking;
 Ark.Logs = Logs;
 Ark.Usage = Usage;
+Ark.Limits = Limits;
 Ark.Tenants = Tenants;
+Ark.Platform = Platform;
 
 export declare namespace Ark {
   export type RequestOptions = Opts.RequestOptions;
@@ -879,62 +848,6 @@ export declare namespace Ark {
   };
 
   export {
-    Domains as Domains,
-    type DNSRecord as DNSRecord,
-    type DomainCreateResponse as DomainCreateResponse,
-    type DomainRetrieveResponse as DomainRetrieveResponse,
-    type DomainListResponse as DomainListResponse,
-    type DomainDeleteResponse as DomainDeleteResponse,
-    type DomainVerifyResponse as DomainVerifyResponse,
-    type DomainCreateParams as DomainCreateParams,
-  };
-
-  export {
-    Suppressions as Suppressions,
-    type SuppressionCreateResponse as SuppressionCreateResponse,
-    type SuppressionRetrieveResponse as SuppressionRetrieveResponse,
-    type SuppressionListResponse as SuppressionListResponse,
-    type SuppressionDeleteResponse as SuppressionDeleteResponse,
-    type SuppressionBulkCreateResponse as SuppressionBulkCreateResponse,
-    type SuppressionListResponsesPageNumberPagination as SuppressionListResponsesPageNumberPagination,
-    type SuppressionCreateParams as SuppressionCreateParams,
-    type SuppressionListParams as SuppressionListParams,
-    type SuppressionBulkCreateParams as SuppressionBulkCreateParams,
-  };
-
-  export {
-    Webhooks as Webhooks,
-    type WebhookCreateResponse as WebhookCreateResponse,
-    type WebhookRetrieveResponse as WebhookRetrieveResponse,
-    type WebhookUpdateResponse as WebhookUpdateResponse,
-    type WebhookListResponse as WebhookListResponse,
-    type WebhookDeleteResponse as WebhookDeleteResponse,
-    type WebhookListDeliveriesResponse as WebhookListDeliveriesResponse,
-    type WebhookReplayDeliveryResponse as WebhookReplayDeliveryResponse,
-    type WebhookRetrieveDeliveryResponse as WebhookRetrieveDeliveryResponse,
-    type WebhookTestResponse as WebhookTestResponse,
-    type WebhookCreateParams as WebhookCreateParams,
-    type WebhookUpdateParams as WebhookUpdateParams,
-    type WebhookListDeliveriesParams as WebhookListDeliveriesParams,
-    type WebhookReplayDeliveryParams as WebhookReplayDeliveryParams,
-    type WebhookRetrieveDeliveryParams as WebhookRetrieveDeliveryParams,
-    type WebhookTestParams as WebhookTestParams,
-  };
-
-  export {
-    Tracking as Tracking,
-    type TrackDomain as TrackDomain,
-    type TrackingCreateResponse as TrackingCreateResponse,
-    type TrackingRetrieveResponse as TrackingRetrieveResponse,
-    type TrackingUpdateResponse as TrackingUpdateResponse,
-    type TrackingListResponse as TrackingListResponse,
-    type TrackingDeleteResponse as TrackingDeleteResponse,
-    type TrackingVerifyResponse as TrackingVerifyResponse,
-    type TrackingCreateParams as TrackingCreateParams,
-    type TrackingUpdateParams as TrackingUpdateParams,
-  };
-
-  export {
     Logs as Logs,
     type LogEntry as LogEntry,
     type LogEntryDetail as LogEntryDetail,
@@ -943,7 +856,25 @@ export declare namespace Ark {
     type LogListParams as LogListParams,
   };
 
-  export { Usage as Usage, type UsageRetrieveResponse as UsageRetrieveResponse };
+  export {
+    Usage as Usage,
+    type EmailCounts as EmailCounts,
+    type EmailRates as EmailRates,
+    type OrgUsageSummary as OrgUsageSummary,
+    type TenantUsageItem as TenantUsageItem,
+    type UsagePeriod as UsagePeriod,
+    type UsageExportResponse as UsageExportResponse,
+    type TenantUsageItemsPageNumberPagination as TenantUsageItemsPageNumberPagination,
+    type UsageRetrieveParams as UsageRetrieveParams,
+    type UsageExportParams as UsageExportParams,
+    type UsageListTenantsParams as UsageListTenantsParams,
+  };
+
+  export {
+    Limits as Limits,
+    type LimitsData as LimitsData,
+    type LimitRetrieveResponse as LimitRetrieveResponse,
+  };
 
   export {
     Tenants as Tenants,
@@ -957,6 +888,8 @@ export declare namespace Ark {
     type TenantUpdateParams as TenantUpdateParams,
     type TenantListParams as TenantListParams,
   };
+
+  export { Platform as Platform };
 
   export type APIMeta = API.APIMeta;
 }

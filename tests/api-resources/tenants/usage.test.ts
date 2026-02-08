@@ -9,7 +9,7 @@ const client = new Ark({
 
 describe('resource usage', () => {
   test('retrieve', async () => {
-    const responsePromise = client.usage.retrieve();
+    const responsePromise = client.tenants.usage.retrieve('cm6abc123def456');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -22,39 +22,16 @@ describe('resource usage', () => {
   test('retrieve: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.usage.retrieve({ period: 'period', timezone: 'timezone' }, { path: '/_stainless_unknown_path' }),
-    ).rejects.toThrow(Ark.NotFoundError);
-  });
-
-  test('export', async () => {
-    const responsePromise = client.usage.export();
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('export: request options and params are passed correctly', async () => {
-    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(
-      client.usage.export(
-        {
-          format: 'csv',
-          minSent: 0,
-          period: 'period',
-          status: 'active',
-          timezone: 'timezone',
-        },
+      client.tenants.usage.retrieve(
+        'cm6abc123def456',
+        { period: 'period', timezone: 'timezone' },
         { path: '/_stainless_unknown_path' },
       ),
     ).rejects.toThrow(Ark.NotFoundError);
   });
 
-  test('listTenants', async () => {
-    const responsePromise = client.usage.listTenants();
+  test('retrieveTimeseries', async () => {
+    const responsePromise = client.tenants.usage.retrieveTimeseries('cm6abc123def456');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -64,17 +41,14 @@ describe('resource usage', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('listTenants: request options and params are passed correctly', async () => {
+  test('retrieveTimeseries: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.usage.listTenants(
+      client.tenants.usage.retrieveTimeseries(
+        'cm6abc123def456',
         {
-          minSent: 0,
-          page: 1,
+          granularity: 'hour',
           period: 'period',
-          perPage: 1,
-          sort: 'sent',
-          status: 'active',
           timezone: 'timezone',
         },
         { path: '/_stainless_unknown_path' },

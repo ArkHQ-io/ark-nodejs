@@ -9,7 +9,9 @@ const client = new Ark({
 
 describe('resource suppressions', () => {
   test('create: only required params', async () => {
-    const responsePromise = client.suppressions.create({ address: 'user@example.com' });
+    const responsePromise = client.tenants.suppressions.create('cm6abc123def456', {
+      address: 'user@example.com',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -20,14 +22,16 @@ describe('resource suppressions', () => {
   });
 
   test('create: required and optional params', async () => {
-    const response = await client.suppressions.create({
+    const response = await client.tenants.suppressions.create('cm6abc123def456', {
       address: 'user@example.com',
       reason: 'user requested removal',
     });
   });
 
-  test('retrieve', async () => {
-    const responsePromise = client.suppressions.retrieve('dev@stainless.com');
+  test('retrieve: only required params', async () => {
+    const responsePromise = client.tenants.suppressions.retrieve('user@example.com', {
+      tenantId: 'cm6abc123def456',
+    });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -37,8 +41,14 @@ describe('resource suppressions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
+  test('retrieve: required and optional params', async () => {
+    const response = await client.tenants.suppressions.retrieve('user@example.com', {
+      tenantId: 'cm6abc123def456',
+    });
+  });
+
   test('list', async () => {
-    const responsePromise = client.suppressions.list();
+    const responsePromise = client.tenants.suppressions.list('cm6abc123def456');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -51,24 +61,17 @@ describe('resource suppressions', () => {
   test('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
     await expect(
-      client.suppressions.list({ page: 0, perPage: 100 }, { path: '/_stainless_unknown_path' }),
+      client.tenants.suppressions.list(
+        'cm6abc123def456',
+        { page: 0, perPage: 100 },
+        { path: '/_stainless_unknown_path' },
+      ),
     ).rejects.toThrow(Ark.NotFoundError);
   });
 
-  test('delete', async () => {
-    const responsePromise = client.suppressions.delete('dev@stainless.com');
-    const rawResponse = await responsePromise.asResponse();
-    expect(rawResponse).toBeInstanceOf(Response);
-    const response = await responsePromise;
-    expect(response).not.toBeInstanceOf(Response);
-    const dataAndResponse = await responsePromise.withResponse();
-    expect(dataAndResponse.data).toBe(response);
-    expect(dataAndResponse.response).toBe(rawResponse);
-  });
-
-  test('bulkCreate: only required params', async () => {
-    const responsePromise = client.suppressions.bulkCreate({
-      suppressions: [{ address: 'dev@stainless.com' }],
+  test('delete: only required params', async () => {
+    const responsePromise = client.tenants.suppressions.delete('user@example.com', {
+      tenantId: 'cm6abc123def456',
     });
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
@@ -79,9 +82,9 @@ describe('resource suppressions', () => {
     expect(dataAndResponse.response).toBe(rawResponse);
   });
 
-  test('bulkCreate: required and optional params', async () => {
-    const response = await client.suppressions.bulkCreate({
-      suppressions: [{ address: 'dev@stainless.com', reason: 'reason' }],
+  test('delete: required and optional params', async () => {
+    const response = await client.tenants.suppressions.delete('user@example.com', {
+      tenantId: 'cm6abc123def456',
     });
   });
 });

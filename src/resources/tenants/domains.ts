@@ -1,16 +1,18 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-import { APIResource } from '../core/resource';
+import { APIResource } from '../../core/resource';
 import * as DomainsAPI from './domains';
-import * as Shared from './shared';
-import { APIPromise } from '../core/api-promise';
-import { RequestOptions } from '../internal/request-options';
-import { path } from '../internal/utils/path';
+import * as Shared from '../shared';
+import { APIPromise } from '../../core/api-promise';
+import { RequestOptions } from '../../internal/request-options';
+import { path } from '../../internal/utils/path';
 
 export class Domains extends APIResource {
   /**
-   * Add a new domain for sending emails. Returns DNS records that must be configured
-   * before the domain can be verified.
+   * Add a new sending domain to a tenant. Returns DNS records that must be
+   * configured before the domain can be verified.
+   *
+   * Each tenant gets their own isolated mail server for domain isolation.
    *
    * **Required DNS records:**
    *
@@ -18,56 +20,79 @@ export class Domains extends APIResource {
    * - **DKIM** - TXT record for email signing
    * - **Return Path** - CNAME for bounce handling
    *
-   * After adding DNS records, call `POST /domains/{id}/verify` to verify.
+   * After adding DNS records, call
+   * `POST /tenants/{tenantId}/domains/{domainId}/verify` to verify.
    *
    * @example
    * ```ts
-   * const domain = await client.domains.create({
-   *   name: 'notifications.myapp.com',
-   * });
+   * const domain = await client.tenants.domains.create(
+   *   'cm6abc123def456',
+   *   { name: 'notifications.myapp.com' },
+   * );
    * ```
    */
-  create(body: DomainCreateParams, options?: RequestOptions): APIPromise<DomainCreateResponse> {
-    return this._client.post('/domains', { body, ...options });
+  create(
+    tenantID: string,
+    body: DomainCreateParams,
+    options?: RequestOptions,
+  ): APIPromise<DomainCreateResponse> {
+    return this._client.post(path`/tenants/${tenantID}/domains`, { body, ...options });
   }
 
   /**
-   * Get detailed information about a domain including DNS record status
+   * Get detailed information about a domain including DNS record status.
    *
    * @example
    * ```ts
-   * const domain = await client.domains.retrieve('domainId');
+   * const domain = await client.tenants.domains.retrieve(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
-  retrieve(domainID: string, options?: RequestOptions): APIPromise<DomainRetrieveResponse> {
-    return this._client.get(path`/domains/${domainID}`, options);
+  retrieve(
+    domainID: string,
+    params: DomainRetrieveParams,
+    options?: RequestOptions,
+  ): APIPromise<DomainRetrieveResponse> {
+    const { tenantId } = params;
+    return this._client.get(path`/tenants/${tenantId}/domains/${domainID}`, options);
   }
 
   /**
-   * Get all sending domains with their verification status
+   * Get all sending domains for a specific tenant with their verification status.
    *
    * @example
    * ```ts
-   * const domains = await client.domains.list();
+   * const domains = await client.tenants.domains.list(
+   *   'cm6abc123def456',
+   * );
    * ```
    */
-  list(options?: RequestOptions): APIPromise<DomainListResponse> {
-    return this._client.get('/domains', options);
+  list(tenantID: string, options?: RequestOptions): APIPromise<DomainListResponse> {
+    return this._client.get(path`/tenants/${tenantID}/domains`, options);
   }
 
   /**
-   * Remove a sending domain. You will no longer be able to send emails from this
-   * domain.
+   * Remove a sending domain from a tenant. You will no longer be able to send emails
+   * from this domain.
    *
    * **Warning:** This action cannot be undone.
    *
    * @example
    * ```ts
-   * const domain = await client.domains.delete('domainId');
+   * const domain = await client.tenants.domains.delete('123', {
+   *   tenantId: 'cm6abc123def456',
+   * });
    * ```
    */
-  delete(domainID: string, options?: RequestOptions): APIPromise<DomainDeleteResponse> {
-    return this._client.delete(path`/domains/${domainID}`, options);
+  delete(
+    domainID: string,
+    params: DomainDeleteParams,
+    options?: RequestOptions,
+  ): APIPromise<DomainDeleteResponse> {
+    const { tenantId } = params;
+    return this._client.delete(path`/tenants/${tenantId}/domains/${domainID}`, options);
   }
 
   /**
@@ -78,11 +103,19 @@ export class Domains extends APIResource {
    *
    * @example
    * ```ts
-   * const response = await client.domains.verify('domainId');
+   * const response = await client.tenants.domains.verify(
+   *   '123',
+   *   { tenantId: 'cm6abc123def456' },
+   * );
    * ```
    */
-  verify(domainID: string, options?: RequestOptions): APIPromise<DomainVerifyResponse> {
-    return this._client.post(path`/domains/${domainID}/verify`, options);
+  verify(
+    domainID: string,
+    params: DomainVerifyParams,
+    options?: RequestOptions,
+  ): APIPromise<DomainVerifyResponse> {
+    const { tenantId } = params;
+    return this._client.post(path`/tenants/${tenantId}/domains/${domainID}/verify`, options);
   }
 }
 
@@ -192,6 +225,16 @@ export namespace DomainCreateResponse {
      * Domain must be verified before sending emails.
      */
     verified: boolean;
+
+    /**
+     * ID of the tenant this domain belongs to
+     */
+    tenant_id?: string;
+
+    /**
+     * Name of the tenant this domain belongs to
+     */
+    tenant_name?: string;
 
     /**
      * Timestamp when the domain ownership was verified, or null if not yet verified
@@ -335,6 +378,16 @@ export namespace DomainRetrieveResponse {
     verified: boolean;
 
     /**
+     * ID of the tenant this domain belongs to
+     */
+    tenant_id?: string;
+
+    /**
+     * Name of the tenant this domain belongs to
+     */
+    tenant_name?: string;
+
+    /**
      * Timestamp when the domain ownership was verified, or null if not yet verified
      */
     verifiedAt?: string | null;
@@ -453,6 +506,16 @@ export namespace DomainListResponse {
        * Domain must be verified before sending emails.
        */
       verified: boolean;
+
+      /**
+       * ID of the tenant this domain belongs to (included when filtering by tenant_id)
+       */
+      tenant_id?: string;
+
+      /**
+       * Name of the tenant this domain belongs to (included when filtering by tenant_id)
+       */
+      tenant_name?: string;
     }
   }
 }
@@ -522,6 +585,16 @@ export namespace DomainVerifyResponse {
      * Domain must be verified before sending emails.
      */
     verified: boolean;
+
+    /**
+     * ID of the tenant this domain belongs to
+     */
+    tenant_id?: string;
+
+    /**
+     * Name of the tenant this domain belongs to
+     */
+    tenant_name?: string;
 
     /**
      * Timestamp when the domain ownership was verified, or null if not yet verified
@@ -619,6 +692,27 @@ export interface DomainCreateParams {
   name: string;
 }
 
+export interface DomainRetrieveParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
+}
+
+export interface DomainDeleteParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
+}
+
+export interface DomainVerifyParams {
+  /**
+   * The tenant ID
+   */
+  tenantId: string;
+}
+
 export declare namespace Domains {
   export {
     type DNSRecord as DNSRecord,
@@ -628,5 +722,8 @@ export declare namespace Domains {
     type DomainDeleteResponse as DomainDeleteResponse,
     type DomainVerifyResponse as DomainVerifyResponse,
     type DomainCreateParams as DomainCreateParams,
+    type DomainRetrieveParams as DomainRetrieveParams,
+    type DomainDeleteParams as DomainDeleteParams,
+    type DomainVerifyParams as DomainVerifyParams,
   };
 }

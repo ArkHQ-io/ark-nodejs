@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.19.1 (2026-02-18)
+
+Full Changelog: [v0.19.0...v0.19.1](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.19.0...v0.19.1)
+
+### Chores
+
+* **internal/client:** fix form-urlencoded requests ([5b19feb](https://github.com/ArkHQ-io/ark-nodejs/commit/5b19feb92181ea1e1a975c74134ca537374ecc16))
+* **internal:** allow basic filtering of methods allowed for MCP code mode ([2a08f18](https://github.com/ArkHQ-io/ark-nodejs/commit/2a08f182832a256142ddf2d829710a6f66149d47))
+* **internal:** allow setting x-stainless-api-key header on mcp server requests ([28257e5](https://github.com/ArkHQ-io/ark-nodejs/commit/28257e582d676f49a7bb14aa7478f7aa34174e85))
+* **internal:** always generate MCP server dockerfiles and upgrade associated dependencies ([037403e](https://github.com/ArkHQ-io/ark-nodejs/commit/037403eac179b8c1aaa756746276de7c4de38f04))
+* **internal:** avoid type checking errors with ts-reset ([9496839](https://github.com/ArkHQ-io/ark-nodejs/commit/9496839d6222a21c3c9aa676282cfa8e04d6edaf))
+* **internal:** improve layout of generated MCP server files ([20ba475](https://github.com/ArkHQ-io/ark-nodejs/commit/20ba4751619d64194cafc11340b29e0eb0cf830e))
+* **internal:** improve reliability of MCP servers when using local code mode execution ([00be033](https://github.com/ArkHQ-io/ark-nodejs/commit/00be033fe6e3341ef30fa2aebff9f343410ec1ee))
+* **mcp:** forward STAINLESS_API_KEY to docs search endpoint ([6315d60](https://github.com/ArkHQ-io/ark-nodejs/commit/6315d6035354116ec682d5436b31c196070c4574))
+
 ## 0.19.0 (2026-02-07)
 
 Full Changelog: [v0.18.0...v0.19.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.18.0...v0.19.0)

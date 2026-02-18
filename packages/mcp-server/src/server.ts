@@ -56,7 +56,7 @@ export const newMcpServer = async (stainlessApiKey: string | undefined) =>
   new McpServer(
     {
       name: 'ark_email_api',
-      version: '0.19.0',
+      version: '0.19.1',
     },
     {
       instructions: await getInstructions(stainlessApiKey),

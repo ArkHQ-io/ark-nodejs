@@ -112,6 +112,7 @@ describe('resource emails', () => {
       metadata: { user_id: 'usr_123', campaign: 'onboarding' },
       replyTo: 'dev@stainless.com',
       tag: 'tag',
+      tenantId: 'cm6abc123def456',
       text: 'text',
       'Idempotency-Key': 'user_123_order_456',
     });
@@ -163,6 +164,7 @@ describe('resource emails', () => {
         },
       ],
       from: 'notifications@myapp.com',
+      tenantId: 'cm6abc123def456',
       'Idempotency-Key': 'user_123_order_456',
     });
   });
@@ -188,6 +190,7 @@ describe('resource emails', () => {
       rawMessage: 'x',
       to: ['user@example.com'],
       bounce: true,
+      tenantId: 'cm6abc123def456',
     });
   });
 });

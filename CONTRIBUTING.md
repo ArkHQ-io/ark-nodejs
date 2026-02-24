@@ -60,7 +60,7 @@ $ yarn link ark-email
 # With pnpm
 $ pnpm link --global
 $ cd ../my-package
-$ pnpm link -—global ark-email
+$ pnpm link --global ark-email
 ```
 
 ## Running tests

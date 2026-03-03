@@ -8,6 +8,16 @@ import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
+/**
+ * Send and manage email messages.
+ *
+ * **Quick Reference:**
+ * - `POST /emails` - Send a single email
+ * - `POST /emails/batch` - Send up to 100 emails
+ * - `GET /emails/{emailId}` - Get email status and details
+ * - `GET /emails` - List sent emails
+ * - `POST /emails/{emailId}/retry` - Retry failed delivery
+ */
 export class Emails extends APIResource {
   /**
    * Retrieve detailed information about a specific email including delivery status,

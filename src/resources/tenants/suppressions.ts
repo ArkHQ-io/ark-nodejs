@@ -7,6 +7,18 @@ import { PageNumberPagination, type PageNumberPaginationParams, PagePromise } fr
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Manage the suppression list.
+ *
+ * Suppressed email addresses will not receive any emails. Addresses are
+ * automatically suppressed when they hard bounce or file spam complaints.
+ *
+ * **Quick Reference:**
+ * - `GET /suppressions` - List suppressed addresses
+ * - `POST /suppressions` - Add to suppression list
+ * - `DELETE /suppressions/{email}` - Remove from suppression list
+ * - `GET /suppressions/{email}` - Check if address is suppressed
+ */
 export class Suppressions extends APIResource {
   /**
    * Add an email address to the tenant's suppression list. The address will not

@@ -7,6 +7,27 @@ import { PageNumberPagination, type PageNumberPaginationParams, PagePromise } fr
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
+/**
+ * Access API request logs for debugging and monitoring.
+ *
+ * Every API request is logged with details including:
+ * - Request method, path, and endpoint
+ * - Response status code and duration
+ * - Error details (code, message) for failed requests
+ * - SDK information (name, version)
+ * - Rate limit state at time of request
+ * - Request and response bodies (for single log retrieval)
+ *
+ * **Retention:** Logs are retained for 90 days.
+ *
+ * **Body storage:** Request and response bodies are stored encrypted
+ * and truncated at 25KB. Bodies are only returned when retrieving
+ * a single log entry.
+ *
+ * **Quick Reference:**
+ * - `GET /logs` - List API request logs with filters
+ * - `GET /logs/{requestId}` - Get full details including request/response bodies
+ */
 export class Logs extends APIResource {
   /**
    * Retrieve detailed information about a specific API request log, including the

@@ -96,6 +96,19 @@ import { PageNumberPagination, type PageNumberPaginationParams, PagePromise } fr
 import { RequestOptions } from '../../internal/request-options';
 import { path } from '../../internal/utils/path';
 
+/**
+ * Manage tenants (your customers).
+ *
+ * Create a tenant for each of your customers to track their email sending separately.
+ * Store the tenant `id` in your database and use `metadata` for any custom data.
+ *
+ * **Quick Reference:**
+ * - `POST /tenants` - Create a new tenant
+ * - `GET /tenants` - List all tenants (paginated)
+ * - `GET /tenants/{id}` - Get tenant details
+ * - `PATCH /tenants/{id}` - Update tenant name, metadata, or status
+ * - `DELETE /tenants/{id}` - Delete a tenant
+ */
 export class Tenants extends APIResource {
   credentials: CredentialsAPI.Credentials = new CredentialsAPI.Credentials(this._client);
   domains: DomainsAPI.Domains = new DomainsAPI.Domains(this._client);

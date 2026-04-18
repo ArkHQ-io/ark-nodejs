@@ -1,5 +1,93 @@
 # Changelog
 
+## 0.20.0 (2026-04-18)
+
+Full Changelog: [v0.19.1...v0.20.0](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.19.1...v0.20.0)
+
+### Features
+
+* **api:** add tenantId to send ([6fbdf0b](https://github.com/ArkHQ-io/ark-nodejs/commit/6fbdf0b960675ac848e67eabd1922cbfb0238465))
+* **mcp:** add an option to disable code tool ([ae9fbd3](https://github.com/ArkHQ-io/ark-nodejs/commit/ae9fbd3e0bd339a046c8afd526d8cd3b17b77208))
+
+
+### Bug Fixes
+
+* **client:** preserve URL params already embedded in path ([dd91411](https://github.com/ArkHQ-io/ark-nodejs/commit/dd91411c605832068c3f46b9d2415549a70a78bd))
+* **docs/contributing:** correct pnpm link command ([8beea6f](https://github.com/ArkHQ-io/ark-nodejs/commit/8beea6fed9825a6d68eea8e65839c8c5ab3a8eac))
+* **mcp:** initialize SDK lazily to avoid failing the connection on init errors ([2c38bc4](https://github.com/ArkHQ-io/ark-nodejs/commit/2c38bc4fc25dee8203ed29ccb0d5681c0c972195))
+* **mcp:** update prompt ([57b8946](https://github.com/ArkHQ-io/ark-nodejs/commit/57b8946bd4e9ec20153c93306e32be7d0be07d4b))
+
+
+### Chores
+
+* **ci:** escape input path in publish-npm workflow ([23585b4](https://github.com/ArkHQ-io/ark-nodejs/commit/23585b41adb458bcc2a5d18dc5e2f63bc6853856))
+* **ci:** skip lint on metadata-only changes ([f4703d1](https://github.com/ArkHQ-io/ark-nodejs/commit/f4703d16a4f11f0ad784f213b523a76013dfb7f9))
+* **ci:** skip uploading artifacts on stainless-internal branches ([8ceeec0](https://github.com/ArkHQ-io/ark-nodejs/commit/8ceeec08ddccecc1f4c23d24ae893d8dc730efbd))
+* **internal:** cache fetch instruction calls in MCP server ([70c6458](https://github.com/ArkHQ-io/ark-nodejs/commit/70c6458f5342c89336dd1c3cf6fb01f270771cd0))
+* **internal:** codegen related update ([14c215a](https://github.com/ArkHQ-io/ark-nodejs/commit/14c215a84811fcf8009405a527621d584ee10a56))
+* **internal:** codegen related update ([b23efba](https://github.com/ArkHQ-io/ark-nodejs/commit/b23efba4958abaa2d955ed899fd1324c77d6f523))
+* **internal:** codegen related update ([0690932](https://github.com/ArkHQ-io/ark-nodejs/commit/06909320868dcf47530bd863fd6814d129962333))
+* **internal:** codegen related update ([1b41255](https://github.com/ArkHQ-io/ark-nodejs/commit/1b4125529fcfebdd7e77722497df02b2ed45eb37))
+* **internal:** codegen related update ([64a16a2](https://github.com/ArkHQ-io/ark-nodejs/commit/64a16a2708d314c4e71fe8bfa4bd7de77dceee18))
+* **internal:** codegen related update ([840cca1](https://github.com/ArkHQ-io/ark-nodejs/commit/840cca102a10ef2d36e49e948066640cd6805592))
+* **internal:** codegen related update ([811048d](https://github.com/ArkHQ-io/ark-nodejs/commit/811048d1af1d16e672afe02b2ae0bfa3182a1c1e))
+* **internal:** codegen related update ([7b2d5af](https://github.com/ArkHQ-io/ark-nodejs/commit/7b2d5af6a5eff12fbe5064a4836da0c9676d22b5))
+* **internal:** codegen related update ([2a78b3d](https://github.com/ArkHQ-io/ark-nodejs/commit/2a78b3dce8bd987bafdae838198d84210ceecc7b))
+* **internal:** codegen related update ([c37d70d](https://github.com/ArkHQ-io/ark-nodejs/commit/c37d70dcdcac915c2ccd876cd9dc98d73fab966f))
+* **internal:** codegen related update ([08e9888](https://github.com/ArkHQ-io/ark-nodejs/commit/08e9888e246c70a645acd5e5278e0f956f935c4e))
+* **internal:** codegen related update ([b335bdb](https://github.com/ArkHQ-io/ark-nodejs/commit/b335bdb55f0cdcf4026b902e82a0e182c76ce015))
+* **internal:** codegen related update ([1ea5bfb](https://github.com/ArkHQ-io/ark-nodejs/commit/1ea5bfb37cec1f3394eba8d9f3392e8dc52fa3ed))
+* **internal:** codegen related update ([f2af2ac](https://github.com/ArkHQ-io/ark-nodejs/commit/f2af2ac4011d120c57df8f52017aafe8cea71198))
+* **internal:** codegen related update ([c49d867](https://github.com/ArkHQ-io/ark-nodejs/commit/c49d86766d9dc9de536bc2283f210ba77d6c0659))
+* **internal:** codegen related update ([f70411d](https://github.com/ArkHQ-io/ark-nodejs/commit/f70411d5c2cfacb0105cec1cfd8071099ad12e54))
+* **internal:** codegen related update ([1271f6f](https://github.com/ArkHQ-io/ark-nodejs/commit/1271f6f6e3f0945d1b4c6f9cdade67386d7a3a67))
+* **internal:** codegen related update ([526c820](https://github.com/ArkHQ-io/ark-nodejs/commit/526c8205065577ffb9e480bbf363b1fad2b7cb36))
+* **internal:** fix MCP Dockerfiles so they can be built without buildkit ([f3e1ae0](https://github.com/ArkHQ-io/ark-nodejs/commit/f3e1ae0b09825a183ab87e279af5e1185aa9138b))
+* **internal:** fix MCP Dockerfiles so they can be built without buildkit ([ae0df75](https://github.com/ArkHQ-io/ark-nodejs/commit/ae0df750c9a801293c8e5554963be30dfd1f8e06))
+* **internal:** fix MCP server import ordering ([e6a2ac3](https://github.com/ArkHQ-io/ark-nodejs/commit/e6a2ac35c31c36ecebc005c6ea9055954558c747))
+* **internal:** fix MCP server TS errors that occur with required client options ([322f87e](https://github.com/ArkHQ-io/ark-nodejs/commit/322f87e3241f0b2ff519830cf5c16e4822d9809d))
+* **internal:** improve local docs search for MCP servers ([f134a98](https://github.com/ArkHQ-io/ark-nodejs/commit/f134a98f96202a7bae902bc2cea2a28dee36a0c9))
+* **internal:** improve local docs search for MCP servers ([6faba1a](https://github.com/ArkHQ-io/ark-nodejs/commit/6faba1a10eaa6f7f15ed1e9362245f833924e871))
+* **internal:** make generated MCP servers compatible with Cloudflare worker environments ([1e31765](https://github.com/ArkHQ-io/ark-nodejs/commit/1e317656f82499cc3807bac65e7d3a18e7e97f1c))
+* **internal:** make MCP code execution location configurable via a flag ([dfdead0](https://github.com/ArkHQ-io/ark-nodejs/commit/dfdead08790f1f37332a96ad0bd8449303eda7b1))
+* **internal:** move stringifyQuery implementation to internal function ([cf98d02](https://github.com/ArkHQ-io/ark-nodejs/commit/cf98d02984384b8a5067912df43a3d473b78ac90))
+* **internal:** show error causes in MCP servers when running in local mode ([274906a](https://github.com/ArkHQ-io/ark-nodejs/commit/274906a4c555bf77ad0f831d3c49ec417ecba3ff))
+* **internal:** support custom-instructions-path flag in MCP servers ([d619e6c](https://github.com/ArkHQ-io/ark-nodejs/commit/d619e6cf7bec1156b01077ae365225c064c1ff0c))
+* **internal:** support local docs search in MCP servers ([d7b6c02](https://github.com/ArkHQ-io/ark-nodejs/commit/d7b6c027b474ee92b754adba631e3dd9876ea4bd))
+* **internal:** support type annotations when running MCP in local execution mode ([5bc40dd](https://github.com/ArkHQ-io/ark-nodejs/commit/5bc40dd0b3d667b40082b8ae951dbb28906d0388))
+* **internal:** support x-stainless-mcp-client-envs header in MCP servers ([3baa9fc](https://github.com/ArkHQ-io/ark-nodejs/commit/3baa9fcc0a0cc5f043663be331e94b1fc63e36cc))
+* **internal:** support x-stainless-mcp-client-permissions headers in MCP servers ([8dfe0cf](https://github.com/ArkHQ-io/ark-nodejs/commit/8dfe0cf9834efb627e6497fca376faff0692e191))
+* **internal:** tweak CI branches ([754549d](https://github.com/ArkHQ-io/ark-nodejs/commit/754549d106a22b74a87b9332c9d6f3f671a8946c))
+* **internal:** update dependencies to address dependabot vulnerabilities ([c4378da](https://github.com/ArkHQ-io/ark-nodejs/commit/c4378da3eef2a11aa6e3fa4b3539b2e48b071818))
+* **internal:** update gitignore ([f9f0bfb](https://github.com/ArkHQ-io/ark-nodejs/commit/f9f0bfbe65c243ea6cbb6162a2234a856b229ab2))
+* **internal:** update lock file ([c927691](https://github.com/ArkHQ-io/ark-nodejs/commit/c927691edff4d1434fe28c1a5b4911882d2417e1))
+* **internal:** update lockfile ([ddb9868](https://github.com/ArkHQ-io/ark-nodejs/commit/ddb986866ce29017b12f937b4234110c075ea1be))
+* **internal:** update multipart form array serialization ([d20bbc4](https://github.com/ArkHQ-io/ark-nodejs/commit/d20bbc41fec80127d858ca5f90a9bca9863a250b))
+* **internal:** upgrade @modelcontextprotocol/sdk and hono ([a62c2db](https://github.com/ArkHQ-io/ark-nodejs/commit/a62c2db41c7f5de400cbb45d4d61821ad6d23eaf))
+* **internal:** upgrade pnpm version ([92d897c](https://github.com/ArkHQ-io/ark-nodejs/commit/92d897ccfcd8bcbfcb66b9c9456a3484fc93813f))
+* **internal:** use x-stainless-mcp-client-envs header for MCP remote code tool calls ([1536aa4](https://github.com/ArkHQ-io/ark-nodejs/commit/1536aa4f6deff7c608203fa4aa4a92500b4bb1c7))
+* **mcp-server:** add support for session id, forward client info ([6dbdb7c](https://github.com/ArkHQ-io/ark-nodejs/commit/6dbdb7ce42f618c34740634523d4b8d31f9286d0))
+* **mcp-server:** improve instructions ([034fe72](https://github.com/ArkHQ-io/ark-nodejs/commit/034fe72954e4d7d6458baebcd466743274719e4d))
+* **mcp-server:** increase local docs search result count from 5 to 10 ([2a702d7](https://github.com/ArkHQ-io/ark-nodejs/commit/2a702d711c44effb1dc4e2d0498f93f5263b2200))
+* **mcp-server:** log client info ([c881a14](https://github.com/ArkHQ-io/ark-nodejs/commit/c881a147b57578239283817a55c8ed20a0018962))
+* **mcp-server:** return access instructions for 404 without API key ([7b95543](https://github.com/ArkHQ-io/ark-nodejs/commit/7b95543cce2bcd6e7485b7b72fb661f83f888534))
+* **mcp:** correctly update version in sync with sdk ([1dadb63](https://github.com/ArkHQ-io/ark-nodejs/commit/1dadb630f2bbd1bad630e10761524a890a1c5b84))
+* **test:** do not count install time for mock server timeout ([7e8fb67](https://github.com/ArkHQ-io/ark-nodejs/commit/7e8fb67a552e618d84b159fc7949716358e5f651))
+* **tests:** bump steady to v0.19.4 ([74bea4d](https://github.com/ArkHQ-io/ark-nodejs/commit/74bea4da408c9109c6f6cfcaff3e64cf3d1598ae))
+* **tests:** bump steady to v0.19.5 ([cf9ec91](https://github.com/ArkHQ-io/ark-nodejs/commit/cf9ec91d28bea56831e54837f3dcb70b0045dc2b))
+* **tests:** bump steady to v0.19.6 ([6635173](https://github.com/ArkHQ-io/ark-nodejs/commit/663517360ee9844c63880294cc2cb1c42e54b9dc))
+* **tests:** bump steady to v0.19.7 ([448907b](https://github.com/ArkHQ-io/ark-nodejs/commit/448907bbfe0b30f7b63781f39dfb197ac00163c7))
+* **tests:** bump steady to v0.20.1 ([8cc3098](https://github.com/ArkHQ-io/ark-nodejs/commit/8cc3098ea24e01ee29de534a6a8f7f4b4de2ae9b))
+* **tests:** bump steady to v0.20.2 ([361bb78](https://github.com/ArkHQ-io/ark-nodejs/commit/361bb78948f15b6e778c4e8728700eb31ae0d5d3))
+* **tests:** bump steady to v0.22.1 ([1d5b7d7](https://github.com/ArkHQ-io/ark-nodejs/commit/1d5b7d7823a4b793c8c8fe07bc24771d338e423e))
+* update mock server docs ([2a5b350](https://github.com/ArkHQ-io/ark-nodejs/commit/2a5b35073fbd73679e553f33acd495521420f638))
+
+
+### Refactors
+
+* **tests:** switch from prism to steady ([85e7b1a](https://github.com/ArkHQ-io/ark-nodejs/commit/85e7b1a01ed063105884bb59933bb4d788ca642b))
+* update sdk ([baad2b3](https://github.com/ArkHQ-io/ark-nodejs/commit/baad2b38bfd71bccea2d84bad2137efb3c976d64))
+
 ## 0.19.1 (2026-02-18)
 
 Full Changelog: [v0.19.0...v0.19.1](https://github.com/ArkHQ-io/ark-nodejs/compare/v0.19.0...v0.19.1)

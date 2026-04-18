@@ -11,6 +11,7 @@ import type { APIResponseProps } from './internal/parse';
 import { getPlatformHeaders } from './internal/detect-platform';
 import * as Shims from './internal/shims';
 import * as Opts from './internal/request-options';
+import { stringifyQuery } from './internal/utils/query';
 import { VERSION } from './version';
 import * as Errors from './core/error';
 import * as Pagination from './core/pagination';
@@ -274,21 +275,8 @@ export class Ark {
   /**
    * Basic re-implementation of `qs.stringify` for primitive types.
    */
-  protected stringifyQuery(query: Record<string, unknown>): string {
-    return Object.entries(query)
-      .filter(([_, value]) => typeof value !== 'undefined')
-      .map(([key, value]) => {
-        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-          return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-        }
-        if (value === null) {
-          return `${encodeURIComponent(key)}=`;
-        }
-        throw new Errors.ArkError(
-          `Cannot stringify type ${typeof value}; Expected string, number, boolean, or null. If you need to pass nested query parameters, you can manually encode them, e.g. { query: { 'foo[key1]': value1, 'foo[key2]': value2 } }, and please open a GitHub issue requesting better support for your use case.`,
-        );
-      })
-      .join('&');
+  protected stringifyQuery(query: object | Record<string, unknown>): string {
+    return stringifyQuery(query);
   }
 
   private getUserAgent(): string {
@@ -320,12 +308,13 @@ export class Ark {
       : new URL(baseURL + (baseURL.endsWith('/') && path.startsWith('/') ? path.slice(1) : path));
 
     const defaultQuery = this.defaultQuery();
-    if (!isEmptyObj(defaultQuery)) {
-      query = { ...defaultQuery, ...query };
+    const pathQuery = Object.fromEntries(url.searchParams);
+    if (!isEmptyObj(defaultQuery) || !isEmptyObj(pathQuery)) {
+      query = { ...pathQuery, ...defaultQuery, ...query };
     }
 
     if (typeof query === 'object' && query && !Array.isArray(query)) {
-      url.search = this.stringifyQuery(query as Record<string, unknown>);
+      url.search = this.stringifyQuery(query);
     }
 
     return url.toString();
@@ -654,9 +643,9 @@ export class Ark {
       }
     }
 
-    // If the API asks us to wait a certain amount of time (and it's a reasonable amount),
-    // just do what it says, but otherwise calculate a default
-    if (!(timeoutMillis && 0 <= timeoutMillis && timeoutMillis < 60 * 1000)) {
+    // If the API asks us to wait a certain amount of time, just do what it
+    // says, but otherwise calculate a default
+    if (timeoutMillis === undefined) {
       const maxRetries = options.maxRetries ?? this.maxRetries;
       timeoutMillis = this.calculateDefaultRetryTimeoutMillis(retriesRemaining, maxRetries);
     }
@@ -788,7 +777,7 @@ export class Ark {
     ) {
       return {
         bodyHeaders: { 'content-type': 'application/x-www-form-urlencoded' },
-        body: this.stringifyQuery(body as Record<string, unknown>),
+        body: this.stringifyQuery(body),
       };
     } else {
       return this.#encoder({ body, headers });
@@ -814,10 +803,93 @@ export class Ark {
 
   static toFile = Uploads.toFile;
 
+  /**
+   * Send and manage email messages.
+   *
+   * **Quick Reference:**
+   * - `POST /emails` - Send a single email
+   * - `POST /emails/batch` - Send up to 100 emails
+   * - `GET /emails/{emailId}` - Get email status and details
+   * - `GET /emails` - List sent emails
+   * - `POST /emails/{emailId}/retry` - Retry failed delivery
+   *
+   */
   emails: API.Emails = new API.Emails(this);
+  /**
+   * Access API request logs for debugging and monitoring.
+   *
+   * Every API request is logged with details including:
+   * - Request method, path, and endpoint
+   * - Response status code and duration
+   * - Error details (code, message) for failed requests
+   * - SDK information (name, version)
+   * - Rate limit state at time of request
+   * - Request and response bodies (for single log retrieval)
+   *
+   * **Retention:** Logs are retained for 90 days.
+   *
+   * **Body storage:** Request and response bodies are stored encrypted
+   * and truncated at 25KB. Bodies are only returned when retrieving
+   * a single log entry.
+   *
+   * **Quick Reference:**
+   * - `GET /logs` - List API request logs with filters
+   * - `GET /logs/{requestId}` - Get full details including request/response bodies
+   *
+   */
   logs: API.Logs = new API.Logs(this);
+  /**
+   * Per-tenant usage analytics and bulk reporting.
+   *
+   * Track email sending statistics for each tenant to power billing, dashboards, and monitoring.
+   *
+   * **Single Tenant Usage:**
+   * - `GET /tenants/{id}/usage` - Get usage stats for a specific tenant
+   * - `GET /tenants/{id}/usage/timeseries` - Get time-bucketed data for charts
+   *
+   * **Bulk Usage:**
+   * - `GET /usage/tenants` - Get usage for all tenants (paginated, sortable)
+   * - `GET /usage/export` - Export usage data as CSV, JSONL, or JSON
+   *
+   * **Period Formats:**
+   * - Shortcuts: `today`, `yesterday`, `this_month`, `last_month`, `last_7_days`, `last_30_days`
+   * - Month: `2024-01`
+   * - Date range: `2024-01-01..2024-01-15`
+   *
+   */
   usage: API.Usage = new API.Usage(this);
+  /**
+   * Check account rate limits and send limits.
+   *
+   * The limits endpoint returns current status for operational limits:
+   * - **Rate limit:** API requests per second (currently 10/sec)
+   * - **Send limit:** Emails per hour (default 100/hour for new accounts)
+   * - **Billing:** Credit balance and auto-recharge configuration
+   *
+   * **AI Integration Note:** This endpoint is designed for AI agents and MCP servers
+   * to understand account constraints before taking actions. Call this endpoint
+   * first when planning batch operations to avoid hitting limits unexpectedly.
+   *
+   * **Quick Reference:**
+   * - `GET /limits` - Get current rate limits and send limits
+   * - `GET /usage` - (Deprecated) Use `/limits` instead
+   *
+   */
   limits: API.Limits = new API.Limits(this);
+  /**
+   * Manage tenants (your customers).
+   *
+   * Create a tenant for each of your customers to track their email sending separately.
+   * Store the tenant `id` in your database and use `metadata` for any custom data.
+   *
+   * **Quick Reference:**
+   * - `POST /tenants` - Create a new tenant
+   * - `GET /tenants` - List all tenants (paginated)
+   * - `GET /tenants/{id}` - Get tenant details
+   * - `PATCH /tenants/{id}` - Update tenant name, metadata, or status
+   * - `DELETE /tenants/{id}` - Delete a tenant
+   *
+   */
   tenants: API.Tenants = new API.Tenants(this);
   platform: API.Platform = new API.Platform(this);
 }

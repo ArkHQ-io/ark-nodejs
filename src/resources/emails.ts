@@ -8,6 +8,16 @@ import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
+/**
+ * Send and manage email messages.
+ *
+ * **Quick Reference:**
+ * - `POST /emails` - Send a single email
+ * - `POST /emails/batch` - Send up to 100 emails
+ * - `GET /emails/{emailId}` - Get email status and details
+ * - `GET /emails` - List sent emails
+ * - `POST /emails/{emailId}/retry` - Retry failed delivery
+ */
 export class Emails extends APIResource {
   /**
    * Retrieve detailed information about a specific email including delivery status,
@@ -143,6 +153,7 @@ export class Emails extends APIResource {
    *   to: ['user@example.com'],
    *   html: '<h1>Welcome!</h1><p>Thanks for signing up.</p>',
    *   metadata: { user_id: 'usr_123', campaign: 'onboarding' },
+   *   tenantId: 'cm6abc123def456',
    * });
    * ```
    */
@@ -185,6 +196,7 @@ export class Emails extends APIResource {
    *     },
    *   ],
    *   from: 'notifications@myapp.com',
+   *   tenantId: 'cm6abc123def456',
    * });
    * ```
    */
@@ -265,6 +277,11 @@ export namespace EmailRetrieveResponse {
      * Email subject line
      */
     subject: string;
+
+    /**
+     * The tenant ID this email belongs to
+     */
+    tenantId: string;
 
     /**
      * Unix timestamp when the email was sent
@@ -547,6 +564,11 @@ export interface EmailListResponse {
 
   subject: string;
 
+  /**
+   * The tenant ID this email belongs to
+   */
+  tenantId: string;
+
   timestamp: number;
 
   timestampIso: string;
@@ -601,6 +623,11 @@ export namespace EmailRetrieveDeliveriesResponse {
      * - `bounced` - Bounced by recipient server
      */
     status: 'pending' | 'sent' | 'softfail' | 'hardfail' | 'held' | 'bounced';
+
+    /**
+     * The tenant ID this email belongs to
+     */
+    tenantId: string;
   }
 
   export namespace Data {
@@ -758,6 +785,11 @@ export namespace EmailRetryResponse {
     id: string;
 
     message: string;
+
+    /**
+     * The tenant ID this email belongs to
+     */
+    tenantId: string;
   }
 }
 
@@ -780,6 +812,11 @@ export namespace EmailSendResponse {
      * Current delivery status
      */
     status: 'pending' | 'sent';
+
+    /**
+     * The tenant ID this email was sent from
+     */
+    tenantId: string;
 
     /**
      * List of recipient addresses
@@ -825,6 +862,11 @@ export namespace EmailSendBatchResponse {
     messages: { [key: string]: Data.Messages };
 
     /**
+     * The tenant ID this batch was sent from
+     */
+    tenantId: string;
+
+    /**
      * Total emails in the batch
      */
     total: number;
@@ -865,6 +907,11 @@ export namespace EmailSendRawResponse {
      * Current delivery status
      */
     status: 'pending' | 'sent';
+
+    /**
+     * The tenant ID this email was sent from
+     */
+    tenantId: string;
 
     /**
      * List of recipient addresses
@@ -1026,6 +1073,17 @@ export interface EmailSendParams {
   tag?: string | null;
 
   /**
+   * Body param: The tenant ID to send this email from. Determines which tenant's
+   * configuration (domains, webhooks, tracking) is used.
+   *
+   * - If your API key is scoped to a specific tenant, this must match that tenant or
+   *   be omitted.
+   * - If your API key is org-level, specify the tenant to send from.
+   * - If omitted, the organization's default tenant is used.
+   */
+  tenantId?: string | null;
+
+  /**
    * Body param: Plain text body (accepts null, auto-generated from HTML if not
    * provided). Maximum 5MB (5,242,880 characters).
    */
@@ -1067,6 +1125,17 @@ export interface EmailSendBatchParams {
    * Body param: Sender email for all messages
    */
   from: string;
+
+  /**
+   * Body param: The tenant ID to send this batch from. Determines which tenant's
+   * configuration (domains, webhooks, tracking) is used.
+   *
+   * - If your API key is scoped to a specific tenant, this must match that tenant or
+   *   be omitted.
+   * - If your API key is org-level, specify the tenant to send from.
+   * - If omitted, the organization's default tenant is used.
+   */
+  tenantId?: string | null;
 
   /**
    * Header param: Unique key for idempotent requests. If a request with this key was
@@ -1146,6 +1215,17 @@ export interface EmailSendRawParams {
    * Whether this is a bounce message (accepts null)
    */
   bounce?: boolean | null;
+
+  /**
+   * The tenant ID to send this email from. Determines which tenant's configuration
+   * (domains, webhooks, tracking) is used.
+   *
+   * - If your API key is scoped to a specific tenant, this must match that tenant or
+   *   be omitted.
+   * - If your API key is org-level, specify the tenant to send from.
+   * - If omitted, the organization's default tenant is used.
+   */
+  tenantId?: string | null;
 }
 
 export declare namespace Emails {

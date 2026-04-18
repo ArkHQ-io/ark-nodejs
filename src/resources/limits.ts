@@ -5,6 +5,22 @@ import * as Shared from './shared';
 import { APIPromise } from '../core/api-promise';
 import { RequestOptions } from '../internal/request-options';
 
+/**
+ * Check account rate limits and send limits.
+ *
+ * The limits endpoint returns current status for operational limits:
+ * - **Rate limit:** API requests per second (currently 10/sec)
+ * - **Send limit:** Emails per hour (default 100/hour for new accounts)
+ * - **Billing:** Credit balance and auto-recharge configuration
+ *
+ * **AI Integration Note:** This endpoint is designed for AI agents and MCP servers
+ * to understand account constraints before taking actions. Call this endpoint
+ * first when planning batch operations to avoid hitting limits unexpectedly.
+ *
+ * **Quick Reference:**
+ * - `GET /limits` - Get current rate limits and send limits
+ * - `GET /usage` - (Deprecated) Use `/limits` instead
+ */
 export class Limits extends APIResource {
   /**
    * Returns current rate limit and send limit information for your account.
